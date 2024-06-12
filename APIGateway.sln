@@ -17,9 +17,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTest", "UnitTest", "{A9
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MicroservicesMocks", "MicroservicesMocks", "{E11EFBF4-BC1F-465B-9EFB-ACC4E799401F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthorizationServiceAPI", "AuthorizationServiceAPI\AuthorizationServiceAPI.csproj", "{FF48F691-B2B6-4C3C-87C9-4720448D144B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthorizationServiceAPI", "AuthorizationServiceAPI\AuthorizationServiceAPI.csproj", "{FF48F691-B2B6-4C3C-87C9-4720448D144B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StreamGatewayMock", "StreamGatewayMock\StreamGatewayMock.csproj", "{0EC07E62-C6BD-495E-A0AE-4E55D6FD5B88}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StreamGatewayMock", "StreamGatewayMock\StreamGatewayMock.csproj", "{0EC07E62-C6BD-495E-A0AE-4E55D6FD5B88}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APIGatewayUT", "APIGatewayUT\APIGatewayUT.csproj", "{A623AB13-456B-4188-A590-ECA2F0C05B61}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,6 +49,10 @@ Global
 		{0EC07E62-C6BD-495E-A0AE-4E55D6FD5B88}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0EC07E62-C6BD-495E-A0AE-4E55D6FD5B88}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0EC07E62-C6BD-495E-A0AE-4E55D6FD5B88}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A623AB13-456B-4188-A590-ECA2F0C05B61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A623AB13-456B-4188-A590-ECA2F0C05B61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A623AB13-456B-4188-A590-ECA2F0C05B61}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A623AB13-456B-4188-A590-ECA2F0C05B61}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -59,6 +65,7 @@ Global
 		{E11EFBF4-BC1F-465B-9EFB-ACC4E799401F} = {3F8D5891-5360-4A4D-84D6-4AE74AEF31F6}
 		{FF48F691-B2B6-4C3C-87C9-4720448D144B} = {B7F224DB-308A-476E-BB53-713154DC5C8C}
 		{0EC07E62-C6BD-495E-A0AE-4E55D6FD5B88} = {E11EFBF4-BC1F-465B-9EFB-ACC4E799401F}
+		{A623AB13-456B-4188-A590-ECA2F0C05B61} = {A9DF1399-85A5-42EB-82FC-2B2F2B6E1FB1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BEF128E7-167F-4F52-BC68-C39D70551F30}
