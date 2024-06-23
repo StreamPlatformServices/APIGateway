@@ -6,10 +6,16 @@ using Microsoft.IdentityModel.Tokens;
 using StreamGatewayMock;
 using System.Security.Cryptography;
 using AuthorizationServiceAPI.ServiceCollectionExtensions;
+using ContentMetadataServiceMock.ServiceCollectionExtensions;
 using APIGatewayControllers.Configuration;
 using APIGatewayControllers.ServiceCollectionExtensions;
 using APIGatewayControllers.Middlewares;
 using Microsoft.OpenApi.Models;
+using ContentMetadataServiceMock;
+using ContentMetadataServiceMock.Persistance;
+using Microsoft.EntityFrameworkCore;
+
+//TODO: NOW: 1. Create migrations, 2. Test GetAllContents 
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,9 +24,15 @@ var externalServicesSettings = builder.Configuration.GetSection("ExternalService
 //TODO: Move all extension methods to this component
 //TODO: ExtractSettings inside the methods (no params needed)
 builder.Services.AddAuthorizationServiceAPI("https://localhost:7124");//externalServicesSettings.AuthorizationServiceAPISettings.BaseUrl);
-builder.Services.AddJWTConfiguration(externalServicesSettings.JwtSettings.Issuer, externalServicesSettings.JwtSettings.Audience);
+//builder.Services.AddJWTConfiguration(externalServicesSettings.JwtSettings.Issuer, externalServicesSettings.JwtSettings.Audience); //TODO: Commented for testing
+
+//builder.Services.AddDbContext<ContentMetadataDatabaseContext>(options =>
+//            options.UseSqlite("Data Source=content.db"));
+
+builder.Services.AddContentMetadataMock("databasePath"); //TODO:
 
 builder.Services.AddTransient<IStreamUriContract, StreamGatewayContract>(); //TODO: How to not depend on StreamGatewayMock. It is not possible. We need the whole config in one place
+builder.Services.AddTransient<IContentMetadataContract, ContentMetadataContract>();
 
 builder.Services.AddTransient<IContentRouter, ContentRouter>();
 builder.Services.AddTransient<IUserRouter, UserRouter>();

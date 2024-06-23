@@ -1,10 +1,9 @@
-﻿using APIGatewayController.Models;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using APIGatewayRouting.Routing.Interfaces;
 using APIGatewayControllers.DataMappers;
-using APIGatewayControllers.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
+using APIGatewayControllers.DTO.Models.Requests;
 
 namespace APIGateway.Controllers
 {
@@ -24,9 +23,11 @@ namespace APIGateway.Controllers
         }
 
 
-        //TODO: Add searching (searching will be aplicable on frontend side) 
+        //TODO: Add searching (searching will be aplicable on frontend side??) 
+
+        //TODO: Now get the 
         [HttpGet("GetAll", Name = "GetContents")]
-        public async Task<ActionResult<IEnumerable<ContentModel>>> GetContentsAsync([FromQuery] int limit, [FromQuery] int offset)
+        public async Task<ActionResult<IEnumerable<UploadContentRequestModel>>> GetContentsAsync([FromQuery] int limit, [FromQuery] int offset)
         {
             //TODO: Generate Snapshots 
             //TODO: Content cacher in routing component
@@ -47,19 +48,37 @@ namespace APIGateway.Controllers
             }
         }
 
-        //TODO: Add endpoint for get contents by name 
+        [HttpGet("Get", Name = "GetContent")]
+        public async Task<ActionResult<IEnumerable<UploadContentRequestModel>>> GetContentByIdAsync(Guid uuid)
+        {
+            try
+            {
+                var content = await _contentRouter.GetContentByIdAsync(uuid);
+                if (content.Uuid == Guid.Empty)
+                {
+                    return NotFound();
+                }
+
+                return Ok(content.ToContentModel());
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while getting the content data.");
+                return StatusCode(500, $"An error occurred while getting the content data. Error message: {ex.Message}");
+            }
+        }
 
 
-        [Authorize(Roles = "ContentCreator")]
+        //[Authorize(Roles = "ContentCreator")]
         [HttpPost("Upload", Name = "UploadContent")]
-        public async Task<ActionResult<string>> UploadContentAsync([FromBody] ContentWithLicenseModel contentAndLicense)
+        public async Task<ActionResult<string>> UploadContentAsync([FromBody] UploadContentRequestModel contentMetadata)
         {
             //TODO: implement validators witch recognize BadRequest(). Think if the second validation is needed in Routing component!!
 
             try
             {
-                bool result = await _contentRouter.UploadContentAsync(contentAndLicense.ContentModel.ToContent(), contentAndLicense.LicenseModel.ToContentLicense());
-                if (result)
+                bool result = await _contentRouter.UploadContentAsync(contentMetadata.ToContent());
+                if (!result)
                 {
                     return StatusCode(500, $"Operation upload content can not be completed at the moment. Pleas try again later or contact the administrator for more information.");
                 }
@@ -74,17 +93,17 @@ namespace APIGateway.Controllers
         }
 
         //TODO: Recheck logs and return messages
-        [Authorize(Roles = "ContentCreator")]
+        //[Authorize(Roles = "ContentCreator")]
         [HttpDelete("Delete", Name = "DeleteContent")]
-        public async Task<ActionResult<string>> DeleteContentAsync([FromQuery] string contentName)
+        public async Task<ActionResult<string>> DeleteContentAsync([FromBody] Guid contentId) //TODO: FromBody?????
         {
             //TODO: Json parsing overriding 
             try
             {
-                var content = await _contentRouter.GetContentByNameAsync(contentName);
+                var content = await _contentRouter.GetContentByIdAsync(contentId);
                 if (content == null)
                 {
-                    return NotFound($"Content: {contentName} doesn't exist!");
+                    return NotFound($"Content with provided id doesn't exist!");
                 }
 
                 bool result = await _contentRouter.DeleteContentAsync(content.Uuid);
@@ -93,7 +112,7 @@ namespace APIGateway.Controllers
                     return StatusCode(500, $"Operation delete content can not be completed at the moment. Pleas try again later or contact the administrator for more information.");
                 }
 
-                return Ok($"{contentName} has been removed successfully.");
+                return Ok($"Content has been removed successfully.");
             }
             catch (Exception ex)
             {
@@ -103,26 +122,26 @@ namespace APIGateway.Controllers
             }
         }
 
-        [Authorize(Roles = "ContentCreator")]
+        //[Authorize(Roles = "ContentCreator")]
         [HttpPut("Edit", Name = "EditContent")]
-        public async Task<ActionResult<string>> EditContentAsync([FromQuery] string contentName, [FromBody] ContentModel contentModel)
+        public async Task<ActionResult<string>> EditContentAsync([FromQuery] Guid contentId, [FromBody] UploadContentRequestModel contentModel)
         {
             //TODO: implement validators which recognize BadRequest()
             try
             {
-                var content = await _contentRouter.GetContentByNameAsync(contentName);
+                var content = await _contentRouter.GetContentByIdAsync(contentId); //TODO: czy nie powinno to być przezroczyste?? 
                 if (content == null)
                 {
-                    return NotFound($"Content: {contentName} doesn't exist!");
+                    return NotFound($"Content with provided id doesn't exist!");
                 }
 
-                bool result = await _contentRouter.EditContentAsync(content.Uuid, contentModel.ToContent());
+                bool result = await _contentRouter.EditContentAsync(contentId, contentModel.ToContent());
                 if (!result)
                 {
                     return StatusCode(500, $"Operation edit  can not be completed at the moment. Pleas try again later or contact the administrator for more information.");
                 }
 
-                return Ok($"{contentName} has been updated successfully.");
+                return Ok($"Content has been updated successfully.");
             }
             catch (Exception ex)
             {

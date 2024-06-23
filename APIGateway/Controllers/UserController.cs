@@ -1,12 +1,11 @@
-using APIGatewayController.Models;
 using Microsoft.AspNetCore.Mvc;
 using APIGatewayRouting.Routing.Interfaces;
 using APIGatewayControllers.DataMappers;
-using APIGatewayControllers.Models.Responses;
 using Microsoft.AspNetCore.Authorization;
 using APIGatewayRouting.Data;
-using APIGatewayControllers.Models;
 using APIGatewayControllers.Middlewares.Attributes;
+using APIGatewayControllers.DTO.Models;
+using APIGatewayControllers.DTO.Models.Responses;
 
 namespace APIGateway.Controllers
 {

@@ -1,7 +1,7 @@
 ﻿using APIGatewayRouting.Data;
 using System.ComponentModel.DataAnnotations;
 
-namespace APIGatewayControllers.Models
+namespace APIGatewayControllers.DTO.Models
 {
     public class UserModel //TODO: UserRequest and Response different classes
     {
@@ -11,9 +11,9 @@ namespace APIGatewayControllers.Models
         public string Login { get; set; } //TODO: Remove
         [Required]
         public string Password { get; set; }
-       [Required]
-       public string Mail { set; get; } //TODO: Email
-       public UserLevel UserLevel { set; get; }
-       public DateTime CreationTime { set; get; } //TODO: It is needed??
+        [Required]
+        public string Mail { set; get; } //TODO: Email
+        public UserLevel UserLevel { set; get; }
+        public DateTime CreationTime { set; get; } //TODO: It is needed??
     }
 }

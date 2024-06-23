@@ -1,9 +1,7 @@
-﻿
-using APIGatewayControllers.Models;
-using APIGatewayRouting.Data;
+﻿using APIGatewayRouting.Data;
 using System.ComponentModel.DataAnnotations;
 
-namespace APIGatewayController.Models
+namespace APIGatewayControllers.DTO.Models
 {
     public class EndUserModel : UserModel
     {

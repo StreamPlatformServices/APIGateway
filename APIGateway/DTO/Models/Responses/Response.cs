@@ -1,4 +1,4 @@
-﻿namespace APIGatewayControllers.Models.Responses
+﻿namespace APIGatewayControllers.DTO.Models.Responses
 {
     public class Response<T>
     {

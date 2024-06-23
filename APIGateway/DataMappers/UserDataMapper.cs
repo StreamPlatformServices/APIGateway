@@ -1,4 +1,4 @@
-﻿using APIGatewayController.Models;
+﻿using APIGatewayControllers.DTO.Models;
 using APIGatewayRouting.Data;
 
 namespace APIGatewayControllers.DataMappers

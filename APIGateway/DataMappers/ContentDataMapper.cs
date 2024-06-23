@@ -1,30 +1,57 @@
-﻿using APIGatewayController.Models;
+﻿using APIGatewayControllers.DTO.Models;
+using APIGatewayControllers.DTO.Models.Base;
+using APIGatewayControllers.DTO.Models.Requests;
+using APIGatewayControllers.DTO.Models.Responses;
 using APIGatewayRouting.Data;
+using ContentMetadataServiceMock.Persistance.Data;
 
 namespace APIGatewayControllers.DataMappers
 {
     public static class ContentDataMapper
     {
-        public static Content ToContent(this ContentModel model)
+        public static Content ToContent(this UploadContentRequestModel model)
         {
             return new Content
             {
-                Uuid = Guid.Empty,
-                Name = model.Name,
-                UploadTime = model.UploadTime,
+                Uuid = Guid.NewGuid(),
+                Title = model.Title,
+                UploadTime = DateTime.UtcNow, //TODO: UT???
                 Description = model.Description,
-                ContentComments = model.ContentComments?.Select(c => c.ToContentComment()).ToList() ?? new List<ContentComment>() 
+                LicenseRules = model.LicenseRulesModel?.Select(c => c.ToLicenseRules()).ToList() ?? new List<LicenseRules>(),
             };
         }
 
-        public static ContentModel ToContentModel(this Content entity)
+        //public static UploadContentRequestModel ToUploadContentRequestModel(this Content entity) 
+        //{
+        //    return new UploadContentRequestModel
+        //    {
+        //        Title = entity.Title,
+        //        Description = entity.Description,
+        //        LicenseRulesModel = entity.LicenseRules?.Select(c => c.ToLicenseRulesModel()).ToList() ?? new List<LicenseRulesModel>()
+        //    };
+        //}
+
+        //TODO: NOW. Finish all mappers!!!!
+
+        public static GetAllContentsResponseModel ToGetAllContentsResponseModel(this Content entity) 
         {
-            return new ContentModel
+            return new GetAllContentsResponseModel
             {
-                Name = entity.Name,
-                UploadTime = entity.UploadTime,
+                Title = entity.Title,
+                Duration = entity.Duration,
+                ImageUrl = entity.ImageUrl,
+                Uuid = entity.Uuid
+            };
+        }
+
+        public static GetContentResponseModel ToGetContentResponseModel(this Content entity) 
+        {
+            return new GetContentResponseModel
+            {
+                Title = entity.Title,
                 Description = entity.Description,
-                ContentComments = entity.ContentComments?.Select(c => c.ToContentCommentModel()).ToList() ?? new List<ContentCommentModel>()
+                ContentComments = entity.ContentComments?.Select(c => c.ToContentCommentModel()).ToList() ?? new List<ContentCommentModel>(),
+                LicenseRules = entity.LicenseRules?.Select(c => c.ToLicenseRulesModel()).ToList() ?? new List<LicenseRulesModel>(),
             };
         }
     }

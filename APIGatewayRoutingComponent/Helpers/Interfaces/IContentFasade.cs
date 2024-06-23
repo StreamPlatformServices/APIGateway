@@ -2,12 +2,12 @@
 
 namespace APIGatewayRouting.Helpers.Interfaces
 {
-    internal interface IContentFasade
+    public interface IContentFasade
     {
         Task<IEnumerable<Content>> GetAllContentsAsync(int limit, int offset);
-        Task<Content> GetContentByNameAsync(string contentName);
+        Task<Content> GetContentByIdAsync(Guid contentId);
         Task<bool> EditContentAsync(Guid contentId, Content content);
-        Task<bool> UploadContentAsync(Content content, ContentLicense license);
+        Task<bool> UploadContentAsync(Content content);
         Task<bool> DeleteContentAsync(Guid contentId);
     }
 }

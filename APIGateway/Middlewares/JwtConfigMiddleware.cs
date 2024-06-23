@@ -18,7 +18,8 @@ namespace APIGatewayControllers.Middlewares
             _next = next;
             _authorizationContract = authorizationContract;
 
-            UpdateRsaSecurityPublicKey().GetAwaiter().GetResult(); //TODO: GetAwaiter ????
+            //TODO: Commented for testing 
+            //UpdateRsaSecurityPublicKey().GetAwaiter().GetResult(); //TODO: GetAwaiter ????
         }
 
         public async Task InvokeAsync(HttpContext context)

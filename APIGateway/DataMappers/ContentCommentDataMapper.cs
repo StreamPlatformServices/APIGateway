@@ -1,4 +1,4 @@
-﻿using APIGatewayController.Models;
+﻿using APIGatewayControllers.DTO.Models;
 using APIGatewayRouting.Data;
 
 namespace APIGatewayControllers.DataMappers
@@ -12,7 +12,7 @@ namespace APIGatewayControllers.DataMappers
                 Uuid = model.Uuid,
                 Body = model.Body,
                 CreationTime = model.CreationTime,
-                AuthorName = model.AuthorName
+                UserName = model.AuthorName
             };
         }
 
@@ -23,7 +23,7 @@ namespace APIGatewayControllers.DataMappers
                 Uuid = entity.Uuid,
                 Body = entity.Body,
                 CreationTime = entity.CreationTime,
-                AuthorName = entity.AuthorName
+                AuthorName = entity.UserName
             };
         }
     }
