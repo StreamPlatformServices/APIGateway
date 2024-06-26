@@ -1,4 +1,4 @@
-﻿using APIGatewayControllers.DTO.Models;
+﻿using APIGatewayControllers.Models;
 using APIGatewayRouting.Data;
 
 namespace APIGatewayControllers.DataMappers
@@ -9,7 +9,7 @@ namespace APIGatewayControllers.DataMappers
         {
             return new ContentComment
             {
-                Uuid = model.Uuid,
+                Uuid = Guid.NewGuid(),
                 Body = model.Body,
                 CreationTime = model.CreationTime,
                 UserName = model.AuthorName
@@ -20,7 +20,6 @@ namespace APIGatewayControllers.DataMappers
         {
             return new ContentCommentModel
             {
-                Uuid = entity.Uuid,
                 Body = entity.Body,
                 CreationTime = entity.CreationTime,
                 AuthorName = entity.UserName

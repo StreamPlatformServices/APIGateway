@@ -1,11 +1,12 @@
 ﻿using APIGatewayRouting.Data;
 using APIGatewayRouting.IntegrationContracts;
 using AuthorizationServiceAPI.DataMappers;
-using AuthorizationServiceAPI.Models;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Net.Http;
 using System.Text;
+using Newtonsoft.Json.Linq;
+using AuthorizationServiceAPI.Models.Responses;
 
 namespace AuthorizationServiceAPI
 {
@@ -14,59 +15,28 @@ namespace AuthorizationServiceAPI
 
         private readonly HttpClient _httpClient;
 
-        private const string GET_USERS_ENDPOINT = "api/users";
+        private const string USERS_ENDPOINT = "users";
+        private const string GET_USER_ENDPOINT = "user"; 
+        private const string CONTENT_CREATOR_ENDPOINT = "content-creator";
+        private const string END_USER_ENDPOINT = "end-user";
+        private const string USER_STATUS_ENDPOINT = "status";
 
         public UserContract(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }
 
-        
-
-        async Task<bool> IUserContract.AddContentCreatorUserAsync(ContentCreatorUser user)
+        async Task<IEnumerable<User>> IUserContract.GetAllUsersAsync(string token)
         {
-            throw new NotImplementedException();
-        }
-        async Task<User> IUserContract.GetUserByNameAsync(string userName, string token)
-        {
-            //TODO: change to GetUser(token) and the user will be recognized by id from token
-
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            var response = await _httpClient.GetAsync(GET_USERS_ENDPOINT);
+            var response = await _httpClient.GetAsync(USERS_ENDPOINT);
 
             if (response.IsSuccessStatusCode)
             {
                 var responseContent = await response.Content.ReadAsStringAsync();
-                var usersResponse = JsonConvert.DeserializeObject<ResponseModel<UsersResponseDto>>(responseContent);
+                var userResponse = JsonConvert.DeserializeObject<ResponseModel<UsersResponseDto>>(responseContent);
 
-                //var users = new List<User>();
-
-                foreach (var user in usersResponse.Result.Users)
-                {
-                    if (user.Name == userName)
-                    {
-                        var role = user.Roles.FirstOrDefault();
-                        //if (string.IsNullOrEmpty(role))
-                        //{
-                        //    //TODO: log
-                        //    return null;
-                        //}
-
-                        //if (role == "EndUser")
-                        //{
-                        //    return user.ToContentCreatorUser();
-                        //}
-
-                        //if (role == "ContentCreatorUser")
-                        //{
-                            return user.ToEndUser();
-                        //}
-
-                        //return null; //TODO: or throw???
-                    }
-                }
-
-                return null;
+                return userResponse.Result.Users.ToUsers();
             }
             else
             {
@@ -74,21 +44,105 @@ namespace AuthorizationServiceAPI
                 throw new HttpRequestException($"SignIn failed: {response.ReasonPhrase}");
             }
         }
+
+        async Task<User> IUserContract.GetUserAsync(string token) 
+        {
+            //TODO: test
+            //TODO: Remove login and password from model. Change model 
+
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var response = await _httpClient.GetAsync($"{USERS_ENDPOINT}/{GET_USER_ENDPOINT}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var userResponse = JsonConvert.DeserializeObject<ResponseModel<UserResponseDto>>(responseContent);
+                var user = userResponse.Result;
+
+                return user.ToUser();
+            }
+            else
+            {
+                // Obsługa błędów
+                throw new HttpRequestException($"SignIn failed: {response.ReasonPhrase}");
+            }
+        }
+
+        async Task<bool> IUserContract.AddContentCreatorUserAsync(ContentCreatorUser user)
+        {
+            var requestContent = new StringContent(
+                JsonConvert.SerializeObject(user.ToUserRequestDto()),
+                Encoding.UTF8,
+                "application/json");
+
+            var response = await _httpClient.PostAsync($"{USERS_ENDPOINT}/{CONTENT_CREATOR_ENDPOINT}", requestContent);
+
+            return response.IsSuccessStatusCode;
+
+            //TODO: exception handling!
+        }
         async Task<bool> IUserContract.AddEndUserAsync(EndUser user)
         {
-            throw new NotImplementedException();
+            var requestContent = new StringContent(
+                JsonConvert.SerializeObject(user.ToUserRequestDto()),
+                Encoding.UTF8,
+                "application/json");
+
+            var response = await _httpClient.PostAsync($"{USERS_ENDPOINT}/{END_USER_ENDPOINT}", requestContent);
+
+            return response.IsSuccessStatusCode;
+
+            //TODO: exception handling!
         }
-        async Task<bool> IUserContract.EditContentCreatorUserAsync(Guid userId, ContentCreatorUser user, string token)
+
+        async Task<bool> IUserContract.EditContentCreatorUserAsync(ContentCreatorUser user, string token) //TODO: Remove user id
         {
-            throw new NotImplementedException();
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var requestContent = new StringContent(
+                JsonConvert.SerializeObject(user.ToUserRequestDto()),
+                Encoding.UTF8,
+                "application/json");
+
+            var response = await _httpClient.PutAsync($"{USERS_ENDPOINT}/{CONTENT_CREATOR_ENDPOINT}", requestContent);
+
+            return response.IsSuccessStatusCode;
+
+            //TODO: exception handling!
         }
-        async Task<bool> IUserContract.EditEndUserAsync(Guid userId, EndUser user, string token)
+        async Task<bool> IUserContract.EditEndUserAsync(EndUser user, string token)
         {
-            throw new NotImplementedException();
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var requestContent = new StringContent(
+                JsonConvert.SerializeObject(user.ToUserRequestDto()),
+                Encoding.UTF8,
+                "application/json");
+
+            var response = await _httpClient.PutAsync($"{USERS_ENDPOINT}/{END_USER_ENDPOINT}", requestContent);
+
+            return response.IsSuccessStatusCode;
+
+            //TODO: exception handling!
         }
-        async Task<bool> IUserContract.RemoveUserAsync(Guid userId, string token)
+        async Task<bool> IUserContract.RemoveUserAsync(string token)
         {
-            throw new NotImplementedException();
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var response = await _httpClient.DeleteAsync(USERS_ENDPOINT);
+
+            return response.IsSuccessStatusCode;
+        }
+
+        async Task<bool> IUserContract.ChangeUserStatusAsync(string userName, bool status, string token) //TODO: Change userName to uuid?
+        {
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var requestContent = new StringContent(
+                JsonConvert.SerializeObject(status),
+                Encoding.UTF8,
+                "application/json");
+
+            var response = await _httpClient.PatchAsync($"{USERS_ENDPOINT}/{userName}/{USER_STATUS_ENDPOINT}", requestContent);
+
+            return response.IsSuccessStatusCode;
         }
     }
 }

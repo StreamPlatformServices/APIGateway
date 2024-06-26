@@ -1,7 +1,7 @@
 ﻿using APIGatewayRouting.Data;
 using System.ComponentModel.DataAnnotations;
 
-namespace APIGatewayControllers.DTO.Models
+namespace APIGatewayControllers.Models
 {
 
     public class ContentLicenseModel

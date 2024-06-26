@@ -48,6 +48,8 @@ namespace APIGatewayControllers.Middlewares
 
             var tokenValidationKey = await _authorizationContract.GetTokenPublicKey(); //TODO: Async????
 
+            //TODO: if null or empty
+
             rsa.ImportSubjectPublicKeyInfo(Convert.FromBase64String(tokenValidationKey), out _);
 
             _rsaSecurityKey = new RsaSecurityKey(rsa);

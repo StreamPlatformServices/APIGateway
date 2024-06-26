@@ -4,13 +4,14 @@ using APIGatewayControllers.DataMappers;
 using Microsoft.AspNetCore.Authorization;
 using APIGatewayRouting.Data;
 using APIGatewayControllers.Middlewares.Attributes;
-using APIGatewayControllers.DTO.Models;
-using APIGatewayControllers.DTO.Models.Responses;
+using APIGatewayControllers.Models.Requests;
+using APIGatewayControllers.Models.Responses;
+using APIGatewayControllers.Models.Base;
 
 namespace APIGateway.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("user")]
     public class UserController : ControllerBase
     {
 
@@ -25,14 +26,62 @@ namespace APIGateway.Controllers
             _userRouter = userRouter;
         }
 
+        [Authorize(Roles = "Admin")]
+        [HttpGet("all")]
+        public async Task<ActionResult> GetAllUserAsync()
+        {
+            var response = new Response<UsersResponseModel>();
+            //TODO: change to IEnumerable?????
+            string jwt = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+
+            try
+            {
+                var users = await _userRouter.GetAllUsersAsync(jwt);
+                if (users == null || !users.Any())
+                {
+                    response.Message = "Users list is empty!";
+                    return NotFound();
+                }
+                response.Result = users.ToUsersResponseModel();
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while getting the user data.");
+                response.Message = $"An error occurred while getting the user data. Error message: {ex.Message}";
+                return StatusCode(500, response);
+            }
+        }
+
+        [Authorize]
+        [HttpGet()]
+        public async Task<ActionResult> GetUserDataAsync()
+        {
+            var response = new Response<UserResponseModel> { Result = new UserResponseModel() };
+            string jwt = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+
+            try
+            {
+                var user = await _userRouter.GetUserAsync(jwt);
+                response.Result = user.ToUserResponseModel();
+                return NotFound(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while getting the user data.");
+                response.Message = $"An error occurred while getting the user data. Error message: {ex.Message}";
+                return StatusCode(500, response);
+            }
+        }
+
         [UpdateJwtPublicKey]
-        [HttpPost("SignIn", Name = "SignIn")]  
-        public async Task<ActionResult> SignInAsync(string email, string password) //TODO: Json Body/ change userName to email!!!!!!
+        [HttpPost("sign-in")]  
+        public async Task<ActionResult> SignInAsync([FromBody] UserModel requestData)
         {
             var response = new Response<SignInDataResponse> { Result = new SignInDataResponse() };
             try
             {
-                response.Result.Token = await _userRouter.SignInAsync(email, password);
+                response.Result.Token = await _userRouter.SignInAsync(requestData.Email, requestData.Password);
                 
                 if (string.IsNullOrEmpty(response.Result.Token))
                 {
@@ -41,7 +90,7 @@ namespace APIGateway.Controllers
                     return StatusCode(500, response);
                 }
 
-                response.Message = $"User {email} signed in succesfully.";
+                response.Message = $"User {requestData.Email} signed in succesfully.";
                 return Ok(response);
             }
             catch (Exception ex)
@@ -54,11 +103,11 @@ namespace APIGateway.Controllers
             }
         }
 
-        [HttpPost("AddContentCreator", Name = "AddContentCreator")]
-        public async Task<ActionResult> AddContentCreatorAsync(ContentCreatorUserModel userModel)
+        [HttpPost("content-creator")]
+        public async Task<ActionResult> AddContentCreatorAsync(ContentCreatorUserModel userModel) //TODO: ContentCreatorRequestModel??
         {
             //TODO: UserData validator
-            //TODO: Check if user exist
+            //TODO: Check if user exist ??
             var response = new Response<bool> { Result = false };
             try
             {
@@ -68,7 +117,7 @@ namespace APIGateway.Controllers
                     response.Message = $"Operation add user can not be completed at the moment. Pleas try again later or contact the administrator for more information.";
                     return StatusCode(500, response);
                 }
-                response.Message = $"User {userModel.Name} has been added successfully.";
+                response.Message = $"User {userModel.UserName} has been added successfully.";
                 response.Result = true;
                 return Ok(response);
             }
@@ -80,11 +129,11 @@ namespace APIGateway.Controllers
             }
         }
 
-        [HttpPost("AddEndUser", Name = "AddEndUser")]
+        [HttpPost("end-user")]
         public async Task<ActionResult> AddEndUserAsync(EndUserModel userModel)
         {
             //TODO: UserData validator
-            //TODO: Check if user exist
+            //TODO: Check if user exist ??
             var response = new Response<bool> { Result = false };
             try
             {
@@ -94,7 +143,7 @@ namespace APIGateway.Controllers
                     response.Message = $"Operation add user can not be completed at the moment. Pleas try again later or contact the administrator for more information.";
                     return StatusCode(500, response);
                 }
-                response.Message = $"User {userModel.Name} has been added successfully.";
+                response.Message = $"User {userModel.UserName} has been added successfully.";
                 response.Result = true;
                 return Ok(response);
             }
@@ -106,102 +155,24 @@ namespace APIGateway.Controllers
             }
         }
 
-        [Authorize]
-        [HttpGet("Get", Name = "GetUserData")]
-        public async Task<ActionResult> GetUserDataAsync(string userName)
-        {
-            var response = new Response<UserModel> { Result = new UserModel() };
-            string jwt = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-
-            try
-            {
-                var user = await _userRouter.GetUserByNameAsync(userName, jwt);
-
-                if (user is EndUser endUser)
-                {
-                    response.Result = endUser.ToEndUserModel();
-                    return Ok(response);
-                }
-
-                if (user is ContentCreatorUser contentCreatorUser)
-                {
-                    response.Result = contentCreatorUser.ToContentCreatorUserModel();
-                    return Ok(response);
-                }
-
-                response.Message = $"User with name: {userName} doesn't exist!";
-                return NotFound(response);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while getting the user data.");
-                response.Message = $"An error occurred while getting the user data. Error message: {ex.Message}";
-                return StatusCode(500, response);
-            }
-        }
-
-        //TODO: Get all users for admin
-
-        [Authorize]
-        [HttpDelete("Delete", Name = "RemoveUser")]
-        public async Task<ActionResult> RemoveUserAsync(string userName) //TODO: Rozkmin jeszcze czy wyszukujemy po userName (moze + data) 
-        {
-            //TODO: User == null ???
-
-            var response = new Response<bool> { Result = false };
-            string jwt = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-
-            try
-            {
-                var user = await _userRouter.GetUserByNameAsync(userName, jwt);
-                if (user == null)
-                {
-                    response.Message = $"User with name: {userName} doesn't exist!";
-                    return NotFound();
-                }
-
-                bool result = await _userRouter.RemoveUserAsync(user.Uuid, jwt);
-                if (!result)
-                {
-                    response.Message = $"Operation remove user can not be completed at the moment. Pleas try again later or contact the administrator for more information.";
-                    return StatusCode(500, response);
-                }
-
-                response.Message = $"User {userName} has been removed successfully.";
-                response.Result = true;
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while removing a user.");
-                response.Message = $"An error occurred while removing a user. Error message: {ex.Message}";
-                return StatusCode(500, response);
-            }
-        }
+        
 
         [Authorize(Roles = "EndUser")]
-        [HttpPut("EditEndUser", Name = "EditEndUser")]
-        public async Task<ActionResult> EditEndUserAsync(string userName, EndUserModel userModel)
+        [HttpPut("end-user")]
+        public async Task<ActionResult> EditEndUserAsync(EndUserModel userModel)
         {
             var response = new Response<bool> { Result = false };
             string jwt = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
             try
             {
-                var user = await _userRouter.GetUserByNameAsync(userName, jwt);
-                if (user is null or not EndUser)
-                {
-                    response.Message = $"User with name: {userName} doesn't exist!";
-                    return NotFound(response);
-                }
-
-                bool result = await _userRouter.EditEndUserAsync(user.Uuid, userModel.ToEndUser(), jwt);
+                bool result = await _userRouter.EditEndUserAsync(userModel.ToEndUser(), jwt);
                 if (!result)
                 {
                     response.Message = $"Operation edit user can not be completed at the moment. Pleas try again later or contact the administrator for more information.";
                     return StatusCode(500, response);
                 }
 
-                response.Message = $"User data for {userName} has been changed successfully.";
+                response.Message = $"User data has been changed successfully.";
                 response.Result = true;
                 return Ok(response);
             }
@@ -215,29 +186,22 @@ namespace APIGateway.Controllers
         }
 
         [Authorize(Roles = "ContentCreator")]
-        [HttpPut("EditContentCreatorUser", Name = "EditContentCreatorUser")]
-        public async Task<ActionResult> EditContentCreatorUserAsync(string userName, ContentCreatorUserModel userModel)
+        [HttpPut("content-creator")]
+        public async Task<ActionResult> EditContentCreatorUserAsync(ContentCreatorUserModel userModel)
         {
             var response = new Response<bool> { Result = false };
             string jwt = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
 
             try
             {
-                var user = await _userRouter.GetUserByNameAsync(userName, jwt);
-                if (user is null or not ContentCreatorUser)
-                {
-                    response.Message = $"User with name: {userName} doesn't exist!";
-                    return NotFound(response);
-                }
-
-                bool result = await _userRouter.EditContentCreatorUserAsync(user.Uuid, userModel.ToContentCreatorUser(), jwt);
+                bool result = await _userRouter.EditContentCreatorUserAsync(userModel.ToContentCreatorUser(), jwt);
                 if (!result)
                 {
                     response.Message = $"Operation edit user can not be completed at the moment. Pleas try again later or contact the administrator for more information.";
                     return StatusCode(500, response);
                 }
 
-                response.Message = $"User data for {userName} has been changed successfully.";
+                response.Message = $"User data has been changed successfully.";
                 response.Result = true;
                 return Ok(response);
             }
@@ -246,6 +210,34 @@ namespace APIGateway.Controllers
 
                 _logger.LogError(ex, "An error occurred while editing a user.");
                 response.Message = $"An error occurred while editing a user. Error message: {ex.Message}";
+                return StatusCode(500, response);
+            }
+        }
+
+        [Authorize]
+        [HttpDelete()]
+        public async Task<ActionResult> RemoveUserAsync() //TODO: add password param
+        {
+            var response = new Response<bool> { Result = false };
+            string jwt = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+
+            try
+            {
+                bool result = await _userRouter.RemoveUserAsync(jwt);
+                if (!result)
+                {
+                    response.Message = $"Operation remove user can not be completed at the moment. Pleas try again later or contact the administrator for more information.";
+                    return StatusCode(500, response);
+                }
+
+                response.Message = $"User has been removed successfully.";
+                response.Result = true;
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while removing a user.");
+                response.Message = $"An error occurred while removing a user. Error message: {ex.Message}";
                 return StatusCode(500, response);
             }
         }

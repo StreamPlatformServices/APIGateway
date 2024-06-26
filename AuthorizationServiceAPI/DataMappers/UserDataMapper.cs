@@ -1,26 +1,110 @@
 ﻿using AuthorizationServiceAPI.Models;
 using APIGatewayRouting.Data;
+using System.Runtime.CompilerServices;
+using AuthorizationServiceAPI.Models.Requests;
+using AuthorizationServiceAPI.Models.Responses;
 
 namespace AuthorizationServiceAPI.DataMappers
 {
     public static class UserDataMapper
     {
-        public static EndUser ToEndUser(this UserWithRolesDto model)
+        //TODO: Visitor pattern !!!!!
+        //TODO: Use dotnet mapper library
+        public static UserRequestDto ToUserRequestDto(this User model)
         {
-            return new EndUser
+            if (model is EndUser endUser)
             {
-                Uuid = model.ID,
-                Name = model.Name,
-                Login = "",
-                Password = "", //TODO: Remove
-                Mail = model.Email,
-                UserLevel = model.Roles.ToUserLevel(), //TODO: Validate??? 
+                return new EndUserRequestDto
+                {
+                    UserName = endUser.UserName,
+                    Email = endUser.Email,
+                    Password = endUser.Password
+                };
+            }
+
+            if (model is ContentCreatorUser contentCreatorUser)
+            {
+                return new ContentCreatorRequestDto
+                {
+                    UserName = contentCreatorUser.UserName,
+                    Email = contentCreatorUser.Email,
+                    Password = contentCreatorUser.Password,
+                    PhoneNumber = " //TODO: ",
+                    NIP = contentCreatorUser.NIP
+                };
+            }
+
+            return new UserRequestDto
+            {
+                Email = model.Email,
+                Password = model.Password
             };
         }
 
-        public static UserLevel ToUserLevel(this IEnumerable<string> roles)
+        public static IEnumerable<User> ToUsers(this IEnumerable<UserResponseDto> models)
         {
-            var role = roles.FirstOrDefault();
+            var users = new List<User>();
+            foreach (var model in models)
+            {
+                if (model.Role == "EndUser")
+                {
+                    users.Add(model.ToEndUser());
+                }
+
+                if (model.Role == "ContentCreator")
+                {
+                    users.Add(model.ToContentCreatorUser());
+                }
+            }
+            
+            return users;
+        }
+
+        public static User ToUser(this UserResponseDto model)
+        {
+            if (model.Role == "EndUser")
+            {
+                return model.ToEndUser();
+            }
+
+            if (model.Role == "ContentCreator")
+            {
+                return model.ToContentCreatorUser();
+            }
+
+            //TODO: Log error??
+            return null;
+            
+        }
+
+        public static EndUser ToEndUser(this UserResponseDto model)
+        {
+            return new EndUser
+            {
+                //Uuid = model.ID, //TODO: Get id from authorization service.. Is it needed???
+                UserName = model.UserName,
+                Email = model.Email,
+                UserLevel = model.Role.ToUserLevel(), //TODO: Validate??? 
+                IsActive = model.IsActive
+            };
+        }
+
+        public static ContentCreatorUser ToContentCreatorUser(this UserResponseDto model)
+        {
+            return new ContentCreatorUser
+            {
+                //Uuid = model.ID,
+                UserName = model.UserName,
+                Email = model.Email,
+                UserLevel = model.Role.ToUserLevel(), //TODO: Validate??? 
+                IsActive = model.IsActive,
+                PhoneNumber = model.PhoneNumber,
+                NIP = model.NIP
+            };
+        }
+
+        public static UserLevel ToUserLevel(this string role)
+        {
             if (string.IsNullOrEmpty(role))
             {
                 return UserLevel.Unknown;
@@ -37,45 +121,9 @@ namespace AuthorizationServiceAPI.DataMappers
                 default: return UserLevel.Unknown;
             }
         }
+        
 
-        //public static EndUserModel ToEndUserModel(this EndUser entity)
-        //{
-        //    return new EndUserModel
-        //    {
-        //        Name = entity.Name,
-        //        Login = entity.Login,
-        //        Password = entity.Password,
-        //        Mail = entity.Mail,
-        //        UserLevel = entity.UserLevel
-        //    };
-        //}
-
-        public static ContentCreatorUser ToContentCreatorUser(this UserWithRolesDto model)
-        {
-            return new ContentCreatorUser
-            {
-                Uuid = model.ID,
-                Name = model.Name,
-                Login = "",
-                Password = "", //TODO: Remove
-                Mail = model.Email,
-                UserLevel = model.Roles.ToUserLevel(), //TODO: Validate??? 
-                NIP = ""
-            };
-        }
-
-        //public static ContentCreatorUserModel ToContentCreatorUserModel(this ContentCreatorUser entity)
-        //{
-        //    return new ContentCreatorUserModel
-        //    {
-        //        Name = entity.Name,
-        //        Login = entity.Login,
-        //        Password = entity.Password,
-        //        Mail = entity.Mail,
-        //        UserLevel = entity.UserLevel,
-        //        NIP = entity.NIP
-        //    };
-        //}
+        
     }
 
 }

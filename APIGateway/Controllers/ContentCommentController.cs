@@ -2,7 +2,7 @@
 using APIGatewayRouting.Routing.Interfaces;
 using APIGatewayControllers.DataMappers;
 using APIGatewayRouting.Data;
-using APIGatewayControllers.DTO.Models;
+using APIGatewayControllers.Models;
 
 namespace APIGateway.Controllers
 {

@@ -1,6 +1,6 @@
 ﻿using APIGatewayRouting.Data;
 using APIGatewayRouting.IntegrationContracts;
-using AuthorizationServiceAPI.Models;
+using AuthorizationServiceAPI.Models.Responses;
 using Newtonsoft.Json;
 using System.Text;
 
@@ -10,8 +10,8 @@ namespace AuthorizationServiceAPI
     {
 
         private readonly HttpClient _httpClient;
-        private const string SIGN_IN_ENDPOINT = "api/login";
-        private const string GET_JWT_PUBLIC_KEY_ENDPOINT = "api/publickey";
+        private const string SIGN_IN_ENDPOINT = "auth/login";
+        private const string GET_JWT_PUBLIC_KEY_ENDPOINT = "auth/publickey";
 
         public AuthorizationContract(HttpClient httpClient)
         {
@@ -40,7 +40,7 @@ namespace AuthorizationServiceAPI
             }
             
             var responseContent = await response.Content.ReadAsStringAsync();
-            var signInResponse = JsonConvert.DeserializeObject<ResponseModel<LoginResponseDto>>(responseContent);
+            var signInResponse = JsonConvert.DeserializeObject<ResponseModel<AuthorizeResponseDto>>(responseContent);
 
             return signInResponse.Result.Token;
         }

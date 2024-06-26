@@ -1,8 +1,7 @@
 ﻿
 using System.ComponentModel.DataAnnotations;
-using APIGatewayControllers.DTO.Models;
 
-namespace APIGatewayControllers.DTO.Models.Base
+namespace APIGatewayControllers.Models.Base
 {
     public class ContentModel
     {

@@ -1,4 +1,4 @@
-﻿using APIGatewayControllers.DTO.Models;
+﻿using APIGatewayControllers.Models;
 using APIGatewayRouting.Data;
 using System.ComponentModel;
 

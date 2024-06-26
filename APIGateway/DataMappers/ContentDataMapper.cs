@@ -1,7 +1,6 @@
-﻿using APIGatewayControllers.DTO.Models;
-using APIGatewayControllers.DTO.Models.Base;
-using APIGatewayControllers.DTO.Models.Requests;
-using APIGatewayControllers.DTO.Models.Responses;
+﻿using APIGatewayControllers.Models;
+using APIGatewayControllers.Models.Requests;
+using APIGatewayControllers.Models.Responses;
 using APIGatewayRouting.Data;
 using ContentMetadataServiceMock.Persistance.Data;
 

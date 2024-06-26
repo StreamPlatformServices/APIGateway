@@ -3,7 +3,7 @@ using APIGatewayRouting.Routing.Interfaces;
 using APIGatewayControllers.DataMappers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
-using APIGatewayControllers.DTO.Models.Requests;
+using APIGatewayControllers.Models.Requests;
 
 namespace APIGateway.Controllers
 {
@@ -39,7 +39,7 @@ namespace APIGateway.Controllers
                     return NotFound();
                 }
 
-                return Ok(content.Select(x => x.ToContentModel()));
+                return Ok(content.Select(x => x.ToGetAllContentsResponseModel()));
             }
             catch (Exception ex)
             {
@@ -59,7 +59,7 @@ namespace APIGateway.Controllers
                     return NotFound();
                 }
 
-                return Ok(content.ToContentModel());
+                return Ok(content.ToGetContentResponseModel());
             }
             catch (Exception ex)
             {

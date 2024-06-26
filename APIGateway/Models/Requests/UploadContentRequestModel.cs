@@ -1,8 +1,9 @@
 ﻿
 using System.ComponentModel.DataAnnotations;
-using APIGatewayControllers.DTO.Models.Base;
+using APIGatewayControllers.Models;
+using APIGatewayControllers.Models.Base;
 
-namespace APIGatewayControllers.DTO.Models.Requests
+namespace APIGatewayControllers.Models.Requests
 {
     public class UploadContentRequestModel : ContentModel
     {

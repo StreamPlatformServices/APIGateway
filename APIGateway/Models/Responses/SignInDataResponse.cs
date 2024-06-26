@@ -1,4 +1,4 @@
-﻿namespace APIGatewayControllers.DTO.Models.Responses
+﻿namespace APIGatewayControllers.Models.Responses
 {
     public class SignInDataResponse //TODO: Why in model??
     {

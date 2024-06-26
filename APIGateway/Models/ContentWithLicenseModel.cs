@@ -1,7 +1,7 @@
-﻿using APIGatewayControllers.DTO.Models.Requests;
+﻿using APIGatewayControllers.Models.Requests;
 using System.ComponentModel.DataAnnotations;
 
-namespace APIGatewayControllers.DTO.Models
+namespace APIGatewayControllers.Models
 {
     public class ContentWithLicenseModel
     {

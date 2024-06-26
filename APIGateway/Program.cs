@@ -24,10 +24,7 @@ var externalServicesSettings = builder.Configuration.GetSection("ExternalService
 //TODO: Move all extension methods to this component
 //TODO: ExtractSettings inside the methods (no params needed)
 builder.Services.AddAuthorizationServiceAPI("https://localhost:7124");//externalServicesSettings.AuthorizationServiceAPISettings.BaseUrl);
-//builder.Services.AddJWTConfiguration(externalServicesSettings.JwtSettings.Issuer, externalServicesSettings.JwtSettings.Audience); //TODO: Commented for testing
-
-//builder.Services.AddDbContext<ContentMetadataDatabaseContext>(options =>
-//            options.UseSqlite("Data Source=content.db"));
+builder.Services.AddJWTConfiguration(externalServicesSettings.JwtSettings.Issuer, externalServicesSettings.JwtSettings.Audience); //TODO: Commented for testing
 
 builder.Services.AddContentMetadataMock("databasePath"); //TODO:
 

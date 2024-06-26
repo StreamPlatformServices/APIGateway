@@ -29,36 +29,44 @@ namespace APIGatewayRouting.Routing.Interfaces
             return token;
         }
 
-        async public Task<bool> AddContentCreatorUserAsync(ContentCreatorUser user)
+        async Task<bool> IUserRouter.AddContentCreatorUserAsync(ContentCreatorUser user)
         {
             return await _userContract.AddContentCreatorUserAsync(user);
         }
 
-        async public Task<bool> AddEndUserAsync(EndUser user)
+        async Task<bool> IUserRouter.AddEndUserAsync(EndUser user)
         {
             return await _userContract.AddEndUserAsync(user);
         }
 
-        async public Task<bool> EditEndUserAsync(Guid userId, EndUser user, string token)
+        async Task<bool> IUserRouter.EditEndUserAsync(EndUser user, string token)
         {
-            return await _userContract.EditEndUserAsync(userId, user, token);
+            return await _userContract.EditEndUserAsync(user, token);
         }
 
-        async public Task<bool> EditContentCreatorUserAsync(Guid userId, ContentCreatorUser user, string token)
+        async Task<bool> IUserRouter.EditContentCreatorUserAsync(ContentCreatorUser user, string token)
         {
-            return await _userContract.EditContentCreatorUserAsync(userId, user, token);
+            return await _userContract.EditContentCreatorUserAsync(user, token);
         }
 
-        async Task<bool> IUserRouter.RemoveUserAsync(Guid Uuid, string token)
+        async Task<bool> IUserRouter.RemoveUserAsync(string token)
         {
-            return await _userContract.RemoveUserAsync(Uuid, token);
+            return await _userContract.RemoveUserAsync(token);
         }
 
-        async Task<User> IUserRouter.GetUserByNameAsync(string userName, string token)
+        async Task<User> IUserRouter.GetUserAsync(string token)
         {
-            return await _userContract.GetUserByNameAsync(userName, token);
+            return await _userContract.GetUserAsync(token);
         }
 
-        
+        async Task<IEnumerable<User>> IUserRouter.GetAllUsersAsync(string token)
+        {
+            return await _userContract.GetAllUsersAsync(token);
+        }
+
+        async Task<bool> IUserRouter.ChangeUserStatusAsync(string userName, bool status, string token)
+        {
+            return await _userContract.ChangeUserStatusAsync(userName, status, token);
+        }
     }
 }

@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace APIGatewayControllers.DTO.Models
+namespace APIGatewayControllers.Models
 {
     public class ContentCommentModel
     {
-       // public Guid Uuid { set; get; }
+        //public Guid Uuid { set; get; }
         //[Required]
         public string Body { set; get; }
         public DateTime CreationTime { set; get; }

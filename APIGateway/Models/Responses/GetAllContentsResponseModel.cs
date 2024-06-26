@@ -1,7 +1,6 @@
-﻿
-using APIGatewayControllers.DTO.Models.Base;
+﻿using APIGatewayControllers.Models.Base;
 
-namespace APIGatewayControllers.DTO.Models.Responses
+namespace APIGatewayControllers.Models.Responses
 {
     public class GetAllContentsResponseModel : ContentModel
     {
