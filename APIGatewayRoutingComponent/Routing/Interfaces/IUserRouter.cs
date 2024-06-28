@@ -8,7 +8,7 @@ namespace APIGatewayRouting.Routing.Interfaces
         Task<User> GetUserAsync(string token);
         Task<bool> AddContentCreatorUserAsync(ContentCreatorUser user);
         Task<bool> AddEndUserAsync(EndUser user);
-        Task<bool> RemoveUserAsync(string token);
+        Task<bool> RemoveUserAsync(string password, string token);
         Task<bool> EditEndUserAsync(EndUser user, string token);
         Task<bool> EditContentCreatorUserAsync(ContentCreatorUser user, string token);
         Task<string> SignInAsync(string login, string password);

@@ -49,9 +49,9 @@ namespace APIGatewayRouting.Routing.Interfaces
             return await _userContract.EditContentCreatorUserAsync(user, token);
         }
 
-        async Task<bool> IUserRouter.RemoveUserAsync(string token)
+        async Task<bool> IUserRouter.RemoveUserAsync(string password, string token)
         {
-            return await _userContract.RemoveUserAsync(token);
+            return await _userContract.RemoveUserAsync(password, token);
         }
 
         async Task<User> IUserRouter.GetUserAsync(string token)

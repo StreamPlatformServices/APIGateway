@@ -1,6 +1,6 @@
 ﻿namespace APIGatewayControllers.Models.Responses
 {
-    public class SignInDataResponse //TODO: Why in model??
+    public class SignInResponseModel
     {
         public string Token { get; set; }
     }

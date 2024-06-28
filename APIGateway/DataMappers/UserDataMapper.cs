@@ -1,4 +1,5 @@
-﻿using APIGatewayControllers.Models.Base;
+﻿using APIGatewayControllers.DTO.Models.Requests;
+using APIGatewayControllers.Models.Base;
 using APIGatewayControllers.Models.Responses;
 using APIGatewayRouting.Data;
 
@@ -6,7 +7,6 @@ namespace APIGatewayControllers.DataMappers
 {
     public static class UserDataMapper
     {
-        //TODO: REMOVE unused methods
         public static UsersResponseModel ToUsersResponseModel(this IEnumerable<User> entities)
         {
             var users = new List<UserResponseModel>(); //TODO: copy or reference???
@@ -43,12 +43,24 @@ namespace APIGatewayControllers.DataMappers
                     NIP = contentCreator.NIP
                 };
             }
-            
+
+            if (entity is AdminUser adminUser)
+            {
+                return new UserResponseModel
+                {
+                    UserName = adminUser.UserName,
+                    Email = adminUser.Email,
+                    UserLevel = UserLevel.Administrator,
+                    IsActive = adminUser.IsActive,
+                };
+            }
+
+
             //TODO: >>>???
             return null;
         }
 
-        public static EndUser ToEndUser(this EndUserModel model)
+        public static EndUser ToEndUser(this EndUserRequestModel model)
         {
             return new EndUser
             {
@@ -60,21 +72,11 @@ namespace APIGatewayControllers.DataMappers
             };
         }
 
-        public static EndUserModel ToEndUserModel(this EndUser entity)
-        {
-            return new EndUserModel
-            {
-                UserName = entity.UserName,
-                Password = entity.Password,
-                Email = entity.Email
-            };
-        }
-
-        public static ContentCreatorUser ToContentCreatorUser(this ContentCreatorUserModel model)
+        public static ContentCreatorUser ToContentCreatorUser(this ContentCreatorRequestModel model)
         {
             return new ContentCreatorUser
             {
-                Uuid = Guid.Empty,
+                Uuid = Guid.NewGuid(),
                 UserName = model.UserName,
                 Password = model.Password,
                 Email = model.Email,
@@ -83,18 +85,7 @@ namespace APIGatewayControllers.DataMappers
                 NIP = model.NIP
             };
         }
-
-        public static ContentCreatorUserModel ToContentCreatorUserModel(this ContentCreatorUser entity)
-        {
-            return new ContentCreatorUserModel
-            {
-                UserName = entity.UserName,
-                Password = entity.Password,
-                Email = entity.Email,
-                PhoneNumber = entity.PhoneNumber,
-                NIP = entity.NIP
-            };
-        }
+        
     }
 
 }

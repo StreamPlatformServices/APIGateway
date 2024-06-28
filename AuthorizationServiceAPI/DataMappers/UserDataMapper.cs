@@ -55,6 +55,11 @@ namespace AuthorizationServiceAPI.DataMappers
                 {
                     users.Add(model.ToContentCreatorUser());
                 }
+
+                if (model.Role == "Admin")
+                {
+                    users.Add(model.ToAdminUser());
+                }
             }
             
             return users;
@@ -72,11 +77,26 @@ namespace AuthorizationServiceAPI.DataMappers
                 return model.ToContentCreatorUser();
             }
 
+            if (model.Role == "Admin")
+            {
+                return model.ToAdminUser();
+            }
+
             //TODO: Log error??
             return null;
             
         }
-
+        public static AdminUser ToAdminUser(this UserResponseDto model)
+        {
+            return new AdminUser
+            {
+                //Uuid = model.ID, //TODO: Get id from authorization service.. Is it needed???
+                UserName = model.UserName,
+                Email = model.Email,
+                UserLevel = model.Role.ToUserLevel(), //TODO: Validate??? 
+                IsActive = model.IsActive
+            };
+        }
         public static EndUser ToEndUser(this UserResponseDto model)
         {
             return new EndUser

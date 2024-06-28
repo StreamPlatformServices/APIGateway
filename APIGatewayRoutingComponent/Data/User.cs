@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace APIGatewayRouting.Data
+namespace APIGatewayRouting.Data //TODO: change namespace to Entities
 {
+
     public enum UserLevel //TODO: enums in seperate files
     {
         Unknown,

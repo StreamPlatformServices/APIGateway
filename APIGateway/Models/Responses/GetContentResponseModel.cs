@@ -1,6 +1,5 @@
 ﻿
 using System.ComponentModel.DataAnnotations;
-using APIGatewayControllers.Models;
 using APIGatewayControllers.Models.Base;
 
 namespace APIGatewayControllers.Models.Responses

@@ -79,7 +79,11 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "APIGateway API V1");
+        c.RoutePrefix = string.Empty; // Make Swagger UI the root page
+    });
 }
 
 app.UseMiddleware<JwtConfigMiddleware>();

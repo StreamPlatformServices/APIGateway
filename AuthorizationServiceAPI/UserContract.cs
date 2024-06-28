@@ -123,20 +123,34 @@ namespace AuthorizationServiceAPI
 
             //TODO: exception handling!
         }
-        async Task<bool> IUserContract.RemoveUserAsync(string token)
+        async Task<bool> IUserContract.RemoveUserAsync(string password, string token)
         {
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-            var response = await _httpClient.DeleteAsync(USERS_ENDPOINT);
+            var requestContent = new StringContent(
+                JsonConvert.SerializeObject(new { password }),
+                Encoding.UTF8,
+                "application/json");
+
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Delete,
+                RequestUri = new Uri(_httpClient.BaseAddress, USERS_ENDPOINT),
+                Content = requestContent
+            };
+
+            var response = await _httpClient.SendAsync(request);
 
             return response.IsSuccessStatusCode;
         }
 
         async Task<bool> IUserContract.ChangeUserStatusAsync(string userName, bool status, string token) //TODO: Change userName to uuid?
         {
+            var isActive = status;
+
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var requestContent = new StringContent(
-                JsonConvert.SerializeObject(status),
+                JsonConvert.SerializeObject(new { isActive }),
                 Encoding.UTF8,
                 "application/json");
 
