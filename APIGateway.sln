@@ -21,9 +21,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthorizationServiceAPI", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StreamGatewayMock", "StreamGatewayMock\StreamGatewayMock.csproj", "{0EC07E62-C6BD-495E-A0AE-4E55D6FD5B88}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APIGatewayUT", "APIGatewayUT\APIGatewayUT.csproj", "{A623AB13-456B-4188-A590-ECA2F0C05B61}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APIGatewayUT", "APIGatewayUT\APIGatewayUT.csproj", "{A623AB13-456B-4188-A590-ECA2F0C05B61}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContentMetadataServiceMock", "ContentMetadataServiceMock\ContentMetadataServiceMock.csproj", "{13DD5F98-BCDC-4048-913C-F57BF276AB75}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContentMetadataServiceMock", "ContentMetadataServiceMock\ContentMetadataServiceMock.csproj", "{13DD5F98-BCDC-4048-913C-F57BF276AB75}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APIGatewayCoreUtilities", "APIGatewayCoreUtilities\APIGatewayCoreUtilities.csproj", "{A9105383-D4D3-443C-80FB-D83A43B2A7AE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,6 +61,10 @@ Global
 		{13DD5F98-BCDC-4048-913C-F57BF276AB75}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{13DD5F98-BCDC-4048-913C-F57BF276AB75}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{13DD5F98-BCDC-4048-913C-F57BF276AB75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9105383-D4D3-443C-80FB-D83A43B2A7AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9105383-D4D3-443C-80FB-D83A43B2A7AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9105383-D4D3-443C-80FB-D83A43B2A7AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9105383-D4D3-443C-80FB-D83A43B2A7AE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -73,6 +79,7 @@ Global
 		{0EC07E62-C6BD-495E-A0AE-4E55D6FD5B88} = {E11EFBF4-BC1F-465B-9EFB-ACC4E799401F}
 		{A623AB13-456B-4188-A590-ECA2F0C05B61} = {A9DF1399-85A5-42EB-82FC-2B2F2B6E1FB1}
 		{13DD5F98-BCDC-4048-913C-F57BF276AB75} = {E11EFBF4-BC1F-465B-9EFB-ACC4E799401F}
+		{A9105383-D4D3-443C-80FB-D83A43B2A7AE} = {3F8D5891-5360-4A4D-84D6-4AE74AEF31F6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BEF128E7-167F-4F52-BC68-C39D70551F30}

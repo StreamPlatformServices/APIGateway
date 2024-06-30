@@ -5,17 +5,17 @@ using APIGatewayRouting.Data;
 
 namespace APIGatewayControllers.DataMappers
 {
-    public static class UserDataMapper
+    public static class UserDataMapper //TODO: Check enum Unknown option handling
     {
         public static UsersResponseModel ToUsersResponseModel(this IEnumerable<User> entities)
         {
-            var users = new List<UserResponseModel>(); //TODO: copy or reference???
+            var users = new List<UserResponseModel>();
             foreach (var entity in entities)
             {
                 users.Add(entity.ToUserResponseModel());
             }
 
-            return new UsersResponseModel { Users = users};
+            return new UsersResponseModel { Users = users, Count = users.Count };
         }
 
         public static UserResponseModel ToUserResponseModel(this User entity)
@@ -55,9 +55,13 @@ namespace APIGatewayControllers.DataMappers
                 };
             }
 
-
-            //TODO: >>>???
-            return null;
+            return new UserResponseModel
+            {
+                UserName = entity.UserName,
+                Email = entity.Email,
+                UserLevel = UserLevel.Unknown,
+                IsActive = entity.IsActive,
+            };
         }
 
         public static EndUser ToEndUser(this EndUserRequestModel model)

@@ -1,10 +1,7 @@
 using APIGatewayRouting.IntegrationContracts;
 using APIGatewayRouting.Routing;
 using APIGatewayRouting.Routing.Interfaces;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 using StreamGatewayMock;
-using System.Security.Cryptography;
 using AuthorizationServiceAPI.ServiceCollectionExtensions;
 using ContentMetadataServiceMock.ServiceCollectionExtensions;
 using APIGatewayControllers.Configuration;
@@ -12,17 +9,20 @@ using APIGatewayControllers.ServiceCollectionExtensions;
 using APIGatewayControllers.Middlewares;
 using Microsoft.OpenApi.Models;
 using ContentMetadataServiceMock;
-using ContentMetadataServiceMock.Persistance;
-using Microsoft.EntityFrameworkCore;
+using APIGatewayControllers.DTO.Models.Requests;
+using APIGatewayControllers.Models.Requests;
+using APIGatewayControllers.Validators;
+using FluentValidation;
 
-//TODO: NOW: 1. Create migrations, 2. Test GetAllContents 
+//TODO: Create separate component Main? , change name from Controllers to Web or WebApi?
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 var externalServicesSettings = builder.Configuration.GetSection("ExternalServicesCommunication").Get<ExternalServicesCommunicationSettings>();
-//TODO: Move all extension methods to this component
-//TODO: ExtractSettings inside the methods (no params needed)
+//TODO: Move all extension methods to this component??
+//TODO: ExtractSettings inside the methods (no params needed) ?? 
+
 builder.Services.AddAuthorizationServiceAPI("https://localhost:7124");//externalServicesSettings.AuthorizationServiceAPISettings.BaseUrl);
 builder.Services.AddJWTConfiguration(externalServicesSettings.JwtSettings.Issuer, externalServicesSettings.JwtSettings.Audience); //TODO: Commented for testing
 
@@ -36,10 +36,15 @@ builder.Services.AddTransient<IUserRouter, UserRouter>();
 builder.Services.AddTransient<IContentCommentRouter, ContentCommentRouter>();
 builder.Services.AddTransient<IStreamUriRouter, StreamUriRouter>();
 
+// Register validators //TODO: Move to extension method
+builder.Services.AddTransient<IValidator<EndUserRequestModel>, EndUserRequestModelValidator>();
+builder.Services.AddTransient<IValidator<ContentCreatorRequestModel>, ContentCreatorRequestModelValidator>();
+builder.Services.AddTransient<IValidator<SignInRequestModel>, SignInRequestModelValidator>();
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+//builder.Services.AddSwaggerGen();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "APIGateway API", Version = "v1" });
@@ -82,7 +87,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "APIGateway API V1");
-        c.RoutePrefix = string.Empty; // Make Swagger UI the root page
+        //c.RoutePrefix = string.Empty; // Make Swagger UI the root page
     });
 }
 

@@ -3,11 +3,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace APIGatewayControllers.Models.Requests
 {
-    public class SignInRequestModel
+    public class RemoveUserRequestModel
     {
-        [Required]
-        [EmailAddress]
-        public string Email { set; get; }
         [Required]
         public string Password { get; set; }
     }

@@ -1,6 +1,10 @@
 ﻿using APIGatewayControllers.Middlewares.Attributes;
+using APIGatewayControllers.Models.Responses;
+using APIGatewayCoreUtilities.CommonExceptions;
 using APIGatewayRouting.IntegrationContracts;
 using Microsoft.IdentityModel.Tokens;
+using NBitcoin.Secp256k1;
+using System.Net;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text.Json;
@@ -30,7 +34,7 @@ namespace APIGatewayControllers.Middlewares
                 var updateJwtPublicKeyAttribute = endpoint.Metadata.GetMetadata<UpdateJwtPublicKey>();
                 if (updateJwtPublicKeyAttribute != null)
                 {
-                    await UpdateRsaSecurityPublicKey();
+                    await UpdateRsaSecurityPublicKey(context);
                 }
             }
 
@@ -42,17 +46,37 @@ namespace APIGatewayControllers.Middlewares
             return _rsaSecurityKey;
         }
 
-        private async Task UpdateRsaSecurityPublicKey()
+        private async Task UpdateRsaSecurityPublicKey(HttpContext context)
         {
-            var rsa = RSA.Create();
+            try
+            {
+                var rsa = RSA.Create();
 
-            var tokenValidationKey = await _authorizationContract.GetTokenPublicKey(); //TODO: Async????
+                var tokenValidationKey = await _authorizationContract.GetTokenPublicKey(); //TODO: Async????
 
-            //TODO: if null or empty
+                if (string.IsNullOrEmpty(tokenValidationKey))
+                {
+                    context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                    await context.Response.WriteAsync("JWT public key is null or empty.");
+                    return;
+                }
 
-            rsa.ImportSubjectPublicKeyInfo(Convert.FromBase64String(tokenValidationKey), out _);
+                rsa.ImportSubjectPublicKeyInfo(Convert.FromBase64String(tokenValidationKey), out _);
 
-            _rsaSecurityKey = new RsaSecurityKey(rsa);
+                _rsaSecurityKey = new RsaSecurityKey(rsa);
+            }
+            catch (UnauthorizedException ex)
+            {
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                await context.Response.WriteAsync($"Unauthorized access. Error message: {ex.Message}");
+                return;
+            }
+            catch (Exception ex)
+            {
+                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                await context.Response.WriteAsync($"An error occurred while updating RSA security public key. Error message: {ex.Message}");
+                return;
+            }
         }
     }
 }

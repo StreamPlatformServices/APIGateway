@@ -6,6 +6,7 @@ namespace APIGatewayControllers.DTO.Models.Requests
     public class EndUserRequestModel 
     {
         [Required]
+        [EmailAddress]
         public string Email { set; get; }
         
         [Required]

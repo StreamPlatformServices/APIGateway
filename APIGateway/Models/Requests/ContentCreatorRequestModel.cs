@@ -6,6 +6,7 @@ namespace APIGatewayControllers.DTO.Models.Requests
     public class ContentCreatorRequestModel
     {
         [Required]
+        [EmailAddress]
         public string Email { set; get; }
         [Required]
         public string Password { get; set; }
