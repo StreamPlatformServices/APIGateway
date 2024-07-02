@@ -12,41 +12,18 @@ namespace ContentMetadataServiceMock.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "LicenseRules",
-                columns: table => new
-                {
-                    Uuid = table.Column<Guid>(type: "TEXT", nullable: false),
-                    UploadTime = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    ExpirationTime = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    MaxDevicesCount = table.Column<int>(type: "INTEGER", nullable: false),
-                    LicenseType = table.Column<int>(type: "INTEGER", nullable: false),
-                    LicenseStatus = table.Column<int>(type: "INTEGER", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_LicenseRules", x => x.Uuid);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Contents",
                 columns: table => new
                 {
                     ContentId = table.Column<Guid>(type: "TEXT", nullable: false),
                     Title = table.Column<string>(type: "TEXT", maxLength: 255, nullable: false),
                     Description = table.Column<string>(type: "TEXT", nullable: false),
-                    ReleaseDate = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Duration = table.Column<int>(type: "INTEGER", nullable: true),
-                    LicenseRulesId = table.Column<Guid>(type: "TEXT", nullable: false)
+                    ReleaseDate = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    Duration = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Contents", x => x.ContentId);
-                    table.ForeignKey(
-                        name: "FK_Contents_LicenseRules_LicenseRulesId",
-                        column: x => x.LicenseRulesId,
-                        principalTable: "LicenseRules",
-                        principalColumn: "Uuid",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -69,16 +46,36 @@ namespace ContentMetadataServiceMock.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "LicenseRules",
+                columns: table => new
+                {
+                    Uuid = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Prize = table.Column<int>(type: "INTEGER", nullable: false),
+                    Type = table.Column<int>(type: "INTEGER", nullable: false),
+                    Duration = table.Column<int>(type: "INTEGER", nullable: false),
+                    ContentId = table.Column<Guid>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LicenseRules", x => x.Uuid);
+                    table.ForeignKey(
+                        name: "FK_LicenseRules_Contents_ContentId",
+                        column: x => x.ContentId,
+                        principalTable: "Contents",
+                        principalColumn: "ContentId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_ContentComments_ContentId",
                 table: "ContentComments",
                 column: "ContentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Contents_LicenseRulesId",
-                table: "Contents",
-                column: "LicenseRulesId",
-                unique: true);
+                name: "IX_LicenseRules_ContentId",
+                table: "LicenseRules",
+                column: "ContentId");
         }
 
         /// <inheritdoc />
@@ -88,10 +85,10 @@ namespace ContentMetadataServiceMock.Migrations
                 name: "ContentComments");
 
             migrationBuilder.DropTable(
-                name: "Contents");
+                name: "LicenseRules");
 
             migrationBuilder.DropTable(
-                name: "LicenseRules");
+                name: "Contents");
         }
     }
 }

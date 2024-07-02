@@ -52,13 +52,10 @@ namespace ContentMetadataServiceMock.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("Duration")
+                    b.Property<int>("Duration")
                         .HasColumnType("INTEGER");
 
-                    b.Property<Guid>("LicenseRulesId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("ReleaseDate")
+                    b.Property<DateTime?>("ReleaseDate")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Title")
@@ -67,9 +64,6 @@ namespace ContentMetadataServiceMock.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("ContentId");
-
-                    b.HasIndex("LicenseRulesId")
-                        .IsUnique();
 
                     b.ToTable("Contents");
                 });
@@ -80,22 +74,21 @@ namespace ContentMetadataServiceMock.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("ExpirationTime")
+                    b.Property<Guid>("ContentId")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("LicenseStatus")
+                    b.Property<int>("Duration")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("LicenseType")
+                    b.Property<int>("Prize")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("MaxDevicesCount")
+                    b.Property<int>("Type")
                         .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("UploadTime")
-                        .HasColumnType("TEXT");
 
                     b.HasKey("Uuid");
+
+                    b.HasIndex("ContentId");
 
                     b.ToTable("LicenseRules");
                 });
@@ -111,26 +104,22 @@ namespace ContentMetadataServiceMock.Migrations
                     b.Navigation("Content");
                 });
 
-            modelBuilder.Entity("ContentMetadataServiceMock.Persistance.Data.ContentData", b =>
+            modelBuilder.Entity("ContentMetadataServiceMock.Persistance.Data.LicenseRulesData", b =>
                 {
-                    b.HasOne("ContentMetadataServiceMock.Persistance.Data.LicenseRulesData", "LicenseRules")
-                        .WithOne("Content")
-                        .HasForeignKey("ContentMetadataServiceMock.Persistance.Data.ContentData", "LicenseRulesId")
+                    b.HasOne("ContentMetadataServiceMock.Persistance.Data.ContentData", "Content")
+                        .WithMany("LicenseRules")
+                        .HasForeignKey("ContentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("LicenseRules");
+                    b.Navigation("Content");
                 });
 
             modelBuilder.Entity("ContentMetadataServiceMock.Persistance.Data.ContentData", b =>
                 {
                     b.Navigation("Comments");
-                });
 
-            modelBuilder.Entity("ContentMetadataServiceMock.Persistance.Data.LicenseRulesData", b =>
-                {
-                    b.Navigation("Content")
-                        .IsRequired();
+                    b.Navigation("LicenseRules");
                 });
 #pragma warning restore 612, 618
         }
