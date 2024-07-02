@@ -7,7 +7,7 @@ namespace APIGatewayRouting.Routing.Interfaces
         /// <summary>
         /// Returns null if the rate limit has been reached.
         /// </summary>
-        Task<IEnumerable<User>> GetAllUsersAsync(string token);
+        Task<IEnumerable<User>?> GetAllUsersAsync(string token);
 
         /// <summary>
         /// Returns null if the rate limit has been reached.
@@ -42,7 +42,7 @@ namespace APIGatewayRouting.Routing.Interfaces
         /// <summary>
         /// Returns null if the rate limit has been reached.
         /// </summary>
-        Task<string> SignInAsync(string login, string password);
+        Task<string?> SignInAsync(string login, string password);
 
         /// <summary>
         /// Returns false if the rate limit has been reached.

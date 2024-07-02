@@ -4,7 +4,6 @@ using APIGatewayRouting.Routing.Interfaces;
 using StreamGatewayMock;
 using AuthorizationServiceAPI.ServiceCollectionExtensions;
 using ContentMetadataServiceMock.ServiceCollectionExtensions;
-using APIGatewayControllers.Configuration;
 using APIGatewayControllers.ServiceCollectionExtensions;
 using APIGatewayControllers.Middlewares;
 using Microsoft.OpenApi.Models;
@@ -14,21 +13,18 @@ using APIGatewayControllers.Models.Requests;
 using APIGatewayControllers.Validators;
 using FluentValidation;
 
-//TODO: Create separate component Main? , change name from Controllers to Web or WebApi?
+//TODO: Add all extension methods for serviceCollection to Main Component
+//TODO: Separate Main Component from Controllers Component
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-var externalServicesSettings = builder.Configuration.GetSection("ExternalServicesCommunication").Get<ExternalServicesCommunicationSettings>();
-//TODO: Move all extension methods to this component??
-//TODO: ExtractSettings inside the methods (no params needed) ?? 
+builder.Services.AddCommonConfiguration(builder.Configuration);
+builder.Services.AddAuthorizationServiceAPI();
+builder.Services.AddJWTConfiguration();
+builder.Services.AddContentMetadataMock(); 
 
-builder.Services.AddAuthorizationServiceAPI("https://localhost:7124");//externalServicesSettings.AuthorizationServiceAPISettings.BaseUrl);
-builder.Services.AddJWTConfiguration(externalServicesSettings.JwtSettings.Issuer, externalServicesSettings.JwtSettings.Audience); //TODO: Commented for testing
-
-builder.Services.AddContentMetadataMock("databasePath"); //TODO:
-
-builder.Services.AddTransient<IStreamUriContract, StreamGatewayContract>(); //TODO: How to not depend on StreamGatewayMock. It is not possible. We need the whole config in one place
+//TODO: Move to extension methods
+builder.Services.AddTransient<IStreamUriContract, StreamGatewayContract>();
 builder.Services.AddTransient<IContentMetadataContract, ContentMetadataContract>();
 
 builder.Services.AddTransient<IContentRouter, ContentRouter>();

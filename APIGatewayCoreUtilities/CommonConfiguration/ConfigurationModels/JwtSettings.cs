@@ -1,4 +1,4 @@
-﻿namespace APIGatewayControllers.Configuration
+﻿namespace APIGatewayCoreUtilities.CommonConfiguration.ConfigurationModels
 {
     public class JwtSettings
     {

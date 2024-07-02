@@ -1,14 +1,20 @@
-﻿using APIGatewayRouting.Data;
+﻿using APIGatewayCoreUtilities.CommonConfiguration.ConfigurationModels.MockSettings;
 using APIGatewayRouting.IntegrationContracts;
+using Microsoft.Extensions.Options;
 using Nethereum.Web3;
 
 namespace StreamGatewayMock
 {
     public class StreamGatewayContract : IStreamUriContract
     {
+        private readonly StreamGatewayMockSettings _options;
+        public StreamGatewayContract(IOptions<StreamGatewayMockSettings> options) 
+        {
+            _options = options.Value;
+        }  
         Task<string> IStreamUriContract.GetStreamUri(Guid contentId)
         {
-            return Task.FromResult(@"https://cdn.flowplayer.com/a30bd6bc-f98b-47bc-abf5-97633d4faea0/v-de3f6ca7-2db3-4689-8160-0f574a5996ad.mp4");
+            return Task.FromResult(_options.MockedStreamUrl);
         }
 
         async Task<string> IStreamUriContract.GetUploadUri(Guid contentId)

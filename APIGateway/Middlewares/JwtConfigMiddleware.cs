@@ -1,13 +1,10 @@
 ﻿using APIGatewayControllers.Middlewares.Attributes;
-using APIGatewayControllers.Models.Responses;
 using APIGatewayCoreUtilities.CommonExceptions;
 using APIGatewayRouting.IntegrationContracts;
 using Microsoft.IdentityModel.Tokens;
-using NBitcoin.Secp256k1;
-using System.Net;
-using System.Security.Claims;
+
 using System.Security.Cryptography;
-using System.Text.Json;
+
 
 namespace APIGatewayControllers.Middlewares
 {
