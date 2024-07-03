@@ -127,7 +127,7 @@ namespace AuthorizationServiceAPI
             }
         }
 
-        async Task<bool> IUserContract.AddContentCreatorUserAsync(ContentCreatorUser user)
+        async Task IUserContract.AddContentCreatorUserAsync(ContentCreatorUser user)
         {
             try 
             { 
@@ -140,7 +140,7 @@ namespace AuthorizationServiceAPI
 
                 if (response.IsSuccessStatusCode)
                 {
-                    return true;
+                    return;
                 }
 
                 if (response.StatusCode == HttpStatusCode.Conflict)
@@ -162,7 +162,7 @@ namespace AuthorizationServiceAPI
                 throw;
             }
         }
-        async Task<bool> IUserContract.AddEndUserAsync(EndUser user)
+        async Task IUserContract.AddEndUserAsync(EndUser user)
         {
             try
             { 
@@ -175,7 +175,7 @@ namespace AuthorizationServiceAPI
 
                 if (response.IsSuccessStatusCode)
                 {
-                    return true;
+                    return;
                 }
 
                 if (response.StatusCode == HttpStatusCode.Conflict)
@@ -198,7 +198,7 @@ namespace AuthorizationServiceAPI
             }
         }
 
-        async Task<bool> IUserContract.EditContentCreatorUserAsync(ContentCreatorUser user, string token)
+        async Task IUserContract.EditContentCreatorUserAsync(ContentCreatorUser user, string token)
         {
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
@@ -213,7 +213,7 @@ namespace AuthorizationServiceAPI
 
                 if (response.IsSuccessStatusCode)
                 {
-                    return true;
+                    return;
                 }
 
                 switch (response.StatusCode)
@@ -242,7 +242,7 @@ namespace AuthorizationServiceAPI
                 throw;
             }
         }
-        async Task<bool> IUserContract.EditEndUserAsync(EndUser user, string token) //TODO: change return type to void 
+        async Task IUserContract.EditEndUserAsync(EndUser user, string token)
         {
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
@@ -257,7 +257,7 @@ namespace AuthorizationServiceAPI
 
                 if (response.IsSuccessStatusCode)
                 {
-                    return true;
+                    return;
                 }
 
                 switch (response.StatusCode)
@@ -286,7 +286,7 @@ namespace AuthorizationServiceAPI
                 throw;
             }
         }
-        async Task<bool> IUserContract.RemoveUserAsync(string password, string token)
+        async Task IUserContract.RemoveUserAsync(string password, string token)
         {
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
@@ -308,7 +308,7 @@ namespace AuthorizationServiceAPI
 
                 if (response.IsSuccessStatusCode)
                 {
-                    return true;
+                    return;
                 }
 
                 switch (response.StatusCode)
@@ -338,7 +338,7 @@ namespace AuthorizationServiceAPI
             }
         }
 
-        async Task<bool> IUserContract.ChangeUserStatusAsync(string userName, bool status, string token) //TODO: Change userName to uuid?
+        async Task IUserContract.ChangeUserStatusAsync(string userName, bool status, string token) //TODO: Change userName to uuid?
         {
             var isActive = status;
 
@@ -355,7 +355,7 @@ namespace AuthorizationServiceAPI
 
                 if (response.IsSuccessStatusCode)
                 {
-                    return true;
+                    return;
                 }
 
                 switch (response.StatusCode)

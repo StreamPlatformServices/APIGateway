@@ -41,7 +41,7 @@ namespace AuthorizationServiceAPI //TODO: Log.Information, Log.Debug
                     var signInResponse = JsonConvert.DeserializeObject<ResponseModel<AuthorizeResponseDto>>(responseContent);
 
                     var token = signInResponse?.Result?.Token;
-                    if (token == null)
+                    if (string.IsNullOrEmpty(token))
                     {
                         _logger.LogError("Deserialized token object is empty.");
                         throw new Exception("Token object is empty after deserialization");
@@ -86,7 +86,7 @@ namespace AuthorizationServiceAPI //TODO: Log.Information, Log.Debug
                     var jwtPublicKeyResponse = JsonConvert.DeserializeObject<ResponseModel<string>>(responseContent);
 
                     var jwtPublicKey = jwtPublicKeyResponse?.Result;
-                    if (jwtPublicKey == null)
+                    if (string.IsNullOrEmpty(jwtPublicKey))
                     {
                         _logger.LogError($"Failed to get JWT public key. Key is empty after deserialization. Respnonse reason phrase: {response.ReasonPhrase}");
                         throw new Exception("JWT public key is empty after deserialization");
@@ -96,7 +96,7 @@ namespace AuthorizationServiceAPI //TODO: Log.Information, Log.Debug
                 }
 
 
-                _logger.LogError($"Failed to get JWT public key. Respnonse reason phrase: {response.ReasonPhrase}");
+                _logger.LogError($"Failed to get JWT public key. Response reason phrase: {response.ReasonPhrase}");
                 throw new UnauthorizedException($"{response.ReasonPhrase}");
 
             }

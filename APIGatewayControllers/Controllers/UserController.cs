@@ -101,7 +101,7 @@ namespace APIGateway.Controllers
                 if (string.IsNullOrEmpty(response.Result.Token))
                 {
                     HttpContext.Response.Headers.Append("Retry-After", "3600"); //TODO: Configurable rate limiting
-                    _logger.LogWarning("Get all users. Too many requests.");
+                    _logger.LogWarning("Sign in. Too many requests.");
                     return StatusCode((int)HttpStatusCode.TooManyRequests, response);
                 }
 
@@ -147,7 +147,7 @@ namespace APIGateway.Controllers
                 if (!response.Result)
                 {
                     HttpContext.Response.Headers.Append("Retry-After", "3600"); //TODO: Configurable rate limiting
-                    _logger.LogWarning("Get all users. Too many requests.");
+                    _logger.LogWarning("Add content creator. Too many requests.");
                     return StatusCode((int)HttpStatusCode.TooManyRequests, response);
                 }
 
@@ -163,8 +163,8 @@ namespace APIGateway.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while adding a user..");
-                response.Message = $"An error occurred while adding a user.. Error message: {ex.Message}";
+                _logger.LogError(ex, "An error occurred while adding a user.");
+                response.Message = $"An error occurred while adding a user. Error message: {ex.Message}";
                 return StatusCode((int)HttpStatusCode.InternalServerError, response);
             }
         }
@@ -189,7 +189,7 @@ namespace APIGateway.Controllers
                 if (!response.Result)
                 {
                     HttpContext.Response.Headers.Append("Retry-After", "3600"); //TODO: Configurable rate limiting
-                    _logger.LogWarning("Get all users. Too many requests.");
+                    _logger.LogWarning("Add end user. Too many requests.");
                     return StatusCode((int)HttpStatusCode.TooManyRequests, response);
                 }
 
@@ -236,7 +236,7 @@ namespace APIGateway.Controllers
                 if (!result)
                 {
                     HttpContext.Response.Headers.Append("Retry-After", "3600"); //TODO: Configurable rate limiting
-                    _logger.LogWarning("Get all users. Too many requests.");
+                    _logger.LogWarning("Edit end user. Too many requests.");
                     return StatusCode((int)HttpStatusCode.TooManyRequests, response);
                 }
 
@@ -292,7 +292,7 @@ namespace APIGateway.Controllers
                 if (!result)
                 {
                     HttpContext.Response.Headers.Append("Retry-After", "3600"); //TODO: Configurable rate limiting
-                    _logger.LogWarning("Get all users. Too many requests.");
+                    _logger.LogWarning("Edit content creator. Too many requests.");
                     return StatusCode((int)HttpStatusCode.TooManyRequests, response);
                 }
 
@@ -348,7 +348,7 @@ namespace APIGateway.Controllers
                 if (!result)
                 {
                     HttpContext.Response.Headers.Append("Retry-After", "3600"); //TODO: Configurable rate limiting
-                    _logger.LogWarning("Get all users. Too many requests.");
+                    _logger.LogWarning("Remove user. Too many requests.");
                     return StatusCode((int)HttpStatusCode.TooManyRequests, response);
                 }
 
@@ -450,7 +450,7 @@ namespace APIGateway.Controllers
                 if (!response.Result)
                 {
                     HttpContext.Response.Headers.Append("Retry-After", "3600"); //TODO: Configurable rate limiting
-                    _logger.LogWarning("Get all users. Too many requests.");
+                    _logger.LogWarning("Update user status. Too many requests.");
                     return StatusCode((int)HttpStatusCode.TooManyRequests, response);
                 }
 

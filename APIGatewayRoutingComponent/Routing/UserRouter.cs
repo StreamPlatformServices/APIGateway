@@ -1,5 +1,4 @@
 ﻿using APIGatewayRouting.Data;
-using APIGatewayRouting.Helpers.Interfaces;
 using APIGatewayRouting.IntegrationContracts;
 
 namespace APIGatewayRouting.Routing.Interfaces
@@ -31,27 +30,37 @@ namespace APIGatewayRouting.Routing.Interfaces
 
         async Task<bool> IUserRouter.AddContentCreatorUserAsync(ContentCreatorUser user)
         {
-            return await _userContract.AddContentCreatorUserAsync(user);
+            await _userContract.AddContentCreatorUserAsync(user);
+
+            return true;
         }
 
         async Task<bool> IUserRouter.AddEndUserAsync(EndUser user)
         {
-            return await _userContract.AddEndUserAsync(user);
+            await _userContract.AddEndUserAsync(user);
+
+            return true;
         }
 
         async Task<bool> IUserRouter.EditEndUserAsync(EndUser user, string token)
         {
-            return await _userContract.EditEndUserAsync(user, token);
+            await _userContract.EditEndUserAsync(user, token);
+
+            return true;
         }
 
         async Task<bool> IUserRouter.EditContentCreatorUserAsync(ContentCreatorUser user, string token)
         {
-            return await _userContract.EditContentCreatorUserAsync(user, token);
+            await _userContract.EditContentCreatorUserAsync(user, token);
+
+            return true;
         }
 
         async Task<bool> IUserRouter.RemoveUserAsync(string password, string token)
         {
-            return await _userContract.RemoveUserAsync(password, token);
+            await _userContract.RemoveUserAsync(password, token);
+
+            return true;
         }
 
         async Task<User> IUserRouter.GetUserAsync(string token)
@@ -66,7 +75,9 @@ namespace APIGatewayRouting.Routing.Interfaces
 
         async Task<bool> IUserRouter.ChangeUserStatusAsync(string userName, bool status, string token)
         {
-            return await _userContract.ChangeUserStatusAsync(userName, status, token);
+            await _userContract.ChangeUserStatusAsync(userName, status, token);
+            
+            return true;
         }
     }
 }
