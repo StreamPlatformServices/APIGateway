@@ -1,17 +1,12 @@
 ﻿using APIGatewayCoreUtilities.CommonConfiguration.ConfigurationModels;
 using APIGatewayRouting.IntegrationContracts;
-using Microsoft.Extensions.DependencyInjection;
+using AuthorizationServiceAPI;
 using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace AuthorizationServiceAPI.ServiceCollectionExtensions
+namespace APIGatewayMain.ServiceCollectionExtensions
 {
 
-    public static class AuthorizationServiceAPIServiceCollectionExtensions
+    public static class AuthorizationServiceAPIExtensions
     {
         public static IServiceCollection AddAuthorizationServiceAPI(this IServiceCollection services) 
         {

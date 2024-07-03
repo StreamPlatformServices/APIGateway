@@ -9,6 +9,8 @@ using APIGatewayControllers.DTO.Models.Requests;
 using APIGatewayCoreUtilities.CommonExceptions;
 using System.Net;
 using APIGatewayRouting.Data;
+using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Http;
 
 namespace APIGateway.Controllers
 {

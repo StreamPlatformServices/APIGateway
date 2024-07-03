@@ -4,10 +4,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace APIGatewayControllers.ServiceCollectionExtensions
+namespace APIGatewayMain.ServiceCollectionExtensions
 {
-   
-    public static class ControllersServiceCollectionExtensions
+    public static class ControllersExtensions
     {
         public static IServiceCollection AddJWTConfiguration(this IServiceCollection services)
         {
@@ -40,5 +39,4 @@ namespace APIGatewayControllers.ServiceCollectionExtensions
             return services;
         }
     }
-    
 }

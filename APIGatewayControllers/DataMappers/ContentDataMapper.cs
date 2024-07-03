@@ -2,7 +2,6 @@
 using APIGatewayControllers.Models.Requests;
 using APIGatewayControllers.Models.Responses;
 using APIGatewayRouting.Data;
-using ContentMetadataServiceMock.Persistance.Data;
 
 namespace APIGatewayControllers.DataMappers
 {

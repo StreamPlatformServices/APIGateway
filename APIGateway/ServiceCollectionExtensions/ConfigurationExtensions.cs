@@ -1,7 +1,7 @@
 ﻿using APIGatewayCoreUtilities.CommonConfiguration.ConfigurationModels.MockSettings;
 using APIGatewayCoreUtilities.CommonConfiguration.ConfigurationModels;
 
-namespace APIGatewayControllers.ServiceCollectionExtensions
+namespace APIGatewayMain.ServiceCollectionExtensions
 {
     internal static class ConfigurationExtensions
     {

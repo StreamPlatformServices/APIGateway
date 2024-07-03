@@ -3,6 +3,7 @@ using APIGatewayRouting.Routing.Interfaces;
 using APIGatewayControllers.DataMappers;
 using APIGatewayRouting.Data;
 using APIGatewayControllers.Models;
+using Microsoft.Extensions.Logging;
 
 namespace APIGateway.Controllers
 {

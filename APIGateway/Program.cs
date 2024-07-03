@@ -1,55 +1,32 @@
-using APIGatewayRouting.IntegrationContracts;
-using APIGatewayRouting.Routing;
-using APIGatewayRouting.Routing.Interfaces;
-using StreamGatewayMock;
-using AuthorizationServiceAPI.ServiceCollectionExtensions;
-using ContentMetadataServiceMock.ServiceCollectionExtensions;
-using APIGatewayControllers.ServiceCollectionExtensions;
 using APIGatewayControllers.Middlewares;
 using Microsoft.OpenApi.Models;
-using ContentMetadataServiceMock;
-using APIGatewayControllers.DTO.Models.Requests;
-using APIGatewayControllers.Models.Requests;
-using APIGatewayControllers.Validators;
-using FluentValidation;
-
-//TODO: Add all extension methods for serviceCollection to Main Component
-//TODO: Separate Main Component from Controllers Component
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using APIGatewayControllers;
+using APIGatewayMain.ServiceCollectionExtensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCommonConfiguration(builder.Configuration);
 builder.Services.AddAuthorizationServiceAPI();
 builder.Services.AddJWTConfiguration();
-builder.Services.AddContentMetadataMock(); 
+builder.Services.AddContentMetadataMock();
+builder.Services.AddStreamGatewayMock();
+builder.Services.AddRoutingComponent();
+builder.Services.AddValidators();
 
-//TODO: Move to extension methods
-builder.Services.AddTransient<IStreamUriContract, StreamGatewayContract>();
-builder.Services.AddTransient<IContentMetadataContract, ContentMetadataContract>();
+builder.Services.AddControllers().PartManager.ApplicationParts
+    .Add(new AssemblyPart(typeof(ControllersAssemblyMarker).Assembly));
 
-builder.Services.AddTransient<IContentRouter, ContentRouter>();
-builder.Services.AddTransient<IUserRouter, UserRouter>();
-builder.Services.AddTransient<IContentCommentRouter, ContentCommentRouter>();
-builder.Services.AddTransient<IStreamUriRouter, StreamUriRouter>();
-
-// Register validators //TODO: Move to extension method
-builder.Services.AddTransient<IValidator<EndUserRequestModel>, EndUserRequestModelValidator>();
-builder.Services.AddTransient<IValidator<ContentCreatorRequestModel>, ContentCreatorRequestModelValidator>();
-builder.Services.AddTransient<IValidator<SignInRequestModel>, SignInRequestModelValidator>();
-
-builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-//builder.Services.AddSwaggerGen();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "APIGateway API", Version = "v1" });
 
-    // Configure Bearer authorization
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,
-        Description = "Enter JWT token",
+        Description = "Enter JWT token with format: {Bearer <token>}",
         Name = "Authorization",
         Type = SecuritySchemeType.ApiKey,
         Scheme = "Bearer"
@@ -76,7 +53,6 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

@@ -1,15 +1,14 @@
 ﻿using APIGatewayCoreUtilities.CommonConfiguration.ConfigurationModels.MockSettings;
 using APIGatewayRouting.IntegrationContracts;
+using ContentMetadataServiceMock;
 using ContentMetadataServiceMock.Persistance;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
-
-namespace ContentMetadataServiceMock.ServiceCollectionExtensions
+namespace APIGatewayMain.ServiceCollectionExtensions
 {
 
-    public static class ContentMetadataServiceMockCollectionExtensions
+    public static class ContentMetadataServiceMockExtensions
     {
         public static IServiceCollection AddContentMetadataMock(this IServiceCollection services) 
         {

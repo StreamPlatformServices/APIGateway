@@ -4,6 +4,7 @@ using APIGatewayControllers.DataMappers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using APIGatewayControllers.Models.Requests;
+using Microsoft.Extensions.Logging;
 
 namespace APIGateway.Controllers
 {
