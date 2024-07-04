@@ -8,8 +8,7 @@ namespace AuthorizationServiceAPI.DataMappers
 {
     public static class UserDataMapper
     {
-        //TODO: Visitor pattern !!!!!
-        //TODO: Use dotnet mapper library
+        //TODO: Use dotnet mapper library??
         public static UserRequestDto ToUserRequestDto(this User model)
         {
             if (model is EndUser endUser)
@@ -29,7 +28,7 @@ namespace AuthorizationServiceAPI.DataMappers
                     UserName = contentCreatorUser.UserName,
                     Email = contentCreatorUser.Email,
                     Password = contentCreatorUser.Password,
-                    PhoneNumber = " //TODO: ",
+                    PhoneNumber = contentCreatorUser.PhoneNumber,
                     NIP = contentCreatorUser.NIP
                 };
             }

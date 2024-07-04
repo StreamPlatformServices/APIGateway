@@ -26,7 +26,7 @@ namespace APIGatewayRouting.Data //TODO: change namespace to Entities
     {
         public Guid Uuid { set; get; }
         public string UserName { set; get; }
-        public string Password { set; get; }
+        public string? Password { set; get; }
         public string Email { set; get; }
         public UserLevel UserLevel { set; get; }
         public bool IsActive { set; get; }

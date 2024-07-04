@@ -128,7 +128,7 @@ namespace APIGateway.Controllers
         }
 
         [HttpPost("content-creator")]
-        public async Task<ActionResult> AddContentCreatorAsync(ContentCreatorRequestModel userModel)
+        public async Task<ActionResult> AddContentCreatorAsync(AddContentCreatorRequestModel userModel)
         {
             if (!ModelState.IsValid)
             {
@@ -170,7 +170,7 @@ namespace APIGateway.Controllers
         }
 
         [HttpPost("end-user")]
-        public async Task<ActionResult> AddEndUserAsync(EndUserRequestModel userModel)
+        public async Task<ActionResult> AddEndUserAsync(AddEndUserRequestModel userModel)
         {
             if (!ModelState.IsValid)
             {
@@ -215,7 +215,7 @@ namespace APIGateway.Controllers
 
         [Authorize(Roles = "EndUser")]
         [HttpPut("end-user")]
-        public async Task<ActionResult> EditEndUserAsync(EndUserRequestModel userModel)
+        public async Task<ActionResult> EditEndUserAsync(UpdateEndUserRequestModel userModel)
         {
             if (!ModelState.IsValid)
             {
@@ -271,7 +271,7 @@ namespace APIGateway.Controllers
 
         [Authorize(Roles = "ContentCreator")]
         [HttpPut("content-creator")]
-        public async Task<ActionResult> EditContentCreatorUserAsync(ContentCreatorRequestModel userModel)
+        public async Task<ActionResult> EditContentCreatorUserAsync(UpdateContentCreatorRequestModel userModel)
         {
             if (!ModelState.IsValid)
             {

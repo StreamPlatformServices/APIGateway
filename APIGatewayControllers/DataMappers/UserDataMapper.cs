@@ -64,7 +64,7 @@ namespace APIGatewayControllers.DataMappers
             };
         }
 
-        public static EndUser ToEndUser(this EndUserRequestModel model)
+        public static EndUser ToEndUser(this AddEndUserRequestModel model)
         {
             return new EndUser
             {
@@ -76,7 +76,7 @@ namespace APIGatewayControllers.DataMappers
             };
         }
 
-        public static ContentCreatorUser ToContentCreatorUser(this ContentCreatorRequestModel model)
+        public static ContentCreatorUser ToContentCreatorUser(this AddContentCreatorRequestModel model)
         {
             return new ContentCreatorUser
             {
@@ -89,7 +89,33 @@ namespace APIGatewayControllers.DataMappers
                 NIP = model.NIP
             };
         }
-        
+
+        public static EndUser ToEndUser(this UpdateEndUserRequestModel model)
+        {
+            return new EndUser
+            {
+                Uuid = Guid.Empty,
+                UserName = model.UserName,
+                Password = null,
+                Email = model.Email,
+                UserLevel = UserLevel.EndUser
+            };
+        }
+
+        public static ContentCreatorUser ToContentCreatorUser(this UpdateContentCreatorRequestModel model)
+        {
+            return new ContentCreatorUser
+            {
+                Uuid = Guid.NewGuid(),
+                UserName = model.UserName,
+                Password = null,
+                Email = model.Email,
+                PhoneNumber = model.PhoneNumber,
+                UserLevel = UserLevel.ContentCreator,
+                NIP = model.NIP
+            };
+        }
+
     }
 
 }

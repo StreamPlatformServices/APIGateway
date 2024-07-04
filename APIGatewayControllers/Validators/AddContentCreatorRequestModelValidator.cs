@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace APIGatewayControllers.Validators
 {
-    public class ContentCreatorRequestModelValidator : AbstractValidator<ContentCreatorRequestModel> //TODO: decide about password format req
+    public class AddContentCreatorRequestModelValidator : AbstractValidator<AddContentCreatorRequestModel> //TODO: decide about password format req
     {
-        public ContentCreatorRequestModelValidator()
+        public AddContentCreatorRequestModelValidator()
         {
             RuleFor(x => x.Email)
             .NotEmpty().WithMessage("Email is required.")

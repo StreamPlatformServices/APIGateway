@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace APIGatewayControllers.Validators
 {
-    public class EndUserRequestModelValidator : AbstractValidator<EndUserRequestModel>
+    public class AddEndUserRequestModelValidator : AbstractValidator<AddEndUserRequestModel>
     {
-        public EndUserRequestModelValidator()
+        public AddEndUserRequestModelValidator()
         {
             RuleFor(x => x.Email)
             .NotEmpty().WithMessage("Email is required.")

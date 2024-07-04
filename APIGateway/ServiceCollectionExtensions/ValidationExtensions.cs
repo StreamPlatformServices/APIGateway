@@ -10,8 +10,8 @@ namespace APIGatewayMain.ServiceCollectionExtensions
     {
         public static IServiceCollection AddValidators(this IServiceCollection services) 
         {
-            services.AddTransient<IValidator<EndUserRequestModel>, EndUserRequestModelValidator>();
-            services.AddTransient<IValidator<ContentCreatorRequestModel>, ContentCreatorRequestModelValidator>();
+            services.AddTransient<IValidator<AddEndUserRequestModel>, AddEndUserRequestModelValidator>();
+            services.AddTransient<IValidator<AddContentCreatorRequestModel>, AddContentCreatorRequestModelValidator>();
             services.AddTransient<IValidator<SignInRequestModel>, SignInRequestModelValidator>();
             return services;
         }
