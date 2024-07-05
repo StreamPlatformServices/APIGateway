@@ -77,7 +77,7 @@ namespace AuthorizationServiceAPI
             }
         }
 
-        async Task<User> IUserContract.GetUserAsync(string token) 
+        public async Task<User> GetUserAsync(string token) 
         {
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
@@ -370,6 +370,81 @@ namespace AuthorizationServiceAPI
                         throw new ForbiddenException(response.ReasonPhrase);
                     default:
                         _logger.LogError($"Unexpected error in response while trying to change user status. Message: {response.ReasonPhrase}");
+                        throw new Exception(response.ReasonPhrase);
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                _logger.LogError(ex, "HTTP request error occurred while trying to change user status.");
+                throw;
+            }
+            catch (JsonException ex)
+            {
+                _logger.LogError(ex, "JSON deserialization error occurred while trying to change user status.");
+                throw;
+            }
+        }
+
+        async Task IUserContract.ChangePasswordAsync(string oldPassword, string newPassword, string token)
+        {
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            try
+            {
+                var user = await GetUserAsync(token);
+
+                if (user.Password != oldPassword)
+                {
+                    throw new UnauthorizedException("authorization failed. incorrect data.");
+                }
+
+                user.Password = newPassword;
+
+                var response = new HttpResponseMessage();
+
+                if(user.UserLevel == UserLevel.ContentCreator) 
+                {
+                    var requestContent = new StringContent(
+                    JsonConvert.SerializeObject(user.ToUserRequestDto()),
+                    Encoding.UTF8,
+                    "application/json");
+
+                    response = await _httpClient.PutAsync($"{USERS_ENDPOINT}/{CONTENT_CREATOR_ENDPOINT}", requestContent);
+                }
+
+                if (user.UserLevel == UserLevel.EndUser)
+                {
+                    var requestContent = new StringContent(
+                    JsonConvert.SerializeObject(user.ToUserRequestDto()),
+                    Encoding.UTF8,
+                    "application/json");
+
+                    response = await _httpClient.PutAsync($"{USERS_ENDPOINT}/{END_USER_ENDPOINT}", requestContent);
+                }
+
+                if (user.UserLevel == UserLevel.Unknown)
+                {
+                    _logger.LogError("User type is unknown");
+                    throw new Exception("User type is unknown");
+                }
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return;
+                }
+
+                switch (response.StatusCode)
+                {
+                    case HttpStatusCode.NotFound:
+                        throw new NotFoundException(response.ReasonPhrase);
+                    case HttpStatusCode.Unauthorized:
+                        _logger.LogWarning("Request should be blocked in APIGateway middleware!");
+                        throw new UnauthorizedException(response.ReasonPhrase);
+                    case HttpStatusCode.Forbidden:
+                        _logger.LogWarning("Request should be blocked in APIGateway middleware!");
+                        throw new ForbiddenException(response.ReasonPhrase);
+                    default:
+                        _logger.LogError($"Unexpected error in response while trying to change password. Message: {response.ReasonPhrase}");
                         throw new Exception(response.ReasonPhrase);
                 }
             }

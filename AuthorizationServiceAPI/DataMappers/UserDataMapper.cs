@@ -135,7 +135,7 @@ namespace AuthorizationServiceAPI.DataMappers
                     
                 case "ContentCreator": return UserLevel.ContentCreator;
 
-                case "Administrator": return UserLevel.Administrator;
+                case "Admin": return UserLevel.Administrator;
                     
                 default: return UserLevel.Unknown;
             }

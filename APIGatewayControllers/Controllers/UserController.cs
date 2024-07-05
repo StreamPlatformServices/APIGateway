@@ -326,6 +326,61 @@ namespace APIGateway.Controllers
         }
 
         [Authorize]
+        [HttpPatch("password")]
+        public async Task<ActionResult> ChangePasswordAsync([FromBody] ChangePasswordRequestModel requestData)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errorMessages = ModelState.Values
+                        .SelectMany(v => v.Errors)
+                        .Select(e => e.ErrorMessage);
+
+                _logger.LogWarning("Invalid model state for AddEndUserAsync: {Errors}", string.Join("; ", errorMessages));
+                return BadRequest(ModelState);
+            }
+
+            var response = new Response<bool> { Result = false };
+            string jwt = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+
+            try
+            {
+                bool result = await _userRouter.ChangePasswordAsync(requestData.OldPassword, requestData.NewPassword, jwt);
+                if (!result)
+                {
+                    HttpContext.Response.Headers.Append("Retry-After", "3600"); //TODO: Configurable rate limiting
+                    _logger.LogWarning("Remove user. Too many requests.");
+                    return StatusCode((int)HttpStatusCode.TooManyRequests, response);
+                }
+
+                _logger.LogInformation("User has been removed successfully.");
+                response.Message = $"User has been removed successfully.";
+                response.Result = true;
+                return Ok(response);
+            }
+            catch (NotFoundException ex)
+            {
+                response.Message = ex.Message;
+                return NotFound(response);
+            }
+            catch (UnauthorizedException ex)
+            {
+                response.Message = ex.Message;
+                return Unauthorized(response);
+            }
+            catch (ForbiddenException ex)
+            {
+                response.Message = ex.Message;
+                return StatusCode((int)HttpStatusCode.Forbidden, response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while removing a user.");
+                response.Message = $"An error occurred while removing a user. Error message: {ex.Message}";
+                return StatusCode((int)HttpStatusCode.InternalServerError, response);
+            }
+        }
+
+        [Authorize]
         [HttpDelete]
         public async Task<ActionResult> RemoveUserAsync([FromBody] RemoveUserRequestModel requestData) 
         {

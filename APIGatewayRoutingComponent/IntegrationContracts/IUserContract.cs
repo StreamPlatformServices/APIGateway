@@ -13,5 +13,6 @@ namespace APIGatewayRouting.IntegrationContracts
         Task EditEndUserAsync(EndUser user, string token);
         Task EditContentCreatorUserAsync(ContentCreatorUser user, string token);
         Task ChangeUserStatusAsync(string userName, bool status, string token);
+        Task ChangePasswordAsync(string oldPassword, string newPassword, string token);
     }
 }

@@ -32,6 +32,11 @@ namespace APIGatewayRouting.Routing.Interfaces
         /// <summary>
         /// Returns false if the rate limit has been reached.
         /// </summary>
+        Task<bool> ChangePasswordAsync(string oldPassword, string newPassword, string token);
+
+        /// <summary>
+        /// Returns false if the rate limit has been reached.
+        /// </summary>
         Task<bool> EditEndUserAsync(EndUser user, string token);
 
         /// <summary>

@@ -79,5 +79,12 @@ namespace APIGatewayRouting.Routing.Interfaces
             
             return true;
         }
+
+        async Task<bool> IUserRouter.ChangePasswordAsync(string oldPassword, string newPassword, string token)
+        {
+            await _userContract.ChangePasswordAsync(oldPassword, newPassword, token);
+
+            return true;
+        }
     }
 }
