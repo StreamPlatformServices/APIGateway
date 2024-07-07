@@ -1,4 +1,4 @@
-﻿using APIGatewayRouting.Data;
+﻿using APIGatewayEntities.Entities;
 using System.ComponentModel.DataAnnotations;
 
 namespace APIGatewayControllers.Models

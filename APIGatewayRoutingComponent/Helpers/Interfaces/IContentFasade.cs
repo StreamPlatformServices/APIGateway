@@ -1,6 +1,6 @@
-﻿using APIGatewayRouting.Data;
+﻿using APIGatewayEntities.Entities;
 
-namespace APIGatewayRouting.Helpers.Interfaces
+namespace APIGatewayEntities.Helpers.Interfaces
 {
     public interface IContentFasade
     {

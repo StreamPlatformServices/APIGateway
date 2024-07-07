@@ -1,5 +1,5 @@
 ﻿using APIGatewayControllers.Models;
-using APIGatewayRouting.Data;
+using APIGatewayEntities.Entities;
 using System.ComponentModel;
 
 namespace APIGatewayControllers.DataMappers

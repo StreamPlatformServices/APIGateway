@@ -1,28 +1,30 @@
-﻿using APIGatewayControllers.Models;
-using APIGatewayRouting.Data;
+﻿using APIGatewayControllers.Models.Requests.Comment;
+using APIGatewayControllers.Models.Responses.Comment;
+using APIGatewayEntities.Entities;
 
 namespace APIGatewayControllers.DataMappers
 {
     public static class ContentCommentDataMapper
     {
-        public static ContentComment ToContentComment(this ContentCommentModel model)
+        public static ContentComment ToContentComment(this ContentCommentRequestModel model)
         {
             return new ContentComment
             {
                 Uuid = Guid.NewGuid(),
+                ContentId = model.ContentId,
                 Body = model.Body,
-                CreationTime = model.CreationTime,
-                UserName = model.AuthorName
+                CreationTime = DateTime.UtcNow
             };
         }
 
-        public static ContentCommentModel ToContentCommentModel(this ContentComment entity)
+        public static ContentCommentResponseModel ToContentCommentModel(this ContentComment entity)
         {
-            return new ContentCommentModel
+            return new ContentCommentResponseModel
             {
+                Uuid = entity.Uuid,
                 Body = entity.Body,
                 CreationTime = entity.CreationTime,
-                AuthorName = entity.UserName
+                UserName = entity.UserName
             };
         }
     }

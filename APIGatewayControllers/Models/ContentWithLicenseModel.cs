@@ -1,4 +1,4 @@
-﻿using APIGatewayControllers.Models.Requests;
+﻿using APIGatewayControllers.Models.Requests.Content;
 using System.ComponentModel.DataAnnotations;
 
 namespace APIGatewayControllers.Models

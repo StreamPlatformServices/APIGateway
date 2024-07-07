@@ -3,15 +3,19 @@ using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using APIGatewayControllers;
 using APIGatewayMain.ServiceCollectionExtensions;
+using APIGatewayMain.ServiceCollectionExtensions.ComponentsExtensions;
+using AspNetCoreRateLimit;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCommonConfiguration(builder.Configuration);
+builder.Services.AddRateLimiting();
 builder.Services.AddAuthorizationServiceAPI();
 builder.Services.AddJWTConfiguration();
 builder.Services.AddContentMetadataMock();
 builder.Services.AddStreamGatewayMock();
-builder.Services.AddRoutingComponent();
+builder.Services.AddLicenseProxyApi();
+builder.Services.AddEntityComponent();
 builder.Services.AddValidators();
 
 builder.Services.AddControllers().PartManager.ApplicationParts
@@ -68,6 +72,8 @@ app.UseMiddleware<JwtConfigMiddleware>();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseIpRateLimiting();
 
 app.MapControllers();
 

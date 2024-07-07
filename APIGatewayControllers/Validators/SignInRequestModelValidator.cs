@@ -1,4 +1,4 @@
-﻿using APIGatewayControllers.Models.Requests;
+﻿using APIGatewayControllers.Models.Requests.User;
 using FluentValidation;
 
 namespace APIGatewayControllers.Validators

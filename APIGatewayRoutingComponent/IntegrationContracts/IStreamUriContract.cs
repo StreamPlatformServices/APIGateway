@@ -1,11 +1,11 @@
-﻿using APIGatewayRouting.Data;
+﻿using APIGatewayEntities.Entities;
 
-namespace APIGatewayRouting.IntegrationContracts
+namespace APIGatewayEntities.IntegrationContracts
 {
     public interface IStreamUriContract
     {
-        Task<string> GetStreamUri(Guid contentId);
-        Task<string> GetUploadUri(Guid contentId);
+        Task<string> GetStreamUriAsync(Guid contentId);
+        Task<string> GetUploadUriAsync(Guid contentId);
     }
 
 }

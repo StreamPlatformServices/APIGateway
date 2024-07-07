@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using APIGatewayRouting.Routing.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
+using APIGatewayEntities.IntegrationContracts;
 
 
 namespace APIGateway.Controllers
@@ -11,26 +11,26 @@ namespace APIGateway.Controllers
     public class StreamUriController : ControllerBase
     {
         private readonly ILogger<StreamUriController> _logger;
-        private readonly IStreamUriRouter _streamUriRouter;
+        private readonly IStreamUriContract _streamUriContract;
 
         public StreamUriController(
             ILogger<StreamUriController> logger,
-            IStreamUriRouter streamUriRouter)
+            IStreamUriContract streamUriContract)
         {
             _logger = logger;
-            _streamUriRouter = streamUriRouter;
+            _streamUriContract = streamUriContract;
         }
 
         [Authorize]
         [HttpGet("GetStreamUrl", Name = "GetStreamUrl")]
-        public async Task<ActionResult<string>> GetStreamUriAsync(string contentName)
+        public async Task<ActionResult<string>> GetStreamUriAsync(Guid contentName) //TODO: Request data
         {
             //TODO: Create JSON model for URI ????????!!!!!!!!!!!!!!!
             //TODO: Information if it is once or infinit!!!!!!!!!!!
 
             try
             {
-                var streamUri = await _streamUriRouter.GetStreamUriAsync(contentName);
+                var streamUri = await _streamUriContract.GetStreamUriAsync(contentName);
                 if (streamUri == null)
                 {
                     return StatusCode(500, $"Operation get stream url can not be completed at the moment. Pleas try again later or contact the administrator for more information.");
@@ -46,14 +46,14 @@ namespace APIGateway.Controllers
         }
 
         [HttpGet("GetUploadUri", Name = "GetUploadUri")]
-        public async Task<ActionResult<string>> GetUploadUriAsync(string contentName)
+        public async Task<ActionResult<string>> GetUploadUriAsync(Guid contentName)
         {
             //TODO: Create JSON model for URI ????????!!!!!!!!!!!!!!!
             //TODO: Information if it is once or infinit!!!!!!!!!!!
 
             try
             {
-                var streamUri = await _streamUriRouter.GetUploadUriAsync(contentName);
+                var streamUri = await _streamUriContract.GetUploadUriAsync(contentName);
                 if (streamUri == null)
                 {
                     return StatusCode(500, $"Operation get upload url can not be completed at the moment. Pleas try again later or contact the administrator for more information.");

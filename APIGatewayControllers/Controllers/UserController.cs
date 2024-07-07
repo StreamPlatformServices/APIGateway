@@ -1,16 +1,16 @@
 using Microsoft.AspNetCore.Mvc;
-using APIGatewayRouting.Routing.Interfaces;
 using APIGatewayControllers.DataMappers;
 using Microsoft.AspNetCore.Authorization;
 using APIGatewayControllers.Middlewares.Attributes;
-using APIGatewayControllers.Models.Requests;
-using APIGatewayControllers.Models.Responses;
-using APIGatewayControllers.DTO.Models.Requests;
 using APIGatewayCoreUtilities.CommonExceptions;
 using System.Net;
-using APIGatewayRouting.Data;
+using APIGatewayEntities.Entities;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
+using APIGatewayEntities.IntegrationContracts;
+using APIGatewayControllers.Models.Requests.User;
+using APIGatewayControllers.Models.Responses.User;
+using APIGatewayControllers.Models.Responses;
 
 namespace APIGateway.Controllers
 {
@@ -19,14 +19,17 @@ namespace APIGateway.Controllers
     public class UserController : ControllerBase
     {
         private readonly ILogger<UserController> _logger;
-        private readonly IUserRouter _userRouter;
+        private readonly IUserContract _userContract;
+        private readonly IAuthorizationContract _authorizationContract;
 
         public UserController(
             ILogger<UserController> logger,
-            IUserRouter userRouter)
+            IUserContract userContract,
+            IAuthorizationContract authorizationContract)
         {
             _logger = logger;
-            _userRouter = userRouter;
+            _userContract = userContract;
+            _authorizationContract = authorizationContract;
         }
 
         [Authorize]
@@ -38,13 +41,8 @@ namespace APIGateway.Controllers
 
             try
             {
-                var user = await _userRouter.GetUserAsync(jwt);
-                if (user == null)
-                {
-                    HttpContext.Response.Headers.Append("Retry-After", "3600"); //TODO: Configurable rate limiting
-                    _logger.LogWarning("Get all users. Too many requests.");
-                    return StatusCode((int)HttpStatusCode.TooManyRequests, response);
-                }
+                var user = await _userContract.GetUserAsync(jwt);
+                
                 response.Result = user.ToUserResponseModel();
 
                 if (response.Result.UserLevel == UserLevel.Unknown)
@@ -96,13 +94,11 @@ namespace APIGateway.Controllers
             var response = new Response<SignInResponseModel> { Result = new SignInResponseModel() };
             try
             {
-                response.Result.Token = await _userRouter.SignInAsync(requestData.Email, requestData.Password);
+                response.Result.Token = await _authorizationContract.AuthorizeAsync(requestData.Email, requestData.Password);
                 
                 if (string.IsNullOrEmpty(response.Result.Token))
                 {
-                    HttpContext.Response.Headers.Append("Retry-After", "3600"); //TODO: Configurable rate limiting
-                    _logger.LogWarning("Sign in. Too many requests.");
-                    return StatusCode((int)HttpStatusCode.TooManyRequests, response);
+                    throw new Exception("Token is empty!");
                 }
 
                 _logger.LogInformation($"Get data for user: {requestData.Email} signed in successfully."); //TODO: email should be logged??
@@ -143,13 +139,7 @@ namespace APIGateway.Controllers
             var response = new Response<bool> { Result = false };
             try
             {
-                response.Result = await _userRouter.AddContentCreatorUserAsync(userModel.ToContentCreatorUser());
-                if (!response.Result)
-                {
-                    HttpContext.Response.Headers.Append("Retry-After", "3600"); //TODO: Configurable rate limiting
-                    _logger.LogWarning("Add content creator. Too many requests.");
-                    return StatusCode((int)HttpStatusCode.TooManyRequests, response);
-                }
+                await _userContract.AddContentCreatorUserAsync(userModel.ToContentCreatorUser());
 
                 _logger.LogInformation($"User {userModel.UserName} has been added successfully.");
                 response.Message = $"User {userModel.UserName} has been added successfully.";
@@ -185,13 +175,7 @@ namespace APIGateway.Controllers
             var response = new Response<bool> { Result = false };
             try
             {
-                response.Result = await _userRouter.AddEndUserAsync(userModel.ToEndUser());
-                if (!response.Result)
-                {
-                    HttpContext.Response.Headers.Append("Retry-After", "3600"); //TODO: Configurable rate limiting
-                    _logger.LogWarning("Add end user. Too many requests.");
-                    return StatusCode((int)HttpStatusCode.TooManyRequests, response);
-                }
+                await _userContract.AddEndUserAsync(userModel.ToEndUser());
 
                 _logger.LogInformation($"User {userModel.UserName} has been added successfully.");
                 response.Message = $"User {userModel.UserName} has been added successfully.";
@@ -232,13 +216,7 @@ namespace APIGateway.Controllers
 
             try
             {
-                bool result = await _userRouter.EditEndUserAsync(userModel.ToEndUser(), jwt);
-                if (!result)
-                {
-                    HttpContext.Response.Headers.Append("Retry-After", "3600"); //TODO: Configurable rate limiting
-                    _logger.LogWarning("Edit end user. Too many requests.");
-                    return StatusCode((int)HttpStatusCode.TooManyRequests, response);
-                }
+                await _userContract.EditEndUserAsync(userModel.ToEndUser(), jwt);
 
                 _logger.LogInformation("User data has been changed successfully.");
                 response.Message = "User data has been changed successfully.";
@@ -288,13 +266,7 @@ namespace APIGateway.Controllers
 
             try
             {
-                bool result = await _userRouter.EditContentCreatorUserAsync(userModel.ToContentCreatorUser(), jwt);
-                if (!result)
-                {
-                    HttpContext.Response.Headers.Append("Retry-After", "3600"); //TODO: Configurable rate limiting
-                    _logger.LogWarning("Edit content creator. Too many requests.");
-                    return StatusCode((int)HttpStatusCode.TooManyRequests, response);
-                }
+                await _userContract.EditContentCreatorUserAsync(userModel.ToContentCreatorUser(), jwt);
 
                 _logger.LogInformation("User data has been changed successfully.");
                 response.Message = $"User data has been changed successfully.";
@@ -344,13 +316,7 @@ namespace APIGateway.Controllers
 
             try
             {
-                bool result = await _userRouter.ChangePasswordAsync(requestData.OldPassword, requestData.NewPassword, jwt);
-                if (!result)
-                {
-                    HttpContext.Response.Headers.Append("Retry-After", "3600"); //TODO: Configurable rate limiting
-                    _logger.LogWarning("Remove user. Too many requests.");
-                    return StatusCode((int)HttpStatusCode.TooManyRequests, response);
-                }
+                await _userContract.ChangePasswordAsync(requestData.OldPassword, requestData.NewPassword, jwt);
 
                 _logger.LogInformation("User has been removed successfully.");
                 response.Message = $"User has been removed successfully.";
@@ -399,13 +365,7 @@ namespace APIGateway.Controllers
 
             try
             {
-                bool result = await _userRouter.RemoveUserAsync(requestData.Password, jwt);
-                if (!result)
-                {
-                    HttpContext.Response.Headers.Append("Retry-After", "3600"); //TODO: Configurable rate limiting
-                    _logger.LogWarning("Remove user. Too many requests.");
-                    return StatusCode((int)HttpStatusCode.TooManyRequests, response);
-                }
+                await _userContract.RemoveUserAsync(requestData.Password, jwt);
 
                 _logger.LogInformation("User has been removed successfully.");
                 response.Message = $"User has been removed successfully.";
@@ -445,14 +405,7 @@ namespace APIGateway.Controllers
 
             try
             {
-                var users = await _userRouter.GetAllUsersAsync(jwt);
-                
-                if (users == null)
-                {
-                    HttpContext.Response.Headers.Append("Retry-After", "3600"); //TODO: Configurable rate limiting
-                    _logger.LogWarning("Get all users. Too many requests.");
-                    return StatusCode((int)HttpStatusCode.TooManyRequests, response);
-                }
+                var users = await _userContract.GetAllUsersAsync(jwt);
 
                 if (!users.Any())
                 {
@@ -500,14 +453,7 @@ namespace APIGateway.Controllers
             string jwt = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
             try
             {
-                response.Result = await _userRouter.ChangeUserStatusAsync(username, requestData.Status, jwt);
-
-                if (!response.Result)
-                {
-                    HttpContext.Response.Headers.Append("Retry-After", "3600"); //TODO: Configurable rate limiting
-                    _logger.LogWarning("Update user status. Too many requests.");
-                    return StatusCode((int)HttpStatusCode.TooManyRequests, response);
-                }
+                await _userContract.ChangeUserStatusAsync(username, requestData.Status, jwt);
 
                 _logger.LogInformation("User status changed successfully");
                 response.Message = "User status changed successfully";

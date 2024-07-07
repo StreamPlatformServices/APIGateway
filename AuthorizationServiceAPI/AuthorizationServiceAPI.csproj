@@ -14,7 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\APIGatewayCoreUtilities\APIGatewayCoreUtilities.csproj" />
-    <ProjectReference Include="..\APIGatewayRoutingComponent\APIGatewayRouting.csproj" />
+    <ProjectReference Include="..\APIGatewayRoutingComponent\APIGatewayEntities.csproj" />
   </ItemGroup>
 
 </Project>

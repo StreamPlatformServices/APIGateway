@@ -1,6 +1,6 @@
-﻿using APIGatewayRouting.Data;
+﻿using APIGatewayEntities.Entities;
 
-namespace APIGatewayRouting.IntegrationContracts
+namespace APIGatewayEntities.IntegrationContracts
 {
     public interface IContentMetadataContract
     {

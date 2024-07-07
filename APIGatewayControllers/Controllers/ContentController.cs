@@ -1,60 +1,66 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using APIGatewayRouting.Routing.Interfaces;
 using APIGatewayControllers.DataMappers;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authorization.Infrastructure;
-using APIGatewayControllers.Models.Requests;
 using Microsoft.Extensions.Logging;
+using APIGatewayEntities.Helpers.Interfaces;
+using APIGatewayControllers.Models.Responses;
+using APIGatewayCoreUtilities.CommonExceptions;
+using System.Net;
+using Microsoft.AspNetCore.Authorization;
+using APIGatewayControllers.Models.Responses.Content;
+using APIGatewayControllers.Models.Requests.Content;
 
 namespace APIGateway.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("content")]
     public class ContentController : ControllerBase
     {
         private readonly ILogger<ContentController> _logger;
-        private readonly IContentRouter _contentRouter;
+        private readonly IContentFasade _contentFasade;
 
         public ContentController(
             ILogger<ContentController> logger,
-            IContentRouter contentRouter)
+            IContentFasade contentFasade)
         {
             _logger = logger;
-            _contentRouter = contentRouter;
+            _contentFasade = contentFasade;
         }
 
-
-        //TODO: Add searching (searching will be aplicable on frontend side??) 
-
-        //TODO: Now get the 
-        [HttpGet("GetAll", Name = "GetContents")]
+        [HttpGet("all")]
         public async Task<ActionResult<IEnumerable<UploadContentRequestModel>>> GetContentsAsync([FromQuery] int limit, [FromQuery] int offset)
         {
             //TODO: Generate Snapshots 
-            //TODO: Content cacher in routing component
+            //TODO: Content cacher in fasade???
+            var response = new Response<IEnumerable<GetAllContentsResponseModel>>();
+
             try
             {
-                var content = await _contentRouter.GetAllContentsAsync(limit, offset);
-                if (content == null || !content.Any())
+                var content = await _contentFasade.GetAllContentsAsync(limit, offset);
+                if (!content.Any())
                 {
-                    return NotFound();
+                    return NoContent();
                 }
 
-                return Ok(content.Select(x => x.ToGetAllContentsResponseModel()));
+
+                _logger.LogInformation("Get all contents finished properly.");
+                response.Result = content.ToGetAllContentsResponseModel();
+                return Ok(response);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while getting the content data.");
-                return StatusCode(500, $"An error occurred while getting the content data. Error message: {ex.Message}");
+                _logger.LogError(ex, "An error occurred while getting contents list.");
+                response.Message = $"An error occurred while getting contents list. Error message: {ex.Message}";
+                return StatusCode((int)HttpStatusCode.InternalServerError, response);
             }
         }
 
-        [HttpGet("Get", Name = "GetContent")]
+        [Authorize]
+        [HttpGet]
         public async Task<ActionResult<IEnumerable<UploadContentRequestModel>>> GetContentByIdAsync(Guid uuid)
         {
             try
             {
-                var content = await _contentRouter.GetContentByIdAsync(uuid);
+                var content = await _contentFasade.GetContentByIdAsync(uuid);
                 if (content.Uuid == Guid.Empty)
                 {
                     return NotFound();
@@ -78,7 +84,7 @@ namespace APIGateway.Controllers
 
             try
             {
-                bool result = await _contentRouter.UploadContentAsync(contentMetadata.ToContent());
+                bool result = await _contentFasade.UploadContentAsync(contentMetadata.ToContent());
                 if (!result)
                 {
                     return StatusCode(500, $"Operation upload content can not be completed at the moment. Pleas try again later or contact the administrator for more information.");
@@ -101,13 +107,13 @@ namespace APIGateway.Controllers
             //TODO: Json parsing overriding 
             try
             {
-                var content = await _contentRouter.GetContentByIdAsync(contentId);
+                var content = await _contentFasade.GetContentByIdAsync(contentId);
                 if (content == null)
                 {
                     return NotFound($"Content with provided id doesn't exist!");
                 }
 
-                bool result = await _contentRouter.DeleteContentAsync(content.Uuid);
+                bool result = await _contentFasade.DeleteContentAsync(content.Uuid);
                 if (!result)
                 {
                     return StatusCode(500, $"Operation delete content can not be completed at the moment. Pleas try again later or contact the administrator for more information.");
@@ -130,13 +136,13 @@ namespace APIGateway.Controllers
             //TODO: implement validators which recognize BadRequest()
             try
             {
-                var content = await _contentRouter.GetContentByIdAsync(contentId); //TODO: czy nie powinno to być przezroczyste?? 
+                var content = await _contentFasade.GetContentByIdAsync(contentId); //TODO: czy nie powinno to być przezroczyste?? 
                 if (content == null)
                 {
                     return NotFound($"Content with provided id doesn't exist!");
                 }
 
-                bool result = await _contentRouter.EditContentAsync(contentId, contentModel.ToContent());
+                bool result = await _contentFasade.EditContentAsync(contentId, contentModel.ToContent());
                 if (!result)
                 {
                     return StatusCode(500, $"Operation edit  can not be completed at the moment. Pleas try again later or contact the administrator for more information.");

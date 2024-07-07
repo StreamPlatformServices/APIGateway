@@ -1,6 +1,6 @@
-﻿using APIGatewayRouting.Helpers.Interfaces;
+﻿using APIGatewayEntities.Helpers.Interfaces;
 
-namespace APIGatewayRouting.Helpers
+namespace APIGatewayEntities.Helpers
 {
     internal class TimeWrapper : ITimeWrapper
     {

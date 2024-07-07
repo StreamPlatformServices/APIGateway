@@ -1,4 +1,4 @@
-﻿using APIGatewayRouting.Data;
+﻿using APIGatewayEntities.Entities;
 using ContentMetadataServiceMock.Persistance.Data;
 
 namespace AuthorizationServiceAPI.DataMappers

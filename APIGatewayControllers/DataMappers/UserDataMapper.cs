@@ -1,7 +1,6 @@
-﻿using APIGatewayControllers.DTO.Models.Requests;
-using APIGatewayControllers.Models.Base;
-using APIGatewayControllers.Models.Responses;
-using APIGatewayRouting.Data;
+﻿using APIGatewayControllers.Models.Requests.User;
+using APIGatewayControllers.Models.Responses.User;
+using APIGatewayEntities.Entities;
 
 namespace APIGatewayControllers.DataMappers
 {

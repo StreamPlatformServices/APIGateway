@@ -1,7 +1,8 @@
 ﻿using APIGatewayControllers.Models;
-using APIGatewayControllers.Models.Requests;
-using APIGatewayControllers.Models.Responses;
-using APIGatewayRouting.Data;
+using APIGatewayControllers.Models.Requests.Content;
+using APIGatewayControllers.Models.Responses.Comment;
+using APIGatewayControllers.Models.Responses.Content;
+using APIGatewayEntities.Entities;
 
 namespace APIGatewayControllers.DataMappers
 {
@@ -19,27 +20,21 @@ namespace APIGatewayControllers.DataMappers
             };
         }
 
-        //public static UploadContentRequestModel ToUploadContentRequestModel(this Content entity) 
-        //{
-        //    return new UploadContentRequestModel
-        //    {
-        //        Title = entity.Title,
-        //        Description = entity.Description,
-        //        LicenseRulesModel = entity.LicenseRules?.Select(c => c.ToLicenseRulesModel()).ToList() ?? new List<LicenseRulesModel>()
-        //    };
-        //}
-
-        //TODO: NOW. Finish all mappers!!!!
-
-        public static GetAllContentsResponseModel ToGetAllContentsResponseModel(this Content entity) 
+        public static IEnumerable<GetAllContentsResponseModel> ToGetAllContentsResponseModel(this IEnumerable<Content> entities) 
         {
-            return new GetAllContentsResponseModel
+            var contents = new List<GetAllContentsResponseModel>();
+            foreach (var content in entities) 
             {
-                Title = entity.Title,
-                Duration = entity.Duration,
-                ImageUrl = entity.ImageUrl,
-                Uuid = entity.Uuid
-            };
+                contents.Add(new GetAllContentsResponseModel
+                {
+                    Title = content.Title,
+                    Duration = content.Duration,
+                    ImageUrl = content.ImageUrl,
+                    Uuid = content.Uuid
+                });
+            }
+
+            return contents;
         }
 
         public static GetContentResponseModel ToGetContentResponseModel(this Content entity) 
@@ -48,7 +43,7 @@ namespace APIGatewayControllers.DataMappers
             {
                 Title = entity.Title,
                 Description = entity.Description,
-                ContentComments = entity.ContentComments?.Select(c => c.ToContentCommentModel()).ToList() ?? new List<ContentCommentModel>(),
+                ContentComments = entity.ContentComments?.Select(c => c.ToContentCommentModel()).ToList() ?? new List<ContentCommentResponseModel>(),
                 LicenseRules = entity.LicenseRules?.Select(c => c.ToLicenseRulesModel()).ToList() ?? new List<LicenseRulesModel>(),
             };
         }

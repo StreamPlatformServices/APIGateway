@@ -1,5 +1,5 @@
 ﻿using APIGatewayCoreUtilities.CommonConfiguration.ConfigurationModels.MockSettings;
-using APIGatewayRouting.IntegrationContracts;
+using APIGatewayEntities.IntegrationContracts;
 using Microsoft.Extensions.Options;
 using Nethereum.Web3;
 
@@ -12,12 +12,12 @@ namespace StreamGatewayMock
         {
             _options = options.Value;
         }  
-        Task<string> IStreamUriContract.GetStreamUri(Guid contentId)
+        Task<string> IStreamUriContract.GetStreamUriAsync(Guid contentId)
         {
             return Task.FromResult(_options.MockedStreamUrl);
         }
 
-        async Task<string> IStreamUriContract.GetUploadUri(Guid contentId)
+        async Task<string> IStreamUriContract.GetUploadUriAsync(Guid contentId)
         {
             // Twój Infura Project ID
             string infuraProjectId = "4ecdb1024ecc43ff82b3a8e42fd8c121";

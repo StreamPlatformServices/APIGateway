@@ -5,7 +5,7 @@ VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APIGatewayMain", "APIGateway\APIGatewayMain.csproj", "{82FF579A-A296-4A14-865B-00F6A8C37AE8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APIGatewayRouting", "APIGatewayRoutingComponent\APIGatewayRouting.csproj", "{B71B8F2C-280F-4BA7-9940-7CB31A03906A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APIGatewayEntities", "APIGatewayRoutingComponent\APIGatewayEntities.csproj", "{B71B8F2C-280F-4BA7-9940-7CB31A03906A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LicenseProxyAPI", "APIGatewayMicroservicesClient\LicenseProxyAPI.csproj", "{308347DC-901D-49CA-B634-C6DDCCA6E2AC}"
 EndProject
@@ -27,7 +27,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContentMetadataServiceMock"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APIGatewayCoreUtilities", "APIGatewayCoreUtilities\APIGatewayCoreUtilities.csproj", "{A9105383-D4D3-443C-80FB-D83A43B2A7AE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APIGatewayControllers", "APIGatewayControllers\APIGatewayControllers.csproj", "{658EC21E-48CA-492E-8FE1-ACEB68B23EEB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APIGatewayControllers", "APIGatewayControllers\APIGatewayControllers.csproj", "{658EC21E-48CA-492E-8FE1-ACEB68B23EEB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

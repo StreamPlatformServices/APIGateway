@@ -31,6 +31,9 @@ namespace ContentMetadataServiceMock.Migrations
                     b.Property<Guid>("ContentId")
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("UserName")
                         .IsRequired()
                         .HasColumnType("TEXT");

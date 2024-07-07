@@ -1,5 +1,5 @@
 ﻿using AuthorizationServiceAPI.Models;
-using APIGatewayRouting.Data;
+using APIGatewayEntities.Entities;
 using System.Runtime.CompilerServices;
 using AuthorizationServiceAPI.Models.Requests;
 using AuthorizationServiceAPI.Models.Responses;

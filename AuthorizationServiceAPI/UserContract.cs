@@ -1,5 +1,5 @@
-﻿using APIGatewayRouting.Data;
-using APIGatewayRouting.IntegrationContracts;
+﻿using APIGatewayEntities.Entities;
+using APIGatewayEntities.IntegrationContracts;
 using AuthorizationServiceAPI.DataMappers;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;

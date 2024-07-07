@@ -1,6 +1,6 @@
 ﻿using APIGatewayControllers.Middlewares.Attributes;
 using APIGatewayCoreUtilities.CommonExceptions;
-using APIGatewayRouting.IntegrationContracts;
+using APIGatewayEntities.IntegrationContracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 

@@ -1,5 +1,5 @@
 ﻿
-namespace APIGatewayRouting.IntegrationContracts
+namespace APIGatewayEntities.IntegrationContracts
 {
     public interface IAuthorizationContract
     {

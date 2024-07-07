@@ -1,10 +1,10 @@
-﻿using APIGatewayRouting.Data;
-using APIGatewayRouting.Helpers.Interfaces;
-using APIGatewayRouting.IntegrationContracts;
+﻿using APIGatewayEntities.Entities;
+using APIGatewayEntities.Helpers.Interfaces;
+using APIGatewayEntities.IntegrationContracts;
 
-namespace APIGatewayRouting.Helpers
+namespace APIGatewayEntities.Helpers
 {
-    internal class ContentFasade : IContentFasade
+    public class ContentFasade : IContentFasade
     {
         private readonly IContentMetadataContract _contentMetadataContract;
         private readonly ILicenseContract _licenseContract; //TODO: probably not needed ??

@@ -1,5 +1,5 @@
 ﻿using APIGatewayCoreUtilities.CommonExceptions;
-using APIGatewayRouting.IntegrationContracts;
+using APIGatewayEntities.IntegrationContracts;
 using AuthorizationServiceAPI.Models.Responses;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;

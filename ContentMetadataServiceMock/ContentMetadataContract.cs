@@ -1,10 +1,9 @@
-﻿using APIGatewayRouting.Data;
-using APIGatewayRouting.IntegrationContracts;
+﻿using APIGatewayEntities.Entities;
+using APIGatewayEntities.IntegrationContracts;
 using AuthorizationServiceAPI.DataMappers;
 using ContentMetadataServiceMock.Persistance;
 using ContentMetadataServiceMock.Persistance.Data;
 using Microsoft.EntityFrameworkCore;
-using System.Xml.Linq;
 
 namespace ContentMetadataServiceMock
 {
@@ -19,8 +18,11 @@ namespace ContentMetadataServiceMock
 
         async Task<Content> IContentMetadataContract.GetContentMetadataByIdAsync(Guid contentId)
         {   
-            //TODO: Or return null ?? What is better??
-            var content = await _context.Contents.FindAsync(contentId);
+           
+            var content = await _context.Contents
+                .Include(c => c.Comments)
+                .FirstOrDefaultAsync(c => c.ContentId == contentId); ;
+
             if (content == null)
             {
                 return new Content { Uuid = Guid.Empty };
@@ -173,7 +175,5 @@ namespace ContentMetadataServiceMock
 
             return contentData.ToContent();
         }
-
-        
     }
 }

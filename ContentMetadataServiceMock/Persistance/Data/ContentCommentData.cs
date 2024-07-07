@@ -10,10 +10,15 @@ namespace ContentMetadataServiceMock.Persistance.Data
 {
     public class ContentCommentData
     {
+
+        //TODO: Now! migration and mappers
         
         [Key]
         //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid ContentCommentId { get; set; }
+
+        public string UserName { get; set; } //TODO: ???
+        public DateTime CreationTime { get; set; } 
 
         [Required]
         [MaxLength(255)]
@@ -22,7 +27,7 @@ namespace ContentMetadataServiceMock.Persistance.Data
         [ForeignKey("ContentId")]
         public Guid ContentId { get; set; }
         public ContentData Content { get; set; }
-        public string UserName { get; set; } //TODO: ???
+        
 
 
     }

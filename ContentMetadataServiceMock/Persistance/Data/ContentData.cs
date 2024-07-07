@@ -1,4 +1,4 @@
-﻿using APIGatewayRouting.Data;
+﻿using APIGatewayEntities.Entities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -12,8 +12,8 @@ namespace ContentMetadataServiceMock.Persistance.Data
     //TODO: Opcjonalne pola i wymagane dla wszystkich danych (nullable)
     public class ContentData
     {
-        [Key]
         //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key]
         public Guid ContentId { get; set; }
 
         [Required]
@@ -25,8 +25,8 @@ namespace ContentMetadataServiceMock.Persistance.Data
         public DateTime? ReleaseDate { get; set; }
 
         public int Duration { get; set; }
-        public IEnumerable<ContentCommentData> Comments { get; set; } 
-        public IEnumerable<LicenseRulesData> LicenseRules { set; get; }
+        public ICollection<ContentCommentData> Comments { get; set; } 
+        public ICollection<LicenseRulesData> LicenseRules { set; get; }
 
 
     }
