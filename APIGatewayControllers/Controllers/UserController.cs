@@ -6,7 +6,6 @@ using APIGatewayCoreUtilities.CommonExceptions;
 using System.Net;
 using APIGatewayEntities.Entities;
 using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Http;
 using APIGatewayEntities.IntegrationContracts;
 using APIGatewayControllers.Models.Requests.User;
 using APIGatewayControllers.Models.Responses.User;
@@ -191,7 +190,7 @@ namespace APIGateway.Controllers
             {   
                 _logger.LogError(ex, "An error occurred while adding a user.");
                 response.Message = $"An error occurred while adding a user. Error message: {ex.Message}";
-                return StatusCode(500, response);
+                return StatusCode((int)HttpStatusCode.InternalServerError, response);
             }
         }
 

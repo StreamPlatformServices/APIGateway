@@ -6,8 +6,9 @@ namespace APIGatewayEntities.IntegrationContracts
     {
         Task<IEnumerable<Content>> GetAllContentsAsync(int limit, int offset);
         Task<Content> GetContentMetadataByIdAsync(Guid contentId);
-        Task<bool> EditContentMetadataAsync(Guid contentId, Content content);
-        Task<bool> AddContentMetadataAsync(Content content);
-        Task<bool> DeleteContentMetadataAsync(Guid contentId);
+        Task<IEnumerable<Content>> GetContentMetadataByOwnerIdAsync(Guid contentId);
+        Task EditContentMetadataAsync(Guid contentId, Content content);
+        Task AddContentMetadataAsync(Content content);
+        Task DeleteContentMetadataAsync(Guid contentId);
     }
 }

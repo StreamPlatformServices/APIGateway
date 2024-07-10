@@ -3,6 +3,7 @@ using System;
 using ContentMetadataServiceMock.Persistance;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ContentMetadataServiceMock.Migrations
 {
     [DbContext(typeof(ContentMetadataDatabaseContext))]
-    partial class ContentMetadataDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20240710164135_AddColumn_ContentMetadataTable_OwnerId")]
+    partial class AddColumn_ContentMetadataTable_OwnerId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.6");
@@ -82,7 +85,7 @@ namespace ContentMetadataServiceMock.Migrations
                     b.Property<int>("Duration")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("Price")
+                    b.Property<int>("Prize")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Type")

@@ -35,7 +35,7 @@ namespace APIGatewayEntities.Entities
     public class LicenseRules
     {
         public Guid Uuid { set; get; } //TODO is Id needed in entity ?
-        public int Prize { set; get; }
+        public int Price { set; get; }
         public LicenseType Type { set; get; }
         public LicenseDuration Duration { set; get; }
     }

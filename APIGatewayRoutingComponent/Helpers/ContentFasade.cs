@@ -4,7 +4,7 @@ using APIGatewayEntities.IntegrationContracts;
 
 namespace APIGatewayEntities.Helpers
 {
-    public class ContentFasade : IContentFasade
+    public class ContentFasade : IContentFasade //TODO: change to decorator?
     {
         private readonly IContentMetadataContract _contentMetadataContract;
         private readonly ILicenseContract _licenseContract; //TODO: probably not needed ??
@@ -19,14 +19,23 @@ namespace APIGatewayEntities.Helpers
             _licenseContract = licenseContract;
             _userContract = userContract;
         }
-        async Task<bool> IContentFasade.DeleteContentAsync(Guid contentId)
+
+        public async Task<IEnumerable<Content>> GetContentByUserTokenAsync(string token)
         {
-            return await _contentMetadataContract.DeleteContentMetadataAsync(contentId);
+            var user = await _userContract.GetUserAsync(token);
+
+            return await _contentMetadataContract.GetContentMetadataByOwnerIdAsync(user.Uuid);
         }
 
-        async Task<bool> IContentFasade.EditContentAsync(Guid contentId, Content content)
+        async Task IContentFasade.DeleteContentAsync(Guid contentId)
         {
-            return await _contentMetadataContract.EditContentMetadataAsync(contentId, content);
+            await _contentMetadataContract.DeleteContentMetadataAsync(contentId);
+        }
+
+        async Task IContentFasade.EditContentAsync(Guid contentId, Content content)
+        {
+            //TODO: Validate the owner id in auth service???
+            await _contentMetadataContract.EditContentMetadataAsync(contentId, content);
         }
 
         async Task<IEnumerable<Content>> IContentFasade.GetAllContentsAsync(int limit, int offset)
@@ -36,16 +45,16 @@ namespace APIGatewayEntities.Helpers
 
         async Task<Content> IContentFasade.GetContentByIdAsync(Guid contentId)
         {
-
-            var content = await _contentMetadataContract.GetContentMetadataByIdAsync(contentId);
-            //TODO: Get user by id  or maybe change column in comments database from user id to author name (and maybe the content fasade can be removed)
-            //_userContract.GetUserByNameAsync();
-            return content;
+            return await _contentMetadataContract.GetContentMetadataByIdAsync(contentId);
         }
 
-        async Task<bool> IContentFasade.UploadContentAsync(Content content)
+        async Task IContentFasade.UploadContentAsync(Content content, string token)
         {
-            return await _contentMetadataContract.AddContentMetadataAsync(content);
+            var user = await _userContract.GetUserAsync(token);
+
+            content.OwnerId = user.Uuid;
+
+            await _contentMetadataContract.AddContentMetadataAsync(content);
         }
     }
 }

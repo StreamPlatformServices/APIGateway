@@ -6,8 +6,9 @@ namespace APIGatewayEntities.Helpers.Interfaces
     {
         Task<IEnumerable<Content>> GetAllContentsAsync(int limit, int offset);
         Task<Content> GetContentByIdAsync(Guid contentId);
-        Task<bool> EditContentAsync(Guid contentId, Content content);
-        Task<bool> UploadContentAsync(Content content);
-        Task<bool> DeleteContentAsync(Guid contentId);
+        Task<IEnumerable<Content>> GetContentByUserTokenAsync(string token);
+        Task EditContentAsync(Guid contentId, Content content);
+        Task UploadContentAsync(Content content, string token);
+        Task DeleteContentAsync(Guid contentId);
     }
 }

@@ -1,141 +1,105 @@
-﻿using APIGatewayEntities.Entities;
+﻿using APIGatewayCoreUtilities.CommonExceptions;
+using APIGatewayEntities.Entities;
 using APIGatewayEntities.IntegrationContracts;
 using AuthorizationServiceAPI.DataMappers;
 using ContentMetadataServiceMock.Persistance;
 using ContentMetadataServiceMock.Persistance.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using System.Data.SqlClient;
 
 namespace ContentMetadataServiceMock
 {
     public class ContentMetadataContract : IContentMetadataContract
     {
+        private readonly ILogger<ContentMetadataContract> _logger;
         private readonly ContentMetadataDatabaseContext _context;
 
-        public ContentMetadataContract(ContentMetadataDatabaseContext context)
+        private const int UNIQUE_CONSTRAINT_VIOLATION_ERROR_NUMBER = 2627;
+        private const int PRIMARY_KEY_VIOLATION_ERROR_NUMBER = 2601;
+
+        public ContentMetadataContract(
+            ILogger<ContentMetadataContract> logger,
+            ContentMetadataDatabaseContext context)
         {
+            _logger = logger;
             _context = context;
         }
 
         async Task<Content> IContentMetadataContract.GetContentMetadataByIdAsync(Guid contentId)
-        {   
-           
+        {
             var content = await _context.Contents
                 .Include(c => c.Comments)
-                .FirstOrDefaultAsync(c => c.ContentId == contentId); ;
-
+                .FirstOrDefaultAsync(c => c.ContentId == contentId);
+                
             if (content == null)
             {
-                return new Content { Uuid = Guid.Empty };
+                _logger.LogError($"Content with id: {contentId} not found!");
+                throw new NotFoundException($"Content with id: {contentId} not found!");
             }
 
             return content.ToContent();
         }
 
-        public async Task<bool> AddContentMetadataAsync(Content content)
+        public async Task AddContentMetadataAsync(Content content)
         {
             try
             {
                 await _context.Contents.AddAsync(content.ToContentData());
                 await _context.SaveChangesAsync();
-                return true;
             }
-            catch (Exception)
+            catch (DbUpdateException ex)
             {
-                // Log the exception (not implemented here)
-                return false;
-            }
-        }
-
-        public async Task<bool> DeleteContentMetadataAsync(Guid contentId)
-        {
-            try
-            {
-                var content = await _context.Contents.FindAsync(contentId);
-                if (content == null)
+                if (ex.InnerException is SqlException sqlEx)
                 {
-                    return false;
-                }
-
-                _context.Contents.Remove(content);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            catch (Exception)
-            {
-                // Log the exception (not implemented here)
-                return false;
-            }
-        }
-
-        public async Task<bool> EditContentMetadataAsync(Guid contentId, Content updatedContent)
-        {
-            try
-            {
-                // Pobierz zawartość i powiązane reguły licencyjne
-                var content = await _context.Contents
-                    .Include(e => e.LicenseRules)
-                    .FirstOrDefaultAsync(e => e.ContentId == contentId);
-
-                if (content == null)
-                {
-                    Console.WriteLine($"Content with ID {contentId} not found.");
-                    return false;
-                }
-
-                // Aktualizuj właściwości zawartości
-                content.Title = updatedContent.Title;
-                content.Description = updatedContent.Description;
-                //content.ReleaseDate = updatedContent.ReleaseDate;
-                //content.Duration = updatedContent.Duration;
-
-                if (updatedContent.LicenseRules != null && updatedContent.LicenseRules.Any())
-                {
-                    var updatedLicenseRules = updatedContent.LicenseRules.Select(c => c.ToLicenseRulesData()).ToList();
-                    content.LicenseRules = updatedLicenseRules;
-                }
-                else
-                {
-                    content.LicenseRules = new List<LicenseRulesData>();
-                }
-
-
-                // Logowanie przed zapisaniem zmian
-                Console.WriteLine($"Updating content with ID {contentId}.");
-
-                // Zapisz zmiany w kontekście
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            catch (DbUpdateConcurrencyException ex)
-            {
-                // Logowanie wyjątku współbieżności
-                Console.WriteLine("Concurrency exception: " + ex.Message);
-                foreach (var entry in ex.Entries)
-                {
-                    if (entry.Entity is Content)
+                    if (sqlEx.Number == UNIQUE_CONSTRAINT_VIOLATION_ERROR_NUMBER || sqlEx.Number == PRIMARY_KEY_VIOLATION_ERROR_NUMBER)
                     {
-                        var proposedValues = entry.CurrentValues;
-                        var databaseValues = entry.GetDatabaseValues();
-
-                        if (databaseValues != null)
-                        {
-                            foreach (var property in proposedValues.Properties)
-                            {
-                                var proposedValue = proposedValues[property];
-                                var databaseValue = databaseValues[property];
-                                Console.WriteLine($"Property: {property.Name}, Proposed: {proposedValue}, Database: {databaseValue}");
-                            }
-                        }
+                        _logger.LogError($"A conflict accourd while updating the database: {sqlEx.Message}");
+                        throw new ConflictException($"A conflict accourd while updating the database: {sqlEx.Message}");
                     }
                 }
-                return false;
+
+                throw;
             }
-            catch (Exception ex)
+        }
+
+        public async Task DeleteContentMetadataAsync(Guid contentId)
+        {
+            var content = await _context.Contents.FindAsync(contentId);
+            if (content == null)
             {
-                //Log message
-                Console.WriteLine(ex.Message); // lub inny mechanizm logowania
-                return false;
+                throw new NotFoundException($"Content with id: {contentId} not found!");
             }
+
+            _context.Contents.Remove(content);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task EditContentMetadataAsync(Guid contentId, Content updatedContent)
+        {
+            if (updatedContent.LicenseRules == null && !updatedContent.LicenseRules.Any())
+            {
+                _logger.LogError("Bad input. License rules should not be empty.");
+                throw new Exception("Bad input. License rules should not be empty.");
+            }
+
+            var content = await _context.Contents
+                .Include(e => e.LicenseRules)
+                .FirstOrDefaultAsync(e => e.ContentId == contentId);
+
+            if (content == null)
+            {
+                throw new NotFoundException($"Content with id: {contentId} not found!");
+            }
+
+            content.Title = updatedContent.Title;
+            content.Description = updatedContent.Description;
+            content.Duration = updatedContent.Duration;
+
+            var updatedLicenseRules = updatedContent.LicenseRules.Select(c => c.ToLicenseRulesData()).ToList();
+            content.LicenseRules = updatedLicenseRules;
+   
+            await _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Content>> GetAllContentsAsync(int limit, int offset)
@@ -161,19 +125,18 @@ namespace ContentMetadataServiceMock
             return contents;
         }
 
-        public async Task<Content> GetContentMetadataByNameAsync(string contentName)
+        public async Task<IEnumerable<Content>> GetContentMetadataByOwnerIdAsync(Guid ownerId)
         {
-            //TODO: Include Comments
-            //TODO: How to manage Not found
-            var contentData = await _context.Contents
-                .FirstOrDefaultAsync(c => c.Title == contentName);
+            var contentsData = await _context.Contents
+                .Where(c => c.OwnerId == ownerId)
+                .ToListAsync();
 
-            if (contentData == null)
+            if (contentsData == null)
             {
-                throw new KeyNotFoundException();
+                throw new NotFoundException($"Content with owner id: {ownerId} not found!");
             }
 
-            return contentData.ToContent();
+            return contentsData.ToContents();
         }
     }
 }

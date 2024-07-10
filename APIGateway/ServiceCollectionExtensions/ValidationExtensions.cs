@@ -1,5 +1,7 @@
-﻿using APIGatewayControllers.Models.Requests.User;
+﻿using APIGatewayControllers.Models.Requests.Content;
+using APIGatewayControllers.Models.Requests.User;
 using APIGatewayControllers.Validators;
+using APIGatewayControllers.Validators.User;
 using FluentValidation;
 
 namespace APIGatewayMain.ServiceCollectionExtensions
@@ -15,6 +17,8 @@ namespace APIGatewayMain.ServiceCollectionExtensions
             services.AddTransient<IValidator<UpdateContentCreatorRequestModel>, UpdateContentCreatorRequestModelValidator>();
             services.AddTransient<IValidator<SignInRequestModel>, SignInRequestModelValidator>();
             services.AddTransient<IValidator<ChangePasswordRequestModel>, ChangePasswordRequestModelValidator>();
+
+            services.AddTransient<IValidator<UploadContentRequestModel>, UploadContentRequestModelValidator>();
             return services;
         }
     }

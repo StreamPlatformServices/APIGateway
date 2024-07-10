@@ -10,7 +10,7 @@ namespace AuthorizationServiceAPI.DataMappers
             return new LicenseRulesData
             {
                 Uuid = model.Uuid,
-                Prize = model.Prize,
+                Price = model.Price,
                 Type = model.Type,
                 Duration = model.Duration //TODO: is FK id needed???
             };
@@ -21,7 +21,7 @@ namespace AuthorizationServiceAPI.DataMappers
             return new LicenseRules
             {
                 Uuid = data.Uuid,
-                Prize = data.Prize,
+                Price = data.Price,
                 Type = data.Type,
                 Duration = data.Duration
             };

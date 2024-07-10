@@ -37,7 +37,7 @@ namespace APIGateway.Controllers
                         .SelectMany(v => v.Errors)
                         .Select(e => e.ErrorMessage);
 
-                _logger.LogWarning("Invalid model state for AddEndUserAsync: {Errors}", string.Join("; ", errorMessages));
+                _logger.LogWarning("Invalid model state for AddCommentAsync: {Errors}", string.Join("; ", errorMessages));
                 return BadRequest(ModelState);
             }
 
@@ -45,12 +45,6 @@ namespace APIGateway.Controllers
             try
             {
                 await _contentCommentContract.AddCommentAsync(contentCommentModel.ToContentComment(), jwt);
-                //if (!response.Result)
-                //{
-                //    HttpContext.Response.Headers.Append("Retry-After", "3600"); //TODO: Configurable rate limiting
-                //    _logger.LogWarning("Add content creator. Too many requests.");
-                //    return StatusCode((int)HttpStatusCode.TooManyRequests, response);
-                //}
 
                 _logger.LogInformation($"Comment has been added successfully.");
                 response.Message = $"Comment has been added successfully.";

@@ -11,7 +11,7 @@ namespace APIGatewayControllers.DataMappers
             return new LicenseRules
             {
                 Uuid = Guid.NewGuid(),
-                Prize = model.Prize,
+                Price = model.Price,
                 Type = model.Type,
                 Duration = model.Duration
             };
@@ -21,7 +21,7 @@ namespace APIGatewayControllers.DataMappers
         {
             return new LicenseRulesModel
             {
-                Prize = entity.Prize,
+                Price = entity.Price,
                 Type = entity.Type,
                 Duration = entity.Duration
             };

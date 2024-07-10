@@ -1,7 +1,7 @@
 ﻿using APIGatewayControllers.Models.Requests.User;
 using FluentValidation;
 
-namespace APIGatewayControllers.Validators
+namespace APIGatewayControllers.Validators.User
 {
     public class UpdateEndUserRequestModelValidator : AbstractValidator<UpdateEndUserRequestModel>
     {

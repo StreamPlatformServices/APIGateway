@@ -1,7 +1,7 @@
 ﻿using APIGatewayControllers.Models.Requests.User;
 using FluentValidation;
 
-namespace APIGatewayControllers.Validators
+namespace APIGatewayControllers.Validators.User
 {
     public class UpdateContentCreatorRequestModelValidator : AbstractValidator<UpdateContentCreatorRequestModel> //TODO: decide about password format req
     {

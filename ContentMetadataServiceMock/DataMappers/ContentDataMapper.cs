@@ -1,6 +1,5 @@
 ﻿using APIGatewayEntities.Entities;
 using ContentMetadataServiceMock.Persistance.Data;
-using System.ComponentModel.DataAnnotations;
 
 namespace AuthorizationServiceAPI.DataMappers
 {
@@ -28,6 +27,18 @@ namespace AuthorizationServiceAPI.DataMappers
                 ContentComments = data.Comments?.Select(c => c.ToContentComment()).ToList() ?? new List<ContentComment>(),
                 LicenseRules = data.LicenseRules?.Select(c => c.ToLicenseRules()).ToList() ?? new List<LicenseRules>(), //TODO: It is needed
             };
+        }
+
+        public static IEnumerable<Content> ToContents(this IEnumerable<ContentData> data)
+        {
+            var contents = new List<Content>();
+            
+            foreach (var item in data) 
+            {
+                contents.Add(item.ToContent());
+            }
+
+            return contents;
         }
     }
 
