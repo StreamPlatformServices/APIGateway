@@ -13,6 +13,7 @@ using APIGatewayControllers.Models.Responses;
 
 namespace APIGateway.Controllers
 {
+    //TODO: Log start operations of endpoints!!!!!!!!!!!!!!!!!!!!
     [ApiController]
     [Route("user")]
     public class UserController : ControllerBase

@@ -1,11 +1,12 @@
 ﻿using APIGatewayEntities.Entities;
+using StreamGatewayControllers.Models;
 
 namespace APIGatewayEntities.IntegrationContracts
 {
     public interface IStreamUriContract
     {
-        Task<string> GetStreamUriAsync(Guid contentId);
-        Task<string> GetUploadUriAsync(Guid contentId);
+        Task<UriData> GetVideoStreamUriAsync(Guid contentId);
+        Task<UriData> GetImageStreamUriAsync(Guid contentId);
     }
 
 }

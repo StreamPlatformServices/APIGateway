@@ -6,7 +6,7 @@ namespace APIGatewayControllers.DataMappers
 {
     public static class LicenseDataMapper
     {
-        public static ContentLicense ToContentLicense(this ContentLicenseModel model)
+        public static ContentLicense ToContentLicense(this LicenseModel model)
         {
             return new ContentLicense
             {
@@ -17,9 +17,9 @@ namespace APIGatewayControllers.DataMappers
             };
         }
 
-        public static ContentLicenseModel ToContentLicenseModel(this ContentLicense entity)
+        public static LicenseModel ToContentLicenseModel(this ContentLicense entity)
         {
-            return new ContentLicenseModel
+            return new LicenseModel
             {
                 UserId = entity.UserId,
                 ContentId = entity.ContentId,

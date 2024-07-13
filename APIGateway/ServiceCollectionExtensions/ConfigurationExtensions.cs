@@ -1,7 +1,6 @@
 ﻿using APIGatewayCoreUtilities.CommonConfiguration.ConfigurationModels.MockSettings;
 using APIGatewayCoreUtilities.CommonConfiguration.ConfigurationModels;
 using AspNetCoreRateLimit;
-using Nethereum.JsonRpc.Client;
 
 namespace APIGatewayMain.ServiceCollectionExtensions
 {
@@ -15,6 +14,7 @@ namespace APIGatewayMain.ServiceCollectionExtensions
             services.Configure<AuthorizationServiceApiSettings>(configuration.GetSection("ComponentsSettings:AuthorizationServiceApiSettings"));
             services.Configure<StreamServiceApiSettings>(configuration.GetSection("ComponentsSettings:StreamServiceApiSettings"));
             services.Configure<LicenseProxyApiSettings>(configuration.GetSection("ComponentsSettings:LicenseProxyApiSettings"));
+            services.Configure<StreamGatewayApiSettings>(configuration.GetSection("ComponentsSettings:StreamGatewayApiSettings"));
 
             services.Configure<ContentMetadataServiceMockSettings>(configuration.GetSection("MockComponentsSettings:ContentMetadataServiceMockSettings"));
             services.Configure<StreamGatewayMockSettings>(configuration.GetSection("MockComponentsSettings:StreamGatewayMockSettings"));

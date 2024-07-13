@@ -12,12 +12,12 @@ namespace StreamGatewayMock
         {
             _options = options.Value;
         }  
-        Task<string> IStreamUriContract.GetStreamUriAsync(Guid contentId)
+        public Task<string> GetStreamUriAsync(Guid contentId)
         {
             return Task.FromResult(_options.MockedStreamUrl);
         }
 
-        async Task<string> IStreamUriContract.GetUploadUriAsync(Guid contentId)
+        public async Task<string> GetUploadUriAsync(Guid contentId)
         {
             // Twój Infura Project ID
             string infuraProjectId = "4ecdb1024ecc43ff82b3a8e42fd8c121";

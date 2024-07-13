@@ -27,7 +27,7 @@
     <ProjectReference Include="..\APIGatewayRoutingComponent\APIGatewayEntities.csproj" />
     <ProjectReference Include="..\AuthorizationServiceAPI\AuthorizationServiceAPI.csproj" />
     <ProjectReference Include="..\ContentMetadataServiceMock\ContentMetadataServiceMock.csproj" />
-    <ProjectReference Include="..\StreamGatewayMock\StreamGatewayMock.csproj" />
+    <ProjectReference Include="..\StreamGatewayAPI\StreamGatewayAPI.csproj" />
   </ItemGroup>
 
   <ItemGroup>

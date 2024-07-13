@@ -11,6 +11,8 @@ using APIGatewayControllers.Models.Requests.Content;
 
 namespace APIGateway.Controllers
 {
+
+    //TODO: Log start operations of endpoints!!!!!!!!!!!!!!!!!!!!
     [ApiController]
     [Route("content")]
     public class ContentController : ControllerBase

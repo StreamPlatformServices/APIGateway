@@ -10,6 +10,7 @@ using APIGatewayControllers.Models.Requests.Comment;
 
 namespace APIGateway.Controllers
 {
+    //TODO: Log start operations of endpoints!!!!!!!!!!!!!!!!!!!!
     [ApiController]
     [Route("comment")]
     public class ContentCommentController : ControllerBase

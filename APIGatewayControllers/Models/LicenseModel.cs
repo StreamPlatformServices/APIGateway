@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace APIGatewayControllers.Models
 {
 
-    public class ContentLicenseModel
+    public class LicenseModel
     {
         public Guid UserId { set; get; }
         public Guid ContentId { set; get; }
