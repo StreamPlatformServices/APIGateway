@@ -1,10 +1,10 @@
 ﻿namespace APIGatewayEntities.Entities
 {
-    public enum UploadStatus
+    public enum UploadState
     {
+        InProgress,
         Success,
-        Failed,
-        InProgress
+        Failed
     }
     public class Content
     {
@@ -16,8 +16,8 @@
         public string Description { set; get; }
         public IEnumerable<LicenseRules> LicenseRules { set; get; }
         public IEnumerable<ContentComment> ContentComments { set; get; }
-        public UploadStatus ImageStatus { set; get; }
-        public UploadStatus ContentStatus { set; get; }
+        public UploadState ImageStatus { set; get; } = UploadState.InProgress;
+        public UploadState ContentStatus { set; get; } = UploadState.InProgress;
         public Guid OwnerId { set; get; }
     }
 }

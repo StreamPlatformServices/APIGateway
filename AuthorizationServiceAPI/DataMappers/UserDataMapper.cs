@@ -112,7 +112,7 @@ namespace AuthorizationServiceAPI.DataMappers
         {
             return new ContentCreatorUser
             {
-                //Uuid = model.ID,
+                //Uuid = model., //TODO:!!!!!!!!!
                 UserName = model.UserName,
                 Email = model.Email,
                 UserLevel = model.Role.ToUserLevel(), //TODO: Validate??? 

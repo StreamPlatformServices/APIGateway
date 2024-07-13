@@ -96,6 +96,11 @@ namespace ContentMetadataServiceMock
             content.Description = updatedContent.Description;
             content.Duration = updatedContent.Duration;
 
+            //TODO: Update in spearate methods
+            content.ContentStatus = updatedContent.ContentStatus;
+            content.ImageStatus = updatedContent.ImageStatus;
+            //-------------------------------------------------------
+
             var updatedLicenseRules = updatedContent.LicenseRules.Select(c => c.ToLicenseRulesData()).ToList();
             content.LicenseRules = updatedLicenseRules;
    

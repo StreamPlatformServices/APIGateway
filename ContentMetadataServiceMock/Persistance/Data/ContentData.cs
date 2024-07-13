@@ -1,11 +1,5 @@
 ﻿using APIGatewayEntities.Entities;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ContentMetadataServiceMock.Persistance.Data
 {
@@ -20,6 +14,7 @@ namespace ContentMetadataServiceMock.Persistance.Data
         public ICollection<ContentCommentData> Comments { get; set; } 
         public ICollection<LicenseRulesData> LicenseRules { set; get; }
         public Guid OwnerId { get; set; }
-
+        public UploadState ImageStatus { set; get; } = UploadState.InProgress;
+        public UploadState ContentStatus { set; get; } = UploadState.InProgress;
     }
 }

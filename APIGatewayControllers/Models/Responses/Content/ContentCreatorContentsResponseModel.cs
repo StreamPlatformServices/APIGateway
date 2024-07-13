@@ -8,8 +8,8 @@ namespace APIGatewayControllers.Models.Responses.Content
         public string Title { set; get; }
         public int Duration { set; get; }
         public string Description { set; get; }
-        public UploadStatus ImageStatus { set; get; }
-        public UploadStatus ContentStatus { set; get; }
+        public UploadState ImageStatus { set; get; } = UploadState.InProgress;
+        public UploadState ContentStatus { set; get; } = UploadState.InProgress;
         public IEnumerable<LicenseRulesModel> LicenseRules { set; get; }
 
     }

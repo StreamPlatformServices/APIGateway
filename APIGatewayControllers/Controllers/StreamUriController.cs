@@ -6,11 +6,11 @@ using APIGatewayCoreUtilities.CommonExceptions;
 using System.Net;
 using StreamGatewayControllers.Models;
 using APIGatewayControllers.DataMappers;
+using APIGatewayEntities.Entities;
 
 //TODO: Czy wogle powinna byc mozliwosc otrzymania linka ze streamem dla userow bez licencji????
 namespace APIGateway.Controllers
 {
-    //TODO: NOW!! Create temporary endpoint to change the image file state and video file state in content metadata DB 
     [ApiController]
     [Route("uri")]
     public class StreamUriController : ControllerBase
@@ -111,6 +111,77 @@ namespace APIGateway.Controllers
             {
                 response.Message = ex.Message;
                 return StatusCode((int)HttpStatusCode.Forbidden, response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while getting the stream url.");
+                response.Message = $"An error occurred while getting the stream url. Error message: {ex.Message}";
+                return StatusCode((int)HttpStatusCode.InternalServerError, response);
+            }
+        }
+
+
+        //TODO: NOW!!!! Dokoncz to..... nastepnie rozkmin przekazywanie url obrazkow!!!!!!!!
+        public class SetUploadStateRequestModel
+        {
+            public UploadState UploadState { get; set; }
+        }
+
+        [HttpPost("temp/video/{contentId}")]
+        public async Task<IActionResult> SetVideoStateTemp(Guid contentId, [FromBody] SetUploadStateRequestModel requestData)
+        {
+            _logger.LogInformation($"Start get uri procedure for content: {contentId}");
+            var response = new Response<bool>();
+
+            try
+            {
+                var content  = await _contentMetadataContract.GetContentMetadataByIdAsync(contentId);
+
+                content.ContentStatus = requestData.UploadState;
+
+                await _contentMetadataContract.EditContentMetadataAsync(contentId, content);
+
+                response.Result = true;
+
+                _logger.LogInformation($"SetVideoState finished successfully. Actual video state: {requestData.UploadState}");
+                return Ok(response);
+            }
+            catch (NotFoundException ex)
+            {
+                response.Message = ex.Message;
+                return NotFound(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while getting the stream url.");
+                response.Message = $"An error occurred while getting the stream url. Error message: {ex.Message}";
+                return StatusCode((int)HttpStatusCode.InternalServerError, response);
+            }
+        }
+
+        [HttpPost("temp/image/{contentId}")]
+        public async Task<IActionResult> SetImageStateTemp(Guid contentId, [FromBody] SetUploadStateRequestModel requestData)
+        {
+            _logger.LogInformation($"Start get uri procedure for content: {contentId}");
+            var response = new Response<bool>();
+
+            try
+            {
+                var content = await _contentMetadataContract.GetContentMetadataByIdAsync(contentId);
+
+                content.ImageStatus = requestData.UploadState;
+
+                await _contentMetadataContract.EditContentMetadataAsync(contentId, content);
+
+                response.Result = true;
+
+                _logger.LogInformation($"SetVideoState finished successfully. Actual video state: {requestData.UploadState}");
+                return Ok(response);
+            }
+            catch (NotFoundException ex)
+            {
+                response.Message = ex.Message;
+                return NotFound(response);
             }
             catch (Exception ex)
             {
