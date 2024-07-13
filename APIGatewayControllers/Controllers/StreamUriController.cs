@@ -72,56 +72,56 @@ namespace APIGateway.Controllers
             }
         }
 
-        [HttpGet("image/{contentId}")]
-        public async Task<IActionResult> GetImageStreamUriAsync(Guid contentId)
-        {
-            _logger.LogInformation($"Start get uri procedure for content: {contentId}");
-            var response = new Response<GetUriResponseModel> { Result = new GetUriResponseModel() };
+        //TODO: Remove:
+        //[HttpGet("image/{contentId}")]
+        //public async Task<IActionResult> GetImageStreamUriAsync(Guid contentId)
+        //{
+        //    _logger.LogInformation($"Start get uri procedure for content: {contentId}");
+        //    var response = new Response<GetUriResponseModel> { Result = new GetUriResponseModel() };
 
-            try
-            {
-                await _contentMetadataContract.GetContentMetadataByIdAsync(contentId);
-            }
-            catch (NotFoundException ex)
-            {
-                response.Message = ex.Message;
-                return NotFound(response);
-            }
+        //    try
+        //    {
+        //        await _contentMetadataContract.GetContentMetadataByIdAsync(contentId);
+        //    }
+        //    catch (NotFoundException ex)
+        //    {
+        //        response.Message = ex.Message;
+        //        return NotFound(response);
+        //    }
 
-            try
-            {
-                var uriData = await _streamUriContract.GetImageStreamUriAsync(contentId);
+        //    try
+        //    {
+        //        var uriData = await _streamUriContract.GetImageStreamUriAsync(contentId);
 
-                response.Result = uriData.ToGetResponseModel();
+        //        response.Result = uriData.ToGetResponseModel();
 
-                _logger.LogInformation($"Get uri procedure finished successfully content: {contentId}");
-                return Ok(response);
-            }
-            catch (NotFoundException ex) //TODO: Probably remove??
-            {
-                response.Message = ex.Message;
-                return NotFound(response);
-            }
-            catch (UnauthorizedException ex) //TODO: handle token and authorization in StreamGateway. Not sure if token will be needed for get uri but probably yes
-            {
-                response.Message = ex.Message;
-                return Unauthorized(response);
-            }
-            catch (ForbiddenException ex)
-            {
-                response.Message = ex.Message;
-                return StatusCode((int)HttpStatusCode.Forbidden, response);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while getting the stream url.");
-                response.Message = $"An error occurred while getting the stream url. Error message: {ex.Message}";
-                return StatusCode((int)HttpStatusCode.InternalServerError, response);
-            }
-        }
+        //        _logger.LogInformation($"Get uri procedure finished successfully content: {contentId}");
+        //        return Ok(response);
+        //    }
+        //    catch (NotFoundException ex) //TODO: Probably remove??
+        //    {
+        //        response.Message = ex.Message;
+        //        return NotFound(response);
+        //    }
+        //    catch (UnauthorizedException ex) //TODO: handle token and authorization in StreamGateway. Not sure if token will be needed for get uri but probably yes
+        //    {
+        //        response.Message = ex.Message;
+        //        return Unauthorized(response);
+        //    }
+        //    catch (ForbiddenException ex)
+        //    {
+        //        response.Message = ex.Message;
+        //        return StatusCode((int)HttpStatusCode.Forbidden, response);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, "An error occurred while getting the stream url.");
+        //        response.Message = $"An error occurred while getting the stream url. Error message: {ex.Message}";
+        //        return StatusCode((int)HttpStatusCode.InternalServerError, response);
+        //    }
+        //}
 
 
-        //TODO: NOW!!!! Dokoncz to..... nastepnie rozkmin przekazywanie url obrazkow!!!!!!!!
         public class SetUploadStateRequestModel
         {
             public UploadState UploadState { get; set; }

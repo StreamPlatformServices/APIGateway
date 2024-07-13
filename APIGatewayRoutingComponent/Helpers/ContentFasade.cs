@@ -9,15 +9,18 @@ namespace APIGatewayEntities.Helpers
         private readonly IContentMetadataContract _contentMetadataContract;
         private readonly ILicenseContract _licenseContract; //TODO: probably not needed ??
         private readonly IUserContract _userContract; 
+        private readonly IStreamUriContract _streamUriContract; 
 
         public ContentFasade(
             IContentMetadataContract contentMetadataContract,
             ILicenseContract licenseContract,
-            IUserContract userContract)
+            IUserContract userContract,
+            IStreamUriContract streamUriContract)
         {
             _contentMetadataContract = contentMetadataContract;
             _licenseContract = licenseContract;
             _userContract = userContract;
+            _streamUriContract = streamUriContract;
         }
 
         public async Task<IEnumerable<Content>> GetContentByUserTokenAsync(string token)
@@ -40,7 +43,24 @@ namespace APIGatewayEntities.Helpers
 
         async Task<IEnumerable<Content>> IContentFasade.GetAllContentsAsync(int limit, int offset)
         {
-            return await _contentMetadataContract.GetAllContentsAsync(limit, offset);
+            var contents = await _contentMetadataContract.GetAllContentsAsync(limit, offset);
+
+            var tasks = new List<Task>();
+
+            foreach (var content in contents) //TODO: Maybe create method which allows to get list of images with one req. Or create some smart caching structure!!!!!!!!!!!!!
+            {
+                tasks.Add(UpdateContentWithImageUrlAsync(content));
+            }
+
+            await Task.WhenAll(tasks);
+
+            return contents;
+        }
+
+        private async Task UpdateContentWithImageUrlAsync(Content content)
+        {
+            var uriData = await _streamUriContract.GetImageStreamUriAsync(content.Uuid);
+            content.ImageUrl = uriData.Url;
         }
 
         async Task<Content> IContentFasade.GetContentByIdAsync(Guid contentId)
