@@ -1,7 +1,6 @@
 ﻿using APIGatewayEntities.Helpers.Interfaces;
 using APIGatewayEntities.Helpers;
 using APIGatewayEntities.IntegrationContracts;
-using ContentMetadataServiceMock;
 
 namespace APIGatewayMain.ServiceCollectionExtensions.ComponentsExtensions
 {
@@ -11,7 +10,9 @@ namespace APIGatewayMain.ServiceCollectionExtensions.ComponentsExtensions
         {
             services.AddScoped<IContentFasade, ContentFasade>();
 
+            //TODO: Move to components extension methods??
             services.Decorate<IContentCommentContract, ContentCommentDecorator>();
+            services.Decorate<ILicenseContract, LicenseDecorator>();
 
             return services;
         }

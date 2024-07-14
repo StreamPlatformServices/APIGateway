@@ -6,24 +6,24 @@ namespace APIGatewayControllers.DataMappers
 {
     public static class LicenseDataMapper
     {
-        public static ContentLicense ToContentLicense(this LicenseModel model)
+        public static ContentLicense ToContentLicense(this LicenseRequestModel model)
         {
             return new ContentLicense
             {
                 Uuid = Guid.NewGuid(),
-                UserId = model.UserId,
+                //UserId = model.UserId, //TODO: will be provided from token (Create license decorator)
                 ContentId = model.ContentId,
                 LicenseRules = model.LicenseRulesModel.ToLicenseRules()
             };
         }
 
-        public static LicenseModel ToContentLicenseModel(this ContentLicense entity)
+        public static LicenseResponseModel ToContentLicenseModel(this ContentLicense entity)
         {
-            return new LicenseModel
+            return new LicenseResponseModel
             {
-                UserId = entity.UserId,
-                ContentId = entity.ContentId,
-                LicenseRulesModel = entity.LicenseRules.ToLicenseRulesModel()
+                LicenseRulesModel = entity.LicenseRules.ToLicenseRulesModel(),
+                LicenseStatus = entity.LicenseStatus,
+                TimeToExpirationInHours = entity.TimeToExpirationInHours
             };
         }
     }

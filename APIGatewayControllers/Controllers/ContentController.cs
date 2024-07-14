@@ -33,7 +33,6 @@ namespace APIGateway.Controllers
         [HttpGet("all")]
         public async Task<ActionResult> GetContentsAsync([FromQuery] int limit, [FromQuery] int offset)
         {
-            //TODO: Generate Snapshots 
             //TODO: Content cacher in fasade???
             var response = new Response<GetAllContentsResponseModel>();
 
@@ -168,7 +167,7 @@ namespace APIGateway.Controllers
                         .SelectMany(v => v.Errors)
                         .Select(e => e.ErrorMessage);
 
-                _logger.LogWarning("Invalid model state for UploadContentAsync: {Errors}", string.Join("; ", errorMessages));
+                _logger.LogWarning("Invalid model state for DeleteContentAsync: {Errors}", string.Join("; ", errorMessages));
                 return BadRequest(ModelState);
             }
 
@@ -207,7 +206,7 @@ namespace APIGateway.Controllers
         }
 
         [Authorize(Roles = "ContentCreator")]
-        [HttpPut("Edit", Name = "EditContent")]
+        [HttpPut]
         public async Task<ActionResult<string>> EditContentAsync(Guid contentId, [FromBody] UploadContentRequestModel requestData)
         {
             if (!ModelState.IsValid)
@@ -216,7 +215,7 @@ namespace APIGateway.Controllers
                         .SelectMany(v => v.Errors)
                         .Select(e => e.ErrorMessage);
 
-                _logger.LogWarning("Invalid model state for UploadContentAsync: {Errors}", string.Join("; ", errorMessages));
+                _logger.LogWarning("Invalid model state for EditContentAsync: {Errors}", string.Join("; ", errorMessages));
                 return BadRequest(ModelState);
             }
 

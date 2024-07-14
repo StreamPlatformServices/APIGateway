@@ -1,6 +1,5 @@
 ﻿using APIGatewayCoreUtilities.CommonConfiguration.ConfigurationModels;
 using APIGatewayEntities.IntegrationContracts;
-using AuthorizationServiceAPI;
 using Microsoft.Extensions.Options;
 using StreamGatewayAPI;
 

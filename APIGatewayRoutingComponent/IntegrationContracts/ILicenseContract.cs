@@ -2,13 +2,14 @@
 
 namespace APIGatewayEntities.IntegrationContracts
 {
-    public interface ILicenseContract
+    public interface ILicenseContract //TODO: change use cases accordingly
     {
         //TODO: Add LicenseHandler to StreamUriRouter?? Verify license while geting uri or while getting stream???
-        Task<ContentLicense> AssignLicenseAsync(Guid userId, Guid contentId);
-        Task<bool> IssueLicenseAsync(ContentLicense license);
-        Task<bool> VerifyLicenseAsync(Guid userId, Guid contentId);
-        Task<bool> DeleteContentMetadataAsync(Guid licenseId);
+
+        Task ExtendLicenseAsync(ContentLicense license, string token);
+        Task IssueLicenseAsync(ContentLicense license, string token);
+        Task<ContentLicense> GetLicenseAsync(Guid contentId, string token);
+        Task DeleteLicenseAsync(Guid licenseId); //TODO: While removing content remove all licenses??
     }
 
 }

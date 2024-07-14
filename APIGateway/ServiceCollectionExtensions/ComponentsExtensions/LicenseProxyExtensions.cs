@@ -1,5 +1,7 @@
-﻿using APIGatewayEntities.IntegrationContracts;
-using APIGatewayMicroservicesClient;
+﻿using APIGatewayEntities.Entities;
+using APIGatewayEntities.IntegrationContracts;
+using LicenseProxyAPI;
+using LicenseProxyAPI.Helpers;
 
 namespace APIGatewayMain.ServiceCollectionExtensions.ComponentsExtensions
 {
@@ -7,7 +9,8 @@ namespace APIGatewayMain.ServiceCollectionExtensions.ComponentsExtensions
     {
         public static IServiceCollection AddLicenseProxyApi(this IServiceCollection services)
         {
-            services.AddTransient<ILicenseContract, LicenseProxyAPI>();
+            services.AddTransient<ILicenseDurationCalculator, LicenseDurationCalculator>();
+            services.AddTransient<ILicenseContract, LicenseContract>();
 
             return services;
         }

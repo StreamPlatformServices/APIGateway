@@ -87,7 +87,7 @@ namespace APIGateway.Controllers
                         .SelectMany(v => v.Errors)
                         .Select(e => e.ErrorMessage);
 
-                _logger.LogWarning("Invalid model state for AddEndUserAsync: {Errors}", string.Join("; ", errorMessages));
+                _logger.LogWarning("Invalid model state for SignInAsync: {Errors}", string.Join("; ", errorMessages));
                 return BadRequest(ModelState);
             }
 
@@ -132,7 +132,7 @@ namespace APIGateway.Controllers
                         .SelectMany(v => v.Errors)
                         .Select(e => e.ErrorMessage);
 
-                _logger.LogWarning("Invalid model state for AddEndUserAsync: {Errors}", string.Join("; ", errorMessages));
+                _logger.LogWarning("Invalid model state for AddContentCreatorAsync: {Errors}", string.Join("; ", errorMessages));
                 return BadRequest(ModelState);
             }
 
@@ -207,7 +207,7 @@ namespace APIGateway.Controllers
                         .SelectMany(v => v.Errors)
                         .Select(e => e.ErrorMessage);
 
-                _logger.LogWarning("Invalid model state for AddEndUserAsync: {Errors}", string.Join("; ", errorMessages));
+                _logger.LogWarning("Invalid model state for EditEndUserAsync: {Errors}", string.Join("; ", errorMessages));
                 return BadRequest(ModelState);
             }
 
@@ -257,7 +257,7 @@ namespace APIGateway.Controllers
                         .SelectMany(v => v.Errors)
                         .Select(e => e.ErrorMessage);
 
-                _logger.LogWarning("Invalid model state for AddEndUserAsync: {Errors}", string.Join("; ", errorMessages));
+                _logger.LogWarning("Invalid model state for EditContentCreatorUserAsync: {Errors}", string.Join("; ", errorMessages));
                 return BadRequest(ModelState);
             }
 
@@ -307,7 +307,7 @@ namespace APIGateway.Controllers
                         .SelectMany(v => v.Errors)
                         .Select(e => e.ErrorMessage);
 
-                _logger.LogWarning("Invalid model state for AddEndUserAsync: {Errors}", string.Join("; ", errorMessages));
+                _logger.LogWarning("Invalid model state for ChangePasswordAsync: {Errors}", string.Join("; ", errorMessages));
                 return BadRequest(ModelState);
             }
 
@@ -318,8 +318,8 @@ namespace APIGateway.Controllers
             {
                 await _userContract.ChangePasswordAsync(requestData.OldPassword, requestData.NewPassword, jwt);
 
-                _logger.LogInformation("User has been removed successfully.");
-                response.Message = $"User has been removed successfully.";
+                _logger.LogInformation("Password has been changed successfully.");
+                response.Message = $"Password has been changed successfully.";
                 response.Result = true;
                 return Ok(response);
             }
@@ -340,8 +340,8 @@ namespace APIGateway.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while removing a user.");
-                response.Message = $"An error occurred while removing a user. Error message: {ex.Message}";
+                _logger.LogError(ex, "An error occurred while changing password.");
+                response.Message = $"An error occurred while changing password. Error message: {ex.Message}";
                 return StatusCode((int)HttpStatusCode.InternalServerError, response);
             }
         }
@@ -356,7 +356,7 @@ namespace APIGateway.Controllers
                         .SelectMany(v => v.Errors)
                         .Select(e => e.ErrorMessage);
 
-                _logger.LogWarning("Invalid model state for AddEndUserAsync: {Errors}", string.Join("; ", errorMessages));
+                _logger.LogWarning("Invalid model state for RemoveUserAsync: {Errors}", string.Join("; ", errorMessages));
                 return BadRequest(ModelState);
             }
 
@@ -445,7 +445,7 @@ namespace APIGateway.Controllers
                         .SelectMany(v => v.Errors)
                         .Select(e => e.ErrorMessage);
 
-                _logger.LogWarning("Invalid model state for AddEndUserAsync: {Errors}", string.Join("; ", errorMessages));
+                _logger.LogWarning("Invalid model state for UpdateStatusAsync: {Errors}", string.Join("; ", errorMessages));
                 return BadRequest(ModelState);
             }
 
