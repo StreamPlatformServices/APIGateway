@@ -134,15 +134,15 @@ namespace APIGateway.Controllers
 
             string jwt = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
 
-            var response = new Response<bool>();
+            var response = new Response<UploadContentResponseModel> { Result = new UploadContentResponseModel() };
 
             try
             {
-                await _contentFasade.UploadContentAsync(contentMetadata.ToContent(), jwt);
+                var contentId = await _contentFasade.UploadContentAsync(contentMetadata.ToContent(), jwt);
 
                 _logger.LogInformation("Content data saved successfully.");
 
-                response.Result = true;
+                response.Result.ContentId = contentId;
                 return Ok(response);
             }
             catch (ConflictException ex)

@@ -68,13 +68,13 @@ namespace APIGatewayEntities.Helpers
             return await _contentMetadataContract.GetContentMetadataByIdAsync(contentId);
         }
 
-        async Task IContentFasade.UploadContentAsync(Content content, string token)
+        async Task<Guid> IContentFasade.UploadContentAsync(Content content, string token)
         {
             var user = await _userContract.GetUserAsync(token);
 
             content.OwnerId = user.Uuid;
 
-            await _contentMetadataContract.AddContentMetadataAsync(content);
+            return await _contentMetadataContract.AddContentMetadataAsync(content);
         }
     }
 }

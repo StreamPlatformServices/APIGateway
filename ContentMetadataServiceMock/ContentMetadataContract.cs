@@ -41,12 +41,13 @@ namespace ContentMetadataServiceMock
             return content.ToContent();
         }
 
-        public async Task AddContentMetadataAsync(Content content)
+        public async Task<Guid> AddContentMetadataAsync(Content content)
         {
             try
             {
                 await _context.Contents.AddAsync(content.ToContentData());
                 await _context.SaveChangesAsync();
+                return content.Uuid;
             }
             catch (DbUpdateException ex)
             {
