@@ -3,6 +3,7 @@
     //TODO: NOW!!! Create models for all methods -> Use draw.io 
     public class UserResponseDto
     {
+        public Guid Id { get; set; }
         public string Email { get; set; }
         public string UserName { get; set; }
         public string Role { get; set; }

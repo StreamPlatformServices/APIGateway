@@ -16,6 +16,7 @@ namespace AuthorizationServiceAPI.DataMappers
                 ImageStatus = model.ImageStatus,
                 Comments = model.ContentComments?.Select(c => c.ToContentCommentData()).ToList() ?? new List<ContentCommentData>(),
                 LicenseRules = model.LicenseRules?.Select(c => c.ToLicenseRulesData()).ToList() ?? new List<LicenseRulesData>(),
+                OwnerId = model.OwnerId,
             };
         }
 

@@ -89,7 +89,7 @@ namespace AuthorizationServiceAPI.DataMappers
         {
             return new AdminUser
             {
-                //Uuid = model.ID, //TODO: Get id from authorization service.. Is it needed???
+                Uuid = model.Id,
                 UserName = model.UserName,
                 Email = model.Email,
                 UserLevel = model.Role.ToUserLevel(), //TODO: Validate??? 
@@ -100,10 +100,10 @@ namespace AuthorizationServiceAPI.DataMappers
         {
             return new EndUser
             {
-                //Uuid = model.ID, //TODO: Get id from authorization service.. Is it needed???
+                Uuid = model.Id, //TODO: Seperate logic for end user and content creator!!!!! No endUser id needed
                 UserName = model.UserName,
                 Email = model.Email,
-                UserLevel = model.Role.ToUserLevel(), //TODO: Validate??? 
+                UserLevel = model.Role.ToUserLevel(),
                 IsActive = model.IsActive
             };
         }
@@ -112,7 +112,7 @@ namespace AuthorizationServiceAPI.DataMappers
         {
             return new ContentCreatorUser
             {
-                //Uuid = model., //TODO:!!!!!!!!!
+                Uuid = model.Id,
                 UserName = model.UserName,
                 Email = model.Email,
                 UserLevel = model.Role.ToUserLevel(), //TODO: Validate??? 

@@ -6,6 +6,8 @@ using APIGatewayMain.ServiceCollectionExtensions;
 using APIGatewayMain.ServiceCollectionExtensions.ComponentsExtensions;
 using AspNetCoreRateLimit;
 
+//TODO: Duration handling 
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCommonConfiguration(builder.Configuration);

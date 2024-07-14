@@ -1,6 +1,5 @@
 ﻿using APIGatewayControllers.Models;
 using APIGatewayEntities.Entities;
-using System.ComponentModel;
 
 namespace APIGatewayControllers.DataMappers
 {
@@ -21,7 +20,7 @@ namespace APIGatewayControllers.DataMappers
         {
             return new LicenseResponseModel
             {
-                LicenseRulesModel = entity.LicenseRules.ToLicenseRulesModel(),
+                LicenseRules = entity.LicenseRules.ToLicenseRulesModel(),
                 LicenseStatus = entity.LicenseStatus,
                 TimeToExpirationInHours = entity.TimeToExpirationInHours
             };

@@ -65,7 +65,11 @@ namespace APIGatewayEntities.Helpers
 
         async Task<Content> IContentFasade.GetContentByIdAsync(Guid contentId)
         {
-            return await _contentMetadataContract.GetContentMetadataByIdAsync(contentId);
+            var content =  await _contentMetadataContract.GetContentMetadataByIdAsync(contentId);
+
+            await UpdateContentWithImageUrlAsync(content);
+
+            return content;
         }
 
         async Task<Guid> IContentFasade.UploadContentAsync(Content content, string token)
