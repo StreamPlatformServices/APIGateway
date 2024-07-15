@@ -57,9 +57,8 @@ namespace APIGateway.Controllers
             }
         }
 
-        [Authorize]
-        [HttpGet]
-        public async Task<ActionResult> GetContentByIdAsync(Guid uuid)
+        [HttpGet("{uuid}")]
+        public async Task<ActionResult> GetContentByIdAsync([FromRoute] Guid uuid)
         {
             var response = new Response<GetContentResponseModel>();
             try

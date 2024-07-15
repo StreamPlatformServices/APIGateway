@@ -7,6 +7,7 @@ using APIGatewayMain.ServiceCollectionExtensions.ComponentsExtensions;
 using AspNetCoreRateLimit;
 
 //TODO: Duration handling 
+//TODO: Czy w realnych warunkach sukcesywnej platformy komercyjnej byloby sensownie podzielic streamGateway na dwa serwisy (do streamowania i uploadu)
 
 var builder = WebApplication.CreateBuilder(args);
 
