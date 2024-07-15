@@ -22,6 +22,19 @@ builder.Services.AddLicenseProxyApi();
 builder.Services.AddEntityComponent();
 builder.Services.AddValidators();
 
+//TODO: Use safe cors policy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        policy =>
+        {
+            policy.WithOrigins("*")
+                  .AllowAnyOrigin()
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
+
 builder.Services.AddControllers().PartManager.ApplicationParts
     .Add(new AssemblyPart(typeof(ControllersAssemblyMarker).Assembly));
 
