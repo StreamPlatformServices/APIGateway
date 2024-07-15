@@ -110,22 +110,25 @@ namespace ContentMetadataServiceMock
 
         public async Task<IEnumerable<Content>> GetAllContentsAsync(int limit, int offset)
         {
+            //TODO: maybe filter contents in APIGatewayEntity component?
             var contentsData = new List<ContentData>();
+
             if (limit == 0)
             {
                 contentsData = await _context.Contents
+                    .Where(e => e.ContentStatus == UploadState.Success && e.ImageStatus == UploadState.Success)
                     .Skip(offset)
                     .ToListAsync();
             }
             else
             {
                 contentsData = await _context.Contents
-                .Skip(offset)
-                .Take(limit)
-                .ToListAsync();
+                    .Where(e => e.ContentStatus == UploadState.Success && e.ImageStatus == UploadState.Success)
+                    .Skip(offset)
+                    .Take(limit)
+                    .ToListAsync();
             }
            
-
             var contents = contentsData?.Select(c => c.ToContent()).ToList() ?? new List<Content>();
 
             return contents;

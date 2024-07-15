@@ -82,6 +82,8 @@ if (app.Environment.IsDevelopment())
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "APIGateway API V1");
         //c.RoutePrefix = string.Empty; // Make Swagger UI the root page
     });
+
+    app.UseCors("AllowAll");
 }
 
 app.UseMiddleware<JwtConfigMiddleware>();

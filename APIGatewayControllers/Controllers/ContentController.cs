@@ -57,13 +57,13 @@ namespace APIGateway.Controllers
             }
         }
 
-        [HttpGet("{uuid}")]
-        public async Task<ActionResult> GetContentByIdAsync([FromRoute] Guid uuid)
+        [HttpGet("{contentId}")]
+        public async Task<ActionResult> GetContentByIdAsync([FromRoute] Guid contentId)
         {
             var response = new Response<GetContentResponseModel>();
             try
             {
-                var content = await _contentFasade.GetContentByIdAsync(uuid);
+                var content = await _contentFasade.GetContentByIdAsync(contentId);
 
                 _logger.LogInformation("Get content data finished properly.");
                 response.Result = content.ToGetContentResponseModel();
