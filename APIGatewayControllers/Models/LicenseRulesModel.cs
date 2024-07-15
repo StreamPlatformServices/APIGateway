@@ -6,6 +6,6 @@ namespace APIGatewayControllers.Models
     {
         public int Price { set; get; }
         public LicenseType Type { set; get; }
-        public LicenseDuration Duration { set; get; }
+        public LicenseDuration? Duration { set; get; }
     }
 }

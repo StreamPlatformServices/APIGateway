@@ -93,11 +93,6 @@ namespace APIGateway.Controllers
             {
                 var contents = await _contentFasade.GetContentByUserTokenAsync(jwt);
 
-                if (!contents.Any()) //TODO: Comment?
-                {
-                    return NoContent();
-                }
-
                 _logger.LogInformation("Get content data finished properly.");
    
                 response.Result = contents.ToGetContentsByUserResponseModel();

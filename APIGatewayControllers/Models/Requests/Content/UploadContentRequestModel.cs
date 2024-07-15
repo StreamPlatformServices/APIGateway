@@ -10,6 +10,6 @@ namespace APIGatewayControllers.Models.Requests.Content
         [Required]
         public string Description { set; get; }
         [Required]
-        public IEnumerable<LicenseRulesModel> LicenseRulesModel { set; get; }
+        public IEnumerable<LicenseRulesModel> LicenseRules { set; get; }
     }
 }

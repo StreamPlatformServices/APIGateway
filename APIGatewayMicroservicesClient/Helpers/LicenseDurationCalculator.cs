@@ -10,7 +10,7 @@ namespace LicenseProxyAPI.Helpers
 {
     public class LicenseDurationCalculator : ILicenseDurationCalculator
     {
-        public int CalculateTimeToExpirationInHourse(DateTime licenseActivationTime, LicenseDuration licenseDuration)
+        public int CalculateTimeToExpirationInHourse(DateTime licenseActivationTime, LicenseDuration? licenseDuration)
         {
             var elapsedDuration = DateTime.UtcNow - licenseActivationTime;
 

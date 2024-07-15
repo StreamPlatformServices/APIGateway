@@ -15,7 +15,7 @@ namespace APIGatewayControllers.Validators
             RuleFor(x => x.Description)
                 .NotEmpty().WithMessage("Description is required.");
 
-            RuleFor(x => x.LicenseRulesModel)
+            RuleFor(x => x.LicenseRules)
                 .NotEmpty().WithMessage("At least one license rule is needed.");
         }
     }

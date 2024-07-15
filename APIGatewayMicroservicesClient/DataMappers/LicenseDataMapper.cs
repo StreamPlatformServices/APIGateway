@@ -12,8 +12,13 @@ namespace LicenseProxyAPI.DataMappers
     public static class LicenseDataMapper
     {
         private const int HOURS_IN_DAY = 24;
-        public static int ToNumberOfHours(this LicenseDuration licenseDuration)
+        public static int ToNumberOfHours(this LicenseDuration? licenseDuration)
         {
+            if (licenseDuration == null)
+            { 
+                return 0; 
+            }
+
             if (licenseDuration == LicenseDuration.Unknown)
             {
                 return 0;

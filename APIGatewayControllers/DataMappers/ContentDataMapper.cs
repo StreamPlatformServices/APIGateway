@@ -16,7 +16,7 @@ namespace APIGatewayControllers.DataMappers
                 Title = model.Title,
                 UploadTime = DateTime.UtcNow, //TODO: UT???
                 Description = model.Description,
-                LicenseRules = model.LicenseRulesModel?.Select(c => c.ToLicenseRules()).ToList() ?? new List<LicenseRules>(),
+                LicenseRules = model.LicenseRules?.Select(c => c.ToLicenseRules()).ToList() ?? new List<LicenseRules>(),
             };
         }
 
