@@ -32,7 +32,7 @@ namespace ContentMetadataServiceMock
                 .Include(c => c.Comments)
                 .Include(c => c.LicenseRules)
                 .FirstOrDefaultAsync(c => c.ContentId == contentId);
-                
+
             if (content == null)
             {
                 _logger.LogError($"Content with id: {contentId} not found!");
@@ -78,8 +78,8 @@ namespace ContentMetadataServiceMock
         }
 
         public async Task EditContentMetadataAsync(Guid contentId, Content updatedContent)
-        {
-            if (updatedContent.LicenseRules == null && !updatedContent.LicenseRules.Any())
+        { 
+            if (updatedContent.LicenseRules == null || !updatedContent.LicenseRules.Any())
             {
                 _logger.LogError("Bad input. License rules should not be empty.");
                 throw new Exception("Bad input. License rules should not be empty.");
@@ -105,7 +105,7 @@ namespace ContentMetadataServiceMock
 
             var updatedLicenseRules = updatedContent.LicenseRules.Select(c => c.ToLicenseRulesData()).ToList();
             content.LicenseRules = updatedLicenseRules;
-   
+            
             await _context.SaveChangesAsync();
         }
 
