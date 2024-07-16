@@ -2,6 +2,7 @@
 {
     public enum UploadState
     {
+        NoFile,
         InProgress,
         Success,
         Failed

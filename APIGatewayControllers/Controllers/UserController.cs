@@ -13,6 +13,7 @@ using APIGatewayControllers.Models.Responses;
 
 namespace APIGateway.Controllers
 {
+    //TODO: Sprawdz zalety architektury przy bezposredniej komunikacji frontendu z AuthService
     //TODO: Log start operations of endpoints!!!!!!!!!!!!!!!!!!!!
     [ApiController]
     [Route("user")]

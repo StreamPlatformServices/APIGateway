@@ -30,9 +30,16 @@ namespace APIGatewayEntities.Helpers
             return await _contentMetadataContract.GetContentMetadataByOwnerIdAsync(user.Uuid);
         }
 
-        async Task IContentFasade.DeleteContentAsync(Guid contentId)
+        async Task<bool> IContentFasade.DeleteContentAsync(Guid contentId)
         {
+            var content = await _contentMetadataContract.GetContentMetadataByIdAsync(contentId);
+            if (content.ImageStatus != UploadState.NoFile || content.ContentStatus != UploadState.NoFile)
+            {
+                return false;
+            }
+
             await _contentMetadataContract.DeleteContentMetadataAsync(contentId);
+            return true;
         }
 
         async Task IContentFasade.EditContentAsync(Guid contentId, Content content)

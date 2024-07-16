@@ -11,7 +11,7 @@ using APIGatewayControllers.Models.Requests.Content;
 
 namespace APIGateway.Controllers
 {
-
+    //TODO: Operacje metadanych oraz plikow powiazanych powinny byc atomowe
     //TODO: Log start operations of endpoints!!!!!!!!!!!!!!!!!!!!
     [ApiController]
     [Route("content")]
@@ -39,10 +39,6 @@ namespace APIGateway.Controllers
             try
             {
                 var content = await _contentFasade.GetAllContentsAsync(limit, offset);
-                if (!content.Any())
-                {
-                    return NoContent();
-                }
 
 
                 _logger.LogInformation("Get all contents finished properly.");
@@ -152,8 +148,8 @@ namespace APIGateway.Controllers
         }
 
         [Authorize(Roles = "ContentCreator")]
-        [HttpDelete]
-        public async Task<ActionResult<string>> DeleteContentAsync(Guid contentId)
+        [HttpDelete("{contentId}")]
+        public async Task<ActionResult<string>> DeleteContentAsync([FromRoute] Guid contentId)
         {
             if (!ModelState.IsValid)
             {
@@ -169,7 +165,11 @@ namespace APIGateway.Controllers
 
             try
             {
-                await _contentFasade.DeleteContentAsync(contentId);
+                if(!await _contentFasade.DeleteContentAsync(contentId))
+                {
+                    response.Message = $"Content metadata can't be removed. Please remove related files content and image files first.";
+                    return Conflict(response);
+                }
 
                 _logger.LogInformation("Content metadata has been removed successfully.");
                 response.Message = $"Content metadata has been removed successfully.";
@@ -200,8 +200,8 @@ namespace APIGateway.Controllers
         }
 
         [Authorize(Roles = "ContentCreator")]
-        [HttpPut]
-        public async Task<ActionResult<string>> EditContentAsync(Guid contentId, [FromBody] UploadContentRequestModel requestData)
+        [HttpPut("{contentId}")]
+        public async Task<ActionResult<string>> EditContentAsync([FromRoute] Guid contentId, [FromBody] UploadContentRequestModel requestData)
         {
             if (!ModelState.IsValid)
             {
