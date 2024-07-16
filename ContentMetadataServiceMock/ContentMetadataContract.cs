@@ -30,6 +30,7 @@ namespace ContentMetadataServiceMock
         {
             var content = await _context.Contents
                 .Include(c => c.Comments)
+                .Include(c => c.LicenseRules)
                 .FirstOrDefaultAsync(c => c.ContentId == contentId);
                 
             if (content == null)
@@ -137,6 +138,7 @@ namespace ContentMetadataServiceMock
         public async Task<IEnumerable<Content>> GetContentMetadataByOwnerIdAsync(Guid ownerId)
         {
             var contentsData = await _context.Contents
+                .Include(c => c.LicenseRules)
                 .Where(c => c.OwnerId == ownerId)
                 .ToListAsync();
 
