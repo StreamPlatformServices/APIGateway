@@ -135,11 +135,7 @@ namespace APIGateway.Controllers
 
             try
             {
-                var content  = await _contentMetadataContract.GetContentMetadataByIdAsync(contentId);
-
-                content.ContentStatus = requestData.UploadState;
-
-                await _contentMetadataContract.EditContentMetadataAsync(contentId, content);
+                await _contentMetadataContract.UpdateContentVideoFileStateAsync(contentId, requestData.UploadState);
 
                 response.Result = true;
 
@@ -167,11 +163,7 @@ namespace APIGateway.Controllers
 
             try
             {
-                var content = await _contentMetadataContract.GetContentMetadataByIdAsync(contentId);
-
-                content.ImageStatus = requestData.UploadState;
-
-                await _contentMetadataContract.EditContentMetadataAsync(contentId, content);
+                await _contentMetadataContract.UpdateContentImageFileStateAsync(contentId, requestData.UploadState);
 
                 response.Result = true;
 

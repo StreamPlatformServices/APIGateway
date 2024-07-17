@@ -17,8 +17,8 @@
         public string Description { set; get; }
         public IEnumerable<LicenseRules> LicenseRules { set; get; }
         public IEnumerable<ContentComment> ContentComments { set; get; }
-        public UploadState ImageStatus { set; get; } = UploadState.InProgress;
-        public UploadState ContentStatus { set; get; } = UploadState.InProgress;
+        public UploadState ImageStatus { set; get; } = UploadState.NoFile;
+        public UploadState ContentStatus { set; get; } = UploadState.NoFile;
         public Guid OwnerId { set; get; }
     }
 }

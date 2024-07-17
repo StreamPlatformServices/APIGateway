@@ -45,7 +45,7 @@ namespace APIGatewayControllers.DataMappers
                 Duration = entity.Duration,
                 Description = entity.Description,
                 ContentComments = entity.ContentComments?.Select(c => c.ToContentCommentModel()).ToList() ?? new List<ContentCommentResponseModel>(),
-                LicenseRules = entity.LicenseRules?.Select(c => c.ToLicenseRulesModel()).ToList() ?? new List<LicenseRulesModel>(),
+                LicenseRules = entity.LicenseRules?.Select(c => c.ToLicenseRulesModel()).ToList() ?? new List<LicenseRulesModel>(), //TODO: pytanie czy w zgodzie ze standardem nie moznabyłoby zwracac id'kow licencji
                 ImageUrl = entity.ImageUrl
             };
         }

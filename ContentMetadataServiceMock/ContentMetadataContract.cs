@@ -79,12 +79,6 @@ namespace ContentMetadataServiceMock
 
         public async Task EditContentMetadataAsync(Guid contentId, Content updatedContent)
         { 
-            if (updatedContent.LicenseRules == null || !updatedContent.LicenseRules.Any())
-            {
-                _logger.LogError("Bad input. License rules should not be empty.");
-                throw new Exception("Bad input. License rules should not be empty.");
-            }
-
             var content = await _context.Contents
                 .Include(e => e.LicenseRules)
                 .FirstOrDefaultAsync(e => e.ContentId == contentId);
@@ -98,14 +92,57 @@ namespace ContentMetadataServiceMock
             content.Description = updatedContent.Description;
             content.Duration = updatedContent.Duration;
 
-            //TODO: Update in spearate methods
-            content.ContentStatus = updatedContent.ContentStatus;
-            content.ImageStatus = updatedContent.ImageStatus;
-            //-------------------------------------------------------
-
             var updatedLicenseRules = updatedContent.LicenseRules.Select(c => c.ToLicenseRulesData()).ToList();
-            content.LicenseRules = updatedLicenseRules;
-            
+
+            //TODO: should get rules by id and edit them. integrate with frontend (check if the solution will be efiecient and simple)
+            if (content.LicenseRules != null && content.LicenseRules.Any())
+            {
+                _context.LicenseRules.RemoveRange(content.LicenseRules);
+            }
+
+            if (updatedLicenseRules != null && updatedLicenseRules.Any())
+            {
+                foreach (var licenseRule in updatedLicenseRules) 
+                {
+                    licenseRule.ContentId = contentId;
+                    await _context.LicenseRules.AddAsync(licenseRule);
+                }
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateContentImageFileStateAsync(Guid contentId, UploadState uploadState)
+        {
+            var content = await _context.Contents
+                .FirstOrDefaultAsync(e => e.ContentId == contentId);
+
+            if (content == null)
+            {
+                throw new NotFoundException($"Content with id: {contentId} not found!");
+            }
+
+            content.ImageStatus = uploadState;
+
+            _context.Contents.Update(content);
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateContentVideoFileStateAsync(Guid contentId, UploadState uploadState)
+        {
+            var content = await _context.Contents
+                .FirstOrDefaultAsync(e => e.ContentId == contentId);
+
+            if (content == null)
+            {
+                throw new NotFoundException($"Content with id: {contentId} not found!");
+            }
+
+            content.ContentStatus = uploadState;
+
+            _context.Contents.Update(content);
+
             await _context.SaveChangesAsync();
         }
 

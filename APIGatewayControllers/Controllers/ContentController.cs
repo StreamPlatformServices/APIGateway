@@ -78,7 +78,7 @@ namespace APIGateway.Controllers
             }
         }
 
-        [Authorize(Roles = "ContentCreator")]
+        //[Authorize(Roles = "ContentCreator")]
         [HttpGet("user")]
         public async Task<ActionResult> GetContentsByUser()
         {
@@ -108,7 +108,7 @@ namespace APIGateway.Controllers
         }
 
 
-        [Authorize(Roles = "ContentCreator")]
+        //[Authorize(Roles = "ContentCreator")]
         [HttpPost]
         public async Task<ActionResult> UploadContentAsync([FromBody] UploadContentRequestModel contentMetadata)
         {
@@ -147,7 +147,7 @@ namespace APIGateway.Controllers
             }
         }
 
-        [Authorize(Roles = "ContentCreator")]
+        //[Authorize(Roles = "ContentCreator")]
         [HttpDelete("{contentId}")]
         public async Task<ActionResult<string>> DeleteContentAsync([FromRoute] Guid contentId)
         {
@@ -199,7 +199,7 @@ namespace APIGateway.Controllers
             }
         }
 
-        [Authorize(Roles = "ContentCreator")]
+        //[Authorize(Roles = "ContentCreator")]
         [HttpPut("{contentId}")]
         public async Task<ActionResult<string>> EditContentAsync([FromRoute] Guid contentId, [FromBody] UploadContentRequestModel requestData)
         {
