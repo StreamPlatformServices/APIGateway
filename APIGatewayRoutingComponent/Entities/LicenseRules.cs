@@ -1,7 +1,9 @@
 ﻿using System.Net;
+using System.Text.Json.Serialization;
 
 namespace APIGatewayEntities.Entities
 {
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum LicenseType
     { 
         Unknown,
@@ -9,6 +11,7 @@ namespace APIGatewayEntities.Entities
         Rent
     }
 
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum LicenseDuration
     {
         Unknown,
@@ -19,6 +22,7 @@ namespace APIGatewayEntities.Entities
         Month
     }
 
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum LicenseStatus
     {
         Unknown,

@@ -95,6 +95,7 @@ namespace ContentMetadataServiceMock
             var updatedLicenseRules = updatedContent.LicenseRules.Select(c => c.ToLicenseRulesData()).ToList();
 
             //TODO: should get rules by id and edit them. integrate with frontend (check if the solution will be efiecient and simple)
+            //TODO: It is always tricky because the elements not visible in requestModel list should be removed... 
             if (content.LicenseRules != null && content.LicenseRules.Any())
             {
                 _context.LicenseRules.RemoveRange(content.LicenseRules);

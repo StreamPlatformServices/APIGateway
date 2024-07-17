@@ -1,6 +1,4 @@
-﻿using System.Net;
-
-namespace APIGatewayEntities.Entities
+﻿namespace APIGatewayEntities.Entities
 {
     public class ContentLicense
     {

@@ -78,7 +78,7 @@ namespace APIGateway.Controllers
             }
         }
 
-        //[Authorize(Roles = "ContentCreator")]
+        [Authorize(Roles = "ContentCreator")]
         [HttpGet("user")]
         public async Task<ActionResult> GetContentsByUser()
         {
@@ -108,7 +108,7 @@ namespace APIGateway.Controllers
         }
 
 
-        //[Authorize(Roles = "ContentCreator")]
+        [Authorize(Roles = "ContentCreator")]
         [HttpPost]
         public async Task<ActionResult> UploadContentAsync([FromBody] UploadContentRequestModel contentMetadata)
         {
@@ -147,7 +147,7 @@ namespace APIGateway.Controllers
             }
         }
 
-        //[Authorize(Roles = "ContentCreator")]
+        [Authorize(Roles = "ContentCreator")]
         [HttpDelete("{contentId}")]
         public async Task<ActionResult<string>> DeleteContentAsync([FromRoute] Guid contentId)
         {
@@ -167,7 +167,7 @@ namespace APIGateway.Controllers
             {
                 if(!await _contentFasade.DeleteContentAsync(contentId))
                 {
-                    response.Message = $"Content metadata can't be removed. Please remove related files content and image files first.";
+                    response.Message = $"Content metadata can't be removed. Please remove related content and image files first.";
                     return Conflict(response);
                 }
 
@@ -199,7 +199,7 @@ namespace APIGateway.Controllers
             }
         }
 
-        //[Authorize(Roles = "ContentCreator")]
+        [Authorize(Roles = "ContentCreator")]
         [HttpPut("{contentId}")]
         public async Task<ActionResult<string>> EditContentAsync([FromRoute] Guid contentId, [FromBody] UploadContentRequestModel requestData)
         {

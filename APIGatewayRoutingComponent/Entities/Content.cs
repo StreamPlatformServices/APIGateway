@@ -1,5 +1,8 @@
-﻿namespace APIGatewayEntities.Entities
+﻿using System.Text.Json.Serialization;
+
+namespace APIGatewayEntities.Entities
 {
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum UploadState
     {
         NoFile,
