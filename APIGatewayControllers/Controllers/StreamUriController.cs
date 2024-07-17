@@ -37,22 +37,19 @@ namespace APIGateway.Controllers
 
             try
             {
-                await _contentMetadataContract.GetContentMetadataByIdAsync(contentId);
-            }
-            catch (NotFoundException ex)
-            {
-                response.Message = ex.Message;
-                return NotFound(response);
-            }
+                var contentMetadata = await _contentMetadataContract.GetContentMetadataByIdAsync(contentId);
 
-            try
-            {
-                var uriData = await _streamUriContract.GetVideoStreamUriAsync(contentId);
+                var uriData = await _streamUriContract.GetVideoStreamUriAsync(contentMetadata.VideoFileId);
 
                 response.Result = uriData.ToGetResponseModel();
 
                 _logger.LogInformation($"Get uri procedure finished successfully content: {contentId}");
                 return Ok(response);
+            }
+            catch (NotFoundException ex)
+            {
+                response.Message = ex.Message;
+                return NotFound(response);
             }
             catch (UnauthorizedException ex) //TODO: handle token and authorization in StreamGateway. Not sure if token will be needed for get uri but probably yes
             {
@@ -72,30 +69,79 @@ namespace APIGateway.Controllers
             }
         }
 
-
-        [HttpGet("image/{contentId}")]
-        public async Task<IActionResult> GetImageStreamUriAsync(Guid contentId)
+        [HttpGet("video")]
+        public async Task<IActionResult> GetVideUploadUriAsync()
         {
-            _logger.LogInformation($"Start get uri procedure for content: {contentId}");
+            _logger.LogInformation("Start get video upload uri procedure.");
             var response = new Response<GetUriResponseModel> { Result = new GetUriResponseModel() };
 
-            try
-            {
-                await _contentMetadataContract.GetContentMetadataByIdAsync(contentId);
-            }
-            catch (NotFoundException ex)
-            {
-                response.Message = ex.Message;
-                return NotFound(response);
-            }
+            //try
+            //{
+            //    await _contentMetadataContract.GetContentMetadataByIdAsync(contentId);
+            //}
+            //catch (NotFoundException ex)
+            //{
+            //    response.Message = ex.Message;
+            //    return NotFound(response);
+            //}
+
+            var videoFileId = Guid.NewGuid();
+            //TODO:* ADD VIDEO FILE ID TO FILE RETENTION TABLE 
 
             try
             {
-                var uriData = await _streamUriContract.GetImageStreamUriAsync(contentId);
+                var uriData = await _streamUriContract.GetVideoStreamUriAsync(videoFileId);
 
                 response.Result = uriData.ToGetResponseModel();
 
-                _logger.LogInformation($"Get uri procedure finished successfully content: {contentId}");
+                _logger.LogInformation($"Get video upload uri procedure finished successfully fileId: {videoFileId}");
+                return Ok(response);
+            }
+            catch (UnauthorizedException ex) //TODO: handle token and authorization in StreamGateway. Not sure if token will be needed for get uri but probably yes
+            {
+                response.Message = ex.Message;
+                return Unauthorized(response);
+            }
+            catch (ForbiddenException ex)
+            {
+                response.Message = ex.Message;
+                return StatusCode((int)HttpStatusCode.Forbidden, response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while getting the video upload url.");
+                response.Message = $"An error occurred while getting the video upload url. Error message: {ex.Message}";
+                return StatusCode((int)HttpStatusCode.InternalServerError, response);
+            }
+        }
+
+
+        [HttpGet("image")]
+        public async Task<IActionResult> GetImageUploadUriAsync()
+        {
+            _logger.LogInformation("Start get image upload uri procedure.");
+            var response = new Response<GetUriResponseModel> { Result = new GetUriResponseModel() };
+
+            //try
+            //{
+            //    await _contentMetadataContract.GetContentMetadataByIdAsync(contentId);
+            //}
+            //catch (NotFoundException ex)
+            //{
+            //    response.Message = ex.Message;
+            //    return NotFound(response);
+            //}
+
+            var imageFileId = Guid.NewGuid();
+            //TODO:* ADD IMAGE FILE ID TO FILE RETENTION TABLE 
+
+            try
+            {
+                var uriData = await _streamUriContract.GetImageStreamUriAsync(imageFileId);
+
+                response.Result = uriData.ToGetResponseModel();
+
+                _logger.LogInformation($"Get image upload uri procedure finished successfully fileId: {imageFileId}");
                 return Ok(response);
             }
             catch (NotFoundException ex) //TODO: Probably remove??
@@ -115,70 +161,8 @@ namespace APIGateway.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while getting the stream url.");
-                response.Message = $"An error occurred while getting the stream url. Error message: {ex.Message}";
-                return StatusCode((int)HttpStatusCode.InternalServerError, response);
-            }
-        }
-
-
-        public class SetUploadStateRequestModel
-        {
-            public UploadState UploadState { get; set; }
-        }
-
-        [HttpPost("temp/video/{contentId}")]
-        public async Task<IActionResult> SetVideoStateTemp(Guid contentId, [FromBody] SetUploadStateRequestModel requestData)
-        {
-            _logger.LogInformation($"Start get uri procedure for content: {contentId}");
-            var response = new Response<bool>();
-
-            try
-            {
-                await _contentMetadataContract.UpdateContentVideoFileStateAsync(contentId, requestData.UploadState);
-
-                response.Result = true;
-
-                _logger.LogInformation($"SetVideoState finished successfully. Actual video state: {requestData.UploadState}");
-                return Ok(response);
-            }
-            catch (NotFoundException ex)
-            {
-                response.Message = ex.Message;
-                return NotFound(response);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while getting the stream url.");
-                response.Message = $"An error occurred while getting the stream url. Error message: {ex.Message}";
-                return StatusCode((int)HttpStatusCode.InternalServerError, response);
-            }
-        }
-
-        [HttpPost("temp/image/{contentId}")]
-        public async Task<IActionResult> SetImageStateTemp(Guid contentId, [FromBody] SetUploadStateRequestModel requestData)
-        {
-            _logger.LogInformation($"Start get uri procedure for content: {contentId}");
-            var response = new Response<bool>();
-
-            try
-            {
-                await _contentMetadataContract.UpdateContentImageFileStateAsync(contentId, requestData.UploadState);
-
-                response.Result = true;
-
-                _logger.LogInformation($"SetVideoState finished successfully. Actual video state: {requestData.UploadState}");
-                return Ok(response);
-            }
-            catch (NotFoundException ex)
-            {
-                response.Message = ex.Message;
-                return NotFound(response);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while getting the stream url.");
-                response.Message = $"An error occurred while getting the stream url. Error message: {ex.Message}";
+                _logger.LogError(ex, "An error occurred while getting the image upload url.");
+                response.Message = $"An error occurred while getting the image upload url. Error message: {ex.Message}";
                 return StatusCode((int)HttpStatusCode.InternalServerError, response);
             }
         }

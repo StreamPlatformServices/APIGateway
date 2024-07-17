@@ -11,5 +11,11 @@ namespace APIGatewayControllers.Models.Requests.Content
         public string Description { set; get; }
         [Required]
         public IEnumerable<LicenseRulesModel> LicenseRules { set; get; }
+
+        [Required]
+        public Guid VideoFileId { set; get; }
+
+        [Required]
+        public Guid ImageFileId { set; get; }
     }
 }

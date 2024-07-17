@@ -17,6 +17,8 @@ namespace APIGatewayControllers.DataMappers
                 UploadTime = DateTime.UtcNow, //TODO: UT???
                 Description = model.Description,
                 LicenseRules = model.LicenseRules?.Select(c => c.ToLicenseRules()).ToList() ?? new List<LicenseRules>(),
+                ImageFileId = model.ImageFileId,
+                VideoFileId = model.VideoFileId,
             };
         }
 
@@ -58,8 +60,6 @@ namespace APIGatewayControllers.DataMappers
                 Title = entity.Title,
                 Duration = entity.Duration,
                 Description = entity.Description,
-                ImageStatus = entity.ImageStatus,
-                ContentStatus = entity.ContentStatus,
                 LicenseRules = entity.LicenseRules?.Select(c => c.ToLicenseRulesModel()).ToList() ?? new List<LicenseRulesModel>(),
             };
         }

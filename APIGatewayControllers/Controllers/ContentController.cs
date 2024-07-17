@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using APIGatewayControllers.Models.Responses.Content;
 using APIGatewayControllers.Models.Requests.Content;
 
+//TODO: Walidacja formatu pliku w stream gateway?
 namespace APIGateway.Controllers
 {
     //TODO: Operacje metadanych oraz plikow powiazanych powinny byc atomowe
@@ -124,7 +125,7 @@ namespace APIGateway.Controllers
 
             string jwt = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
 
-            var response = new Response<UploadContentResponseModel> { Result = new UploadContentResponseModel() };
+            var response = new Response<bool>();
 
             try
             {
@@ -132,24 +133,27 @@ namespace APIGateway.Controllers
 
                 _logger.LogInformation("Content data saved successfully.");
 
-                response.Result.ContentId = contentId;
+                response.Result = true;
                 return Ok(response);
             }
             catch (ConflictException ex)
             {
+                response.Result = false;
                 response.Message = ex.Message;
                 return Conflict(response);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while adding content metadata.");
-                return StatusCode(500, $"An error occurred while adding content metadata. Error message: {ex.Message}");
+                response.Result = false;
+                response.Message = $"An error occurred while adding content metadata. Error message: {ex.Message}";
+                return StatusCode((int)HttpStatusCode.InternalServerError, response);
             }
         }
 
         [Authorize(Roles = "ContentCreator")]
         [HttpDelete("{contentId}")]
-        public async Task<ActionResult<string>> DeleteContentAsync([FromRoute] Guid contentId)
+        public async Task<IActionResult> DeleteContentAsync([FromRoute] Guid contentId)
         {
             if (!ModelState.IsValid)
             {

@@ -14,7 +14,7 @@ namespace ContentMetadataServiceMock.Persistance.Data
         public ICollection<ContentCommentData> Comments { get; set; } 
         public ICollection<LicenseRulesData> LicenseRules { set; get; }
         public Guid OwnerId { get; set; }
-        public UploadState ImageStatus { set; get; } = UploadState.InProgress;
-        public UploadState ContentStatus { set; get; } = UploadState.InProgress;
+        public Guid VideoFileId { set; get; }
+        public Guid ImageFileId { set; get; }
     }
 }

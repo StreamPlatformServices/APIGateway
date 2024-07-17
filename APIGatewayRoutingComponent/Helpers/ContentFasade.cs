@@ -32,11 +32,7 @@ namespace APIGatewayEntities.Helpers
 
         async Task<bool> IContentFasade.DeleteContentAsync(Guid contentId)
         {
-            var content = await _contentMetadataContract.GetContentMetadataByIdAsync(contentId);
-            if (content.ImageStatus != UploadState.NoFile || content.ContentStatus != UploadState.NoFile)
-            {
-                return false;
-            }
+            //var content = await _contentMetadataContract.GetContentMetadataByIdAsync(contentId);
 
             await _contentMetadataContract.DeleteContentMetadataAsync(contentId);
             return true;
@@ -66,7 +62,7 @@ namespace APIGatewayEntities.Helpers
 
         private async Task UpdateContentWithImageUrlAsync(Content content)
         {
-            var uriData = await _streamUriContract.GetImageStreamUriAsync(content.Uuid);
+            var uriData = await _streamUriContract.GetImageStreamUriAsync(content.ImageFileId);
             content.ImageUrl = uriData.Url;
         }
 

@@ -12,8 +12,8 @@ namespace AuthorizationServiceAPI.DataMappers
                 ContentId = model.Uuid,
                 Title = model.Title,
                 Description = model.Description,
-                ContentStatus = model.ContentStatus,
-                ImageStatus = model.ImageStatus,
+                ImageFileId = model.ImageFileId,
+                VideoFileId = model.VideoFileId,
                 Comments = model.ContentComments?.Select(c => c.ToContentCommentData()).ToList() ?? new List<ContentCommentData>(),
                 LicenseRules = model.LicenseRules?.Select(c => c.ToLicenseRulesData()).ToList() ?? new List<LicenseRulesData>(),
                 OwnerId = model.OwnerId,
@@ -27,8 +27,8 @@ namespace AuthorizationServiceAPI.DataMappers
                 Uuid = data.ContentId,
                 Title = data.Title,
                 Description = data.Description,
-                ContentStatus = data.ContentStatus,
-                ImageStatus = data.ImageStatus,
+                ImageFileId = data.ImageFileId,
+                VideoFileId = data.VideoFileId,
                 ContentComments = data.Comments?.Select(c => c.ToContentComment()).ToList() ?? new List<ContentComment>(),
                 LicenseRules = data.LicenseRules?.Select(c => c.ToLicenseRules()).ToList() ?? new List<LicenseRules>(), //TODO: It is needed
             };

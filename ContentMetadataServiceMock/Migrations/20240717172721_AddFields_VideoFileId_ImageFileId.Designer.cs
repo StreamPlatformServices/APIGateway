@@ -3,6 +3,7 @@ using System;
 using ContentMetadataServiceMock.Persistance;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ContentMetadataServiceMock.Migrations
 {
     [DbContext(typeof(ContentMetadataDatabaseContext))]
-    partial class ContentMetadataDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20240717172721_AddFields_VideoFileId_ImageFileId")]
+    partial class AddFields_VideoFileId_ImageFileId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.7");

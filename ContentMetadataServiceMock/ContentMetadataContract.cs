@@ -42,27 +42,50 @@ namespace ContentMetadataServiceMock
             return content.ToContent();
         }
 
-        public async Task<Guid> AddContentMetadataAsync(Content content)
+        public async Task<Guid> AddContentMetadataAsync(Content content) 
         {
-            try
+            using (var transaction = await _context.Database.BeginTransactionAsync())
             {
-                await _context.Contents.AddAsync(content.ToContentData());
-                await _context.SaveChangesAsync();
-                return content.Uuid;
-            }
-            catch (DbUpdateException ex)
-            {
-                if (ex.InnerException is SqlException sqlEx)
+                try
                 {
-                    if (sqlEx.Number == UNIQUE_CONSTRAINT_VIOLATION_ERROR_NUMBER || sqlEx.Number == PRIMARY_KEY_VIOLATION_ERROR_NUMBER)
-                    {
-                        _logger.LogError($"A conflict accourd while updating the database: {sqlEx.Message}");
-                        throw new ConflictException($"A conflict accourd while updating the database: {sqlEx.Message}");
-                    }
-                }
+                    //TODO:* REMOVE FROM FILE ID'S FROM FILE RETENTION TABLE
+                    await _context.Contents.AddAsync(content.ToContentData());
+                    await _context.SaveChangesAsync();
 
-                throw;
+                    await transaction.CommitAsync();
+                    //TODO: Check if it was saved successfully
+                    return content.Uuid;
+                }
+                catch (DbUpdateException ex)
+                {
+                    if (ex.InnerException is SqlException sqlEx)
+                    {
+                        if (sqlEx.Number == UNIQUE_CONSTRAINT_VIOLATION_ERROR_NUMBER || sqlEx.Number == PRIMARY_KEY_VIOLATION_ERROR_NUMBER)
+                        {
+                            _logger.LogError($"A conflict accourd while updating the database: {sqlEx.Message}");
+                            throw new ConflictException($"A conflict accourd while updating the database: {sqlEx.Message}");
+                        }
+                    }
+
+                    await transaction.RollbackAsync();
+                    await RemoveFileAsync(content.ImageFileId);
+                    await RemoveFileAsync(content.VideoFileId);
+
+                    throw;
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    await RemoveFileAsync(content.ImageFileId);
+                    await RemoveFileAsync(content.VideoFileId); //TODO: It will be needed, when retention will be ready??
+                    throw;
+                }
             }
+        }
+
+        private async Task RemoveFileAsync(Guid fileId)
+        {
+            //TODO:* Remove file from streamgateway/streamservice/encryptionservice
         }
 
         public async Task DeleteContentMetadataAsync(Guid contentId)
@@ -113,39 +136,6 @@ namespace ContentMetadataServiceMock
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateContentImageFileStateAsync(Guid contentId, UploadState uploadState)
-        {
-            var content = await _context.Contents
-                .FirstOrDefaultAsync(e => e.ContentId == contentId);
-
-            if (content == null)
-            {
-                throw new NotFoundException($"Content with id: {contentId} not found!");
-            }
-
-            content.ImageStatus = uploadState;
-
-            _context.Contents.Update(content);
-
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task UpdateContentVideoFileStateAsync(Guid contentId, UploadState uploadState)
-        {
-            var content = await _context.Contents
-                .FirstOrDefaultAsync(e => e.ContentId == contentId);
-
-            if (content == null)
-            {
-                throw new NotFoundException($"Content with id: {contentId} not found!");
-            }
-
-            content.ContentStatus = uploadState;
-
-            _context.Contents.Update(content);
-
-            await _context.SaveChangesAsync();
-        }
 
         public async Task<IEnumerable<Content>> GetAllContentsAsync(int limit, int offset)
         {
@@ -155,14 +145,12 @@ namespace ContentMetadataServiceMock
             if (limit == 0)
             {
                 contentsData = await _context.Contents
-                    .Where(e => e.ContentStatus == UploadState.Success && e.ImageStatus == UploadState.Success)
                     .Skip(offset)
                     .ToListAsync();
             }
             else
             {
                 contentsData = await _context.Contents
-                    .Where(e => e.ContentStatus == UploadState.Success && e.ImageStatus == UploadState.Success)
                     .Skip(offset)
                     .Take(limit)
                     .ToListAsync();

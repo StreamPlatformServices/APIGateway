@@ -1,15 +1,8 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace APIGatewayEntities.Entities
 {
-    [JsonConverter(typeof(JsonStringEnumConverter))]
-    public enum UploadState
-    {
-        NoFile,
-        InProgress,
-        Success,
-        Failed
-    }
     public class Content
     {
         public Guid Uuid { set; get; } = Guid.Empty; //TODO: It is empty by default???
@@ -20,8 +13,8 @@ namespace APIGatewayEntities.Entities
         public string Description { set; get; }
         public IEnumerable<LicenseRules> LicenseRules { set; get; }
         public IEnumerable<ContentComment> ContentComments { set; get; }
-        public UploadState ImageStatus { set; get; } = UploadState.NoFile;
-        public UploadState ContentStatus { set; get; } = UploadState.NoFile;
         public Guid OwnerId { set; get; }
+        public Guid VideoFileId { set; get; }
+        public Guid ImageFileId { set; get; }
     }
 }
