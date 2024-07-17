@@ -9,7 +9,9 @@ namespace APIGatewayControllers.Models.Requests.Content
         public string Title { set; get; }
         [Required]
         public string Description { set; get; }
-        [Required]
+
+        [Required(ErrorMessage = "The LicenseRules field is required.")]
+        [MinLength(1, ErrorMessage = "The array must contain at least one element.")]
         public IEnumerable<LicenseRulesModel> LicenseRules { set; get; }
 
         [Required]

@@ -33,7 +33,7 @@ namespace APIGatewayEntities.Helpers
         async Task<bool> IContentFasade.DeleteContentAsync(Guid contentId)
         {
             //var content = await _contentMetadataContract.GetContentMetadataByIdAsync(contentId);
-
+            //TODO:* Remove files!
             await _contentMetadataContract.DeleteContentMetadataAsync(contentId);
             return true;
         }
