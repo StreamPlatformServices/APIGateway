@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using APIGatewayControllers.Models.Requests.Comment;
 using APIGatewayControllers.Models;
 using APIGatewayEntities.Entities;
+using APIGatewayEntities.Helpers.Interfaces;
 
 namespace APIGateway.Controllers
 {
@@ -18,14 +19,14 @@ namespace APIGateway.Controllers
     public class LicenseController : ControllerBase //TODO: NOW!!!!!!!!!!!! Create license functionality!!!!!!!!!!!!!!!!! 
     {
         private readonly ILogger<LicenseController> _logger;
-        private readonly ILicenseContract _licenseContract;
+        private readonly ILicenseAdapter _licenseAdapter;
 
         public LicenseController(
             ILogger<LicenseController> logger,
-            ILicenseContract licenseContract)
+            ILicenseAdapter licenseAdapter)
         {
             _logger = logger;
-            _licenseContract = licenseContract;
+            _licenseAdapter = licenseAdapter;
         }
 
         //TODO: ReqData ResponseData
@@ -40,7 +41,7 @@ namespace APIGateway.Controllers
             var response = new Response<LicenseResponseModel> { Result = new LicenseResponseModel() };
             try
             {
-                var license = await _licenseContract.GetLicenseAsync(contentId, jwt);
+                var license = await _licenseAdapter.GetLicenseAsync(contentId, jwt);
 
                 _logger.LogInformation($"Get license data finished successfully.");
                 response.Message = $"Get license data finished successfully.";
@@ -91,7 +92,7 @@ namespace APIGateway.Controllers
             var response = new Response<bool> ();
             try
             {
-                await _licenseContract.IssueLicenseAsync(licenseModel.ToContentLicense(), jwt);
+                await _licenseAdapter.IssueLicenseAsync(licenseModel.ToContentLicense(), jwt);
 
                 _logger.LogInformation($"Issue license finished successfully.");
                 response.Message = $"Issue license finished successfully.";
@@ -146,7 +147,7 @@ namespace APIGateway.Controllers
             var response = new Response<bool>();
             try
             {
-                await _licenseContract.ExtendLicenseAsync(licenseModel.ToContentLicense(), jwt);
+                await _licenseAdapter.ExtendLicenseAsync(licenseModel.ToContentLicense(), jwt);
 
                 _logger.LogInformation($"Extend license finished successfully.");
                 response.Message = $"Extend license finished successfully.";

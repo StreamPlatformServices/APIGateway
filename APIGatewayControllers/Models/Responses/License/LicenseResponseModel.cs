@@ -4,8 +4,9 @@ namespace APIGatewayControllers.Models
 {
     public class LicenseResponseModel
     {
-        public LicenseRulesModel LicenseRules { set; get; }
-        public LicenseStatus LicenseStatus { set; get; }
-        public int TimeToExpirationInHours { set; get; }
+        public Guid Uuid { set; get; }
+        public EncryptionKey KeyData { get; set; }
+        public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; set; }
     }
 }

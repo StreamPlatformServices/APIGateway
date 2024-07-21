@@ -8,7 +8,7 @@ namespace APIGatewayEntities.IntegrationContracts
 
         Task ExtendLicenseAsync(ContentLicense license, string token);
         Task IssueLicenseAsync(ContentLicense license, string token);
-        Task<ContentLicense> GetLicenseAsync(Guid contentId, string token);
+        Task<ContentLicense> GetLicenseAsync(Guid userId, Guid fileId, string token);
         Task DeleteLicenseAsync(Guid licenseId); //TODO: While removing content remove all licenses??
     }
 

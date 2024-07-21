@@ -13,7 +13,7 @@ namespace APIGatewayMain.ServiceCollectionExtensions
             services.Configure<JwtSettings>(configuration.GetSection("AuthorizationSettings:JwtSettings"));
             services.Configure<AuthorizationServiceApiSettings>(configuration.GetSection("ComponentsSettings:AuthorizationServiceApiSettings"));
             services.Configure<StreamServiceApiSettings>(configuration.GetSection("ComponentsSettings:StreamServiceApiSettings"));
-            services.Configure<LicenseProxyApiSettings>(configuration.GetSection("ComponentsSettings:LicenseProxyApiSettings"));
+            services.Configure<LicenseServiceClientSettings>(configuration.GetSection("ComponentsSettings:LicenseServiceClientSettings"));
             services.Configure<StreamGatewayApiSettings>(configuration.GetSection("ComponentsSettings:StreamGatewayApiSettings"));
 
             services.Configure<ContentMetadataServiceMockSettings>(configuration.GetSection("MockComponentsSettings:ContentMetadataServiceMockSettings"));

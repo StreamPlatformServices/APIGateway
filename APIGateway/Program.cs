@@ -18,7 +18,7 @@ builder.Services.AddJWTConfiguration();
 builder.Services.AddContentMetadataMock();
 //builder.Services.AddStreamGatewayMock();
 builder.Services.AddStreamGatewayAPI();
-builder.Services.AddLicenseProxyApi();
+builder.Services.AddLicenseServiceClient();
 builder.Services.AddEntityComponent();
 builder.Services.AddValidators();
 

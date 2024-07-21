@@ -4,6 +4,7 @@ using APIGatewayEntities.IntegrationContracts;
 using AuthorizationServiceAPI.DataMappers;
 using ContentMetadataServiceMock.Persistance;
 using ContentMetadataServiceMock.Persistance.Data;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Data.SqlClient;
@@ -58,12 +59,21 @@ namespace ContentMetadataServiceMock
                 }
                 catch (DbUpdateException ex)
                 {
+                    if (ex.InnerException is SqliteException sqliteEx)
+                    {
+                        if (sqliteEx.SqliteErrorCode == SQLitePCL.raw.SQLITE_CONSTRAINT)
+                        {
+                            _logger.LogError($"A conflict occurred while updating the database: {sqliteEx.Message}");
+                            throw new ConflictException($"A conflict occurred while updating the database: {sqliteEx.Message}");
+                        }
+                    }
+
                     if (ex.InnerException is SqlException sqlEx)
                     {
                         if (sqlEx.Number == UNIQUE_CONSTRAINT_VIOLATION_ERROR_NUMBER || sqlEx.Number == PRIMARY_KEY_VIOLATION_ERROR_NUMBER)
                         {
                             _logger.LogError($"A conflict accourd while updating the database: {sqlEx.Message}");
-                            throw new ConflictException($"A conflict accourd while updating the database: {sqlEx.Message}");
+                            throw new ConflictException($"A conflict occurred while updating the database: {sqlEx.Message}");
                         }
                     }
 
@@ -96,7 +106,8 @@ namespace ContentMetadataServiceMock
                 throw new NotFoundException($"Content with id: {contentId} not found!");
             }
 
-            _context.Contents.Remove(content);
+            //TODO: Try catch
+            _context.Contents.Remove(content); //TODO: How many state entries should return when successfull?
             await _context.SaveChangesAsync();
         }
 

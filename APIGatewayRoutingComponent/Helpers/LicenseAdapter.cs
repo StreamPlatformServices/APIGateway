@@ -1,26 +1,34 @@
 ﻿using APIGatewayEntities.Entities;
+using APIGatewayEntities.Helpers.Interfaces;
 using APIGatewayEntities.IntegrationContracts;
 
 namespace APIGatewayEntities.Helpers
 {
-    public class LicenseDecorator : ILicenseContract
+    public class LicenseAdapter : ILicenseAdapter
     {
         private readonly ILicenseContract _licenseContract;
         private readonly IUserContract _userContract;
+        private readonly IContentMetadataContract _contentMetadataContract;
 
-        public LicenseDecorator(
+        public LicenseAdapter(
             ILicenseContract licenseContract,
-            IUserContract userContract)
+            IUserContract userContract,
+            IContentMetadataContract contentMetadataContract)
         {
             _licenseContract = licenseContract;
             _userContract = userContract;
+            _contentMetadataContract = contentMetadataContract;
         }
 
         public async Task<ContentLicense> GetLicenseAsync(Guid contentId, string token)
         {
-            return await _licenseContract.GetLicenseAsync(contentId, token);
-        }
+            var user = await _userContract.GetUserAsync(token);
 
+            var content  = await _contentMetadataContract.GetContentMetadataByIdAsync(contentId);
+
+            return await _licenseContract.GetLicenseAsync(user.Uuid, content.VideoFileId, token);
+        }
+        
         public async Task IssueLicenseAsync(ContentLicense license, string token)
         {
             var user = await _userContract.GetUserAsync(token);
@@ -39,5 +47,7 @@ namespace APIGatewayEntities.Helpers
         {
             await _licenseContract.DeleteLicenseAsync(licenseId);
         }
+
+       
     }
 }

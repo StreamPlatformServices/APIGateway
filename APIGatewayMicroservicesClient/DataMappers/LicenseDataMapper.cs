@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace LicenseProxyAPI.DataMappers
 {
+    //TODO: Create component for common data mappers??
     public static class LicenseDataMapper
     {
         private const int HOURS_IN_DAY = 24;
@@ -37,29 +38,27 @@ namespace LicenseProxyAPI.DataMappers
             }
         }
 
-        public static ContentLicense ToContentLicense(this ContentLicenseDto model)
+        public static ContentLicense ToContentLicense(this ContentLicenseResponseDto model)
         {
             return new ContentLicense
             {
                 Uuid = model.Uuid,
-                UserId = model.UserId,
-                ContentId = model.ContentId,
-                LicenseRules = model.LicenseRules,
-                LicenseStatus = model.LicenseStatus,
-                ActivationTime = model.ActivationTime,
+                UserId = model.UserId, //TODO: Remove?
+                FileId = model.FileId, //TODO: Remove?
+                KeyData = new EncryptionKey { Key = model.KeyData.Key, IV = model.KeyData.IV },
+                StartTime = model.StartTime,
+                EndTime = model.EndTime
             };
         }
 
-        public static ContentLicenseDto ToContentLicenseDto(this ContentLicense entity)
+        public static ContentLicenseRequestDto ToContentLicenseDto(this ContentLicense entity)
         {
-            return new ContentLicenseDto
+            return new ContentLicenseRequestDto
             {
-                Uuid = entity.Uuid,
                 UserId = entity.UserId,
-                ContentId = entity.ContentId,
-                LicenseRules = entity.LicenseRules,
-                LicenseStatus = entity.LicenseStatus,
-                ActivationTime = entity.ActivationTime,
+                FileId = entity.FileId, 
+                StartTime = entity.StartTime,
+                EndTime = entity.EndTime
             };
         }
     }

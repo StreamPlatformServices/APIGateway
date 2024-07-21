@@ -2,8 +2,8 @@
 {
     public class ComponentSettings
     {
-        public LicenseProxyApiSettings AuthorizationServiceAPI { get; set; }
+        public LicenseServiceClientSettings AuthorizationServiceAPI { get; set; }
         public StreamServiceApiSettings StreamServiceAPI { get; set; }
-        public LicenseProxyApiSettings LicenseProxyApiSettings { get; set; }
+        public LicenseServiceClientSettings LicenseProxyApiSettings { get; set; }
     }
 }

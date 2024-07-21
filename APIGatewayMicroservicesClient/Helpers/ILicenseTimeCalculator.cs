@@ -2,8 +2,8 @@
 
 namespace LicenseProxyAPI.Helpers
 {
-    public interface ILicenseDurationCalculator
-    {
+    public interface ILicenseTimeCalculator
+    { 
         int CalculateTimeToExpirationInHourse(DateTime licenseActivationTime, LicenseDuration? licenseDuration);
     }
 }
