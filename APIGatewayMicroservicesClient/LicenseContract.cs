@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using System.Net.Http.Headers;
 using System.Net;
 using Newtonsoft.Json;
+using System.Text;
 
 namespace LicenseProxyAPI
 {
@@ -79,13 +80,87 @@ namespace LicenseProxyAPI
                 throw;
             }
         }
-        public Task IssueLicenseAsync(ContentLicense license, string token)
+        public async Task IssueLicenseAsync(ContentLicense license, string token)
         {
-            //TODO: NOW!!!!!!!!!
-            throw new NotImplementedException();
+            //TODO: NOW! Test
+            try
+            {
+                var requestContent = new StringContent(
+                    JsonConvert.SerializeObject(license.ToContentLicenseDto()),
+                    Encoding.UTF8,
+                    "application/json");
+
+                var response = await _httpClient.PostAsync($"{LICENSE_ENDPOINT}", requestContent);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return;
+                }
+
+                if (response.StatusCode == HttpStatusCode.Conflict)
+                {
+                    throw new ConflictException(response.ReasonPhrase);
+                }
+
+                _logger.LogError($"Unexpected error in response while trying to issue new license for file: {license.FileId}. Message: {response.ReasonPhrase}");
+                throw new Exception($"{response.ReasonPhrase}");
+            }
+            catch (HttpRequestException ex)
+            {
+                _logger.LogError(ex, "HTTP request error occurred while trying to issue new license.");
+                throw;
+            }
+            catch (JsonException ex)
+            {
+                _logger.LogError(ex, "JSON deserialization error occurred while trying to issue new license.");
+                throw;
+            }
         }
-        public Task ExtendLicenseAsync(ContentLicense license, string token)
+
+        public async Task ExtendLicenseAsync(ContentLicense license, string token)
         {
+            //TODO: NOW! Test
+            //_httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            try
+            {
+                var requestContent = new StringContent(
+                    JsonConvert.SerializeObject(license.ToContentLicenseDto()),
+                    Encoding.UTF8,
+                    "application/json");
+
+                var response = await _httpClient.PutAsync($"{LICENSE_ENDPOINT}", requestContent);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return;
+                }
+
+                switch (response.StatusCode)
+                {
+                    case HttpStatusCode.NotFound:
+                        throw new NotFoundException(response.ReasonPhrase);
+                    case HttpStatusCode.Unauthorized:
+                        _logger.LogWarning("Request should be blocked in APIGateway middleware!");
+                        throw new UnauthorizedException(response.ReasonPhrase);
+                    case HttpStatusCode.Forbidden:
+                        _logger.LogWarning("Request should be blocked in APIGateway middleware!");
+                        throw new ForbiddenException(response.ReasonPhrase);
+                    default:
+                        _logger.LogError($"Unexpected error in response while trying to extend license. Message: {response.ReasonPhrase}");
+                        throw new Exception(response.ReasonPhrase);
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                _logger.LogError(ex, "HTTP request error occurred while trying to extend license.");
+                throw;
+            }
+            catch (JsonException ex)
+            {
+                _logger.LogError(ex, "JSON deserialization error occurred while trying to extend license.");
+                throw;
+            }
             throw new NotImplementedException();
         }
 
@@ -93,6 +168,7 @@ namespace LicenseProxyAPI
 
         public Task DeleteLicenseAsync(Guid licenseId)
         {
+            //TODO: Is it needed ???
             throw new NotImplementedException();
         }
     }
