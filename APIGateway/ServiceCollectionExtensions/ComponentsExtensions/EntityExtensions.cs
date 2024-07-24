@@ -13,6 +13,8 @@ namespace APIGatewayMain.ServiceCollectionExtensions.ComponentsExtensions
 
             //TODO: Move to components extension methods??
             services.Decorate<IContentCommentContract, ContentCommentDecorator>();
+            services.AddTransient<ITimeWrapper, TimeWrapper>();
+            services.AddTransient<ILicenseChecker, LicenseChecker>();
             services.AddTransient<ILicenseAdapter, LicenseAdapter>();
 
             return services;

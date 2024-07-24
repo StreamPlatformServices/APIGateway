@@ -127,8 +127,8 @@ namespace APIGateway.Controllers
         }
 
         //[Authorize]
-        [HttpPut]
-        public async Task<ActionResult<string>> ExtendLicenseAsync([FromBody] LicenseRequestModel licenseModel)
+        [HttpPut("{licenseId}")]
+        public async Task<IActionResult> ExtendLicenseAsync([FromRoute] Guid licenseId, [FromBody] LicenseRequestModel licenseModel)
         {
             if (!ModelState.IsValid)
             {
@@ -147,7 +147,7 @@ namespace APIGateway.Controllers
             var response = new Response<bool>();
             try
             {
-                await _licenseAdapter.ExtendLicenseAsync(licenseModel.ToContentLicense(), jwt);
+                await _licenseAdapter.ExtendLicenseAsync(licenseModel.ToContentLicense(licenseId), jwt);
 
                 _logger.LogInformation($"Extend license finished successfully.");
                 response.Message = $"Extend license finished successfully.";

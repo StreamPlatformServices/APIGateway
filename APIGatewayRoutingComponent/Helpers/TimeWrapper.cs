@@ -2,7 +2,7 @@
 
 namespace APIGatewayEntities.Helpers
 {
-    internal class TimeWrapper : ITimeWrapper
+    public class TimeWrapper : ITimeWrapper
     {
         DateTime ITimeWrapper.GetCurrentTimeUtc()
         {

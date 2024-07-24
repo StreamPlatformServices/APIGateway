@@ -30,15 +30,28 @@ namespace APIGatewayControllers.DataMappers
                 default: return 0;
             }
         }
+        //TODO: Change name to: ToNewContentLicenseEntity 
         public static ContentLicense ToContentLicense(this LicenseRequestModel model)
         {
             return new ContentLicense
             {
                 Uuid = Guid.NewGuid(),
-                //UserId = model.UserId, //TODO: will be provided from token (Create license decorator)
-                //FileId = model.ContentId,
+                ContentId = model.ContentId,
                 StartTime = DateTime.UtcNow,
                 EndTime = model.LicenseRulesModel.Type == LicenseType.Rent ? 
+                    DateTime.UtcNow.AddHours(model.LicenseRulesModel.Duration.ToNumberOfHours()) :
+                    DateTime.MaxValue
+            };
+        }
+
+        public static ContentLicense ToContentLicense(this LicenseRequestModel model, Guid licenseId)
+        {
+            return new ContentLicense
+            {
+                Uuid = licenseId,
+                ContentId = model.ContentId,
+                StartTime = DateTime.UtcNow,
+                EndTime = model.LicenseRulesModel.Type == LicenseType.Rent ?
                     DateTime.UtcNow.AddHours(model.LicenseRulesModel.Duration.ToNumberOfHours()) :
                     DateTime.MaxValue
             };

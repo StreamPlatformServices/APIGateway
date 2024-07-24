@@ -129,7 +129,7 @@ namespace LicenseProxyAPI
                     Encoding.UTF8,
                     "application/json");
 
-                var response = await _httpClient.PutAsync($"{LICENSE_ENDPOINT}", requestContent);
+                var response = await _httpClient.PutAsync($"{LICENSE_ENDPOINT}/{license.Uuid}", requestContent);
 
                 if (response.IsSuccessStatusCode)
                 {
