@@ -1,5 +1,6 @@
 ﻿using APIGatewayEntities.Entities;
 using APIGatewayEntities.IntegrationContracts;
+using Microsoft.VisualBasic.FileIO;
 
 namespace APIGatewayEntities.Helpers
 {

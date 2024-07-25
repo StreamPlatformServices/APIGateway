@@ -1,94 +1,73 @@
-using APIGatewayControllers.Middlewares;
-using Microsoft.OpenApi.Models;
+﻿using APIGatewayControllers.Middlewares;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using APIGatewayControllers;
 using APIGatewayMain.ServiceCollectionExtensions;
 using APIGatewayMain.ServiceCollectionExtensions.ComponentsExtensions;
 using AspNetCoreRateLimit;
+using APIGatewayCoreUtilities.CommonConfiguration.ConfigurationModels;
 
-//TODO: Duration handling 
-//TODO: Czy w realnych warunkach sukcesywnej platformy komercyjnej byloby sensownie podzielic streamGateway na dwa serwisy (do streamowania i uploadu)
-
+//TODO: List current config in console log
+//TODO: add path to config
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCommonConfiguration(builder.Configuration);
+
+var kestrelSettings = builder.Configuration.GetSection("KestrelSettings").Get<KestrelSettings>() ?? throw new Exception("Fatal error: Please provide kestrel configuration");
+builder.AddKestrelSettings(kestrelSettings);
+
 builder.Services.AddRateLimiting();
 builder.Services.AddAuthorizationServiceAPI();
 builder.Services.AddJWTConfiguration();
 builder.Services.AddContentMetadataMock();
-//builder.Services.AddStreamGatewayMock();
 builder.Services.AddStreamGatewayAPI();
 builder.Services.AddLicenseServiceClient();
 builder.Services.AddEntityComponent();
 builder.Services.AddValidators();
 
-//TODO: Use safe cors policy
+var corsPolicyName = "CustomCorsPolicy";
+var corsSettings = builder.Configuration.GetSection("CorsSettings").Get<CorsSettings>() ?? throw new Exception("Fatal error: Please provide CorsSettings configuration");
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll",
+    options.AddPolicy(corsPolicyName,
         policy =>
         {
-            policy.WithOrigins("*")
-                  .AllowAnyOrigin()
-                  .AllowAnyHeader()
-                  .AllowAnyMethod();
+            policy.WithOrigins(corsSettings.AllowedHosts)
+                .WithHeaders(corsSettings.AllowedHeaders)
+                .WithMethods(corsSettings.AllowedMethods);
         });
 });
 
 builder.Services.AddControllers().PartManager.ApplicationParts
     .Add(new AssemblyPart(typeof(ControllersAssemblyMarker).Assembly));
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
+
+var useSwagger = builder.Configuration.GetSection("UseSwagger").Get<bool>();
+
+if (useSwagger)
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "APIGateway API", Version = "v1" });
-
-    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        In = ParameterLocation.Header,
-        Description = "Enter JWT token with format: {Bearer <token>}",
-        Name = "Authorization",
-        Type = SecuritySchemeType.ApiKey,
-        Scheme = "Bearer"
-    });
-
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement()
-        {
-            {
-                new OpenApiSecurityScheme
-                {
-                    Reference = new OpenApiReference
-                    {
-                        Type = ReferenceType.SecurityScheme,
-                        Id = "Bearer"
-                    },
-                    Scheme = "oauth2",
-                    Name = "Bearer",
-                    In = ParameterLocation.Header,
-                },
-                new List<string>()
-            }
-        });
-});
+    builder.Services.AddSwaggerSettings();
+}
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+if (useSwagger)
 {
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "APIGateway API V1");
-        //c.RoutePrefix = string.Empty; // Make Swagger UI the root page
+        c.RoutePrefix = string.Empty;
     });
-
-    app.UseCors("AllowAll");
 }
 
+app.UseCors(corsPolicyName);
 app.UseMiddleware<JwtConfigMiddleware>();
 
-app.UseHttpsRedirection();
+if (kestrelSettings.UseTls)
+{
+    app.UseHttpsRedirection();
+}
+
 app.UseAuthentication();
 app.UseAuthorization();
 

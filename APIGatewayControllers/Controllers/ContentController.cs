@@ -9,6 +9,10 @@ using Microsoft.AspNetCore.Authorization;
 using APIGatewayControllers.Models.Responses.Content;
 using APIGatewayControllers.Models.Requests.Content;
 
+//TODO: Duration handling 
+//TODO: Czy w realnych warunkach sukcesywnej platformy komercyjnej byloby sensownie podzielic streamGateway na dwa serwisy (do streamowania i uploadu)
+//Tak, poniewaz upload jest uzywany przez inna grupe aktorow i zmieniają się z różnych powodów. Jest kilka wspólnych elementów jak formaty zapisu odczytu, kodowania odkodowania ale to za mało, żeby łączyć te funkcjonalności
+
 //TODO: Walidacja formatu pliku w stream gateway?
 namespace APIGateway.Controllers
 {

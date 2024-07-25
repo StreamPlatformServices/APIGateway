@@ -16,7 +16,7 @@ namespace APIGateway.Controllers
     //TODO: Log start operations of endpoints!!!!!!!!!!!!!!!!!!!!
     [ApiController]
     [Route("license")]
-    public class LicenseController : ControllerBase //TODO: NOW!!!!!!!!!!!! Create license functionality!!!!!!!!!!!!!!!!! 
+    public class LicenseController : ControllerBase 
     {
         private readonly ILogger<LicenseController> _logger;
         private readonly ILicenseAdapter _licenseAdapter;
@@ -29,8 +29,7 @@ namespace APIGateway.Controllers
             _licenseAdapter = licenseAdapter;
         }
 
-        //TODO: ReqData ResponseData
-        //[Authorize]
+        [Authorize]
         [HttpGet("{contentId}")]
         public async Task<IActionResult> GetLicenseAsync(Guid contentId)
         {
@@ -71,7 +70,7 @@ namespace APIGateway.Controllers
             }
         }
 
-        //[Authorize]
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> IssueLicenseAsync([FromBody] LicenseRequestModel licenseModel)
         {
@@ -126,7 +125,7 @@ namespace APIGateway.Controllers
             }
         }
 
-        //[Authorize]
+        [Authorize]
         [HttpPut("{licenseId}")]
         public async Task<IActionResult> ExtendLicenseAsync([FromRoute] Guid licenseId, [FromBody] LicenseRequestModel licenseModel)
         {
