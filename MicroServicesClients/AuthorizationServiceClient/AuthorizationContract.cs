@@ -49,7 +49,7 @@ namespace AuthorizationServiceAPI //TODO: Log.Information, Log.Debug
 
                     return token;
                 }
-
+                //TODO: Parse messages from auth service !!!
                 switch (response.StatusCode)
                 {
                     case HttpStatusCode.Unauthorized:
