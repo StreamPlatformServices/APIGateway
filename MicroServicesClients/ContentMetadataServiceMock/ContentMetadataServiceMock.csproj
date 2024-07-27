@@ -20,12 +20,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\APIGatewayCoreUtilities\APIGatewayCoreUtilities.csproj" />
-    <ProjectReference Include="..\APIGatewayRoutingComponent\APIGatewayEntities.csproj" />
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Migrations\" />
+    <ProjectReference Include="..\..\APIGatewayCoreUtilities\APIGatewayCoreUtilities.csproj" />
+    <ProjectReference Include="..\..\APIGatewayEntities\APIGatewayEntities.csproj" />
   </ItemGroup>
 
 </Project>

@@ -22,6 +22,8 @@ if (string.IsNullOrEmpty(contentDatabasePath))
     contentDatabasePath = "../ContentMetadataServiceMock";
 }
 
+//TODO: Check if appsettings exist //move to another method module 
+
 builder.Configuration.SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile(Path.Combine(configPath, "appsettings.json"), optional: false, reloadOnChange: true)
     .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true)

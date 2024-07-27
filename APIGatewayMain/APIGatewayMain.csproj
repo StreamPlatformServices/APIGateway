@@ -23,11 +23,12 @@
   <ItemGroup>
     <ProjectReference Include="..\APIGatewayControllers\APIGatewayControllers.csproj" />
     <ProjectReference Include="..\APIGatewayCoreUtilities\APIGatewayCoreUtilities.csproj" />
-    <ProjectReference Include="..\APIGatewayMicroservicesClient\LicenseProxyAPI.csproj" />
-    <ProjectReference Include="..\APIGatewayRoutingComponent\APIGatewayEntities.csproj" />
-    <ProjectReference Include="..\AuthorizationServiceAPI\AuthorizationServiceAPI.csproj" />
-    <ProjectReference Include="..\ContentMetadataServiceMock\ContentMetadataServiceMock.csproj" />
-    <ProjectReference Include="..\StreamGatewayAPI\StreamGatewayAPI.csproj" />
+    <ProjectReference Include="..\APIGatewayEntities\APIGatewayEntities.csproj" />
+    <ProjectReference Include="..\APIGatewayUT\APIGatewayUT.csproj" />
+    <ProjectReference Include="..\MicroServicesClients\AuthorizationServiceClient\AuthorizationServiceClient.csproj" />
+    <ProjectReference Include="..\MicroServicesClients\ContentMetadataServiceMock\ContentMetadataServiceMock.csproj" />
+    <ProjectReference Include="..\MicroServicesClients\LicenseServiceClient\LicenseServiceClient.csproj" />
+    <ProjectReference Include="..\MicroServicesClients\StreamGatewayClient\StreamGatewayClient.csproj" />
   </ItemGroup>
 
   <ItemGroup>
