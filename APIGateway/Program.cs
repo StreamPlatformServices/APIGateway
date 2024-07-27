@@ -7,8 +7,25 @@ using AspNetCoreRateLimit;
 using APIGatewayCoreUtilities.CommonConfiguration.ConfigurationModels;
 
 //TODO: List current config in console log
-//TODO: add path to config
 var builder = WebApplication.CreateBuilder(args);
+
+var configPath = builder.Configuration["ConfigPath"];
+var contentDatabasePath = builder.Configuration["ContentDatabasePath"];
+
+if (string.IsNullOrEmpty(configPath))
+{
+    configPath = Directory.GetCurrentDirectory();
+}
+
+if (string.IsNullOrEmpty(contentDatabasePath))
+{
+    contentDatabasePath = "../ContentMetadataServiceMock";
+}
+
+builder.Configuration.SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile(Path.Combine(configPath, "appsettings.json"), optional: false, reloadOnChange: true)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true)
+    .AddEnvironmentVariables();
 
 builder.Services.AddCommonConfiguration(builder.Configuration);
 
@@ -18,7 +35,7 @@ builder.AddKestrelSettings(kestrelSettings);
 builder.Services.AddRateLimiting();
 builder.Services.AddAuthorizationServiceAPI();
 builder.Services.AddJWTConfiguration();
-builder.Services.AddContentMetadataMock();
+builder.Services.AddContentMetadataMock(contentDatabasePath);
 builder.Services.AddStreamGatewayAPI();
 builder.Services.AddLicenseServiceClient();
 builder.Services.AddEntityComponent();
@@ -76,5 +93,6 @@ app.UseIpRateLimiting();
 app.MapControllers();
 
 app.Run();
+
 
 

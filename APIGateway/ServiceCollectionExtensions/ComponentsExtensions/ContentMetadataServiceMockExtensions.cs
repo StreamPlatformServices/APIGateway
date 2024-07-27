@@ -1,22 +1,18 @@
-﻿using APIGatewayCoreUtilities.CommonConfiguration.ConfigurationModels.MockSettings;
-using APIGatewayEntities.Helpers;
-using APIGatewayEntities.IntegrationContracts;
+﻿using APIGatewayEntities.IntegrationContracts;
 using ContentMetadataServiceMock;
 using ContentMetadataServiceMock.Persistance;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
 namespace APIGatewayMain.ServiceCollectionExtensions.ComponentsExtensions
 {
 
     public static class ContentMetadataServiceMockExtensions
     {
-        public static IServiceCollection AddContentMetadataMock(this IServiceCollection services)
+        public static IServiceCollection AddContentMetadataMock(this IServiceCollection services, string databasePath)
         {
-            services.AddDbContext<ContentMetadataDatabaseContext>((serviceProvider, options) =>
+            services.AddDbContext<ContentMetadataDatabaseContext>(options =>
             {
-                var settings = serviceProvider.GetRequiredService<IOptions<ContentMetadataServiceMockSettings>>().Value;
-                options.UseSqlite($"Data Source={settings.DatabasePath}");
+                options.UseSqlite($"Data Source={databasePath}/content.db");
             });
 
             services.AddScoped<IContentMetadataContract, ContentMetadataContract>();

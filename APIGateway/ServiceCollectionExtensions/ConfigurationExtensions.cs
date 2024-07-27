@@ -1,5 +1,4 @@
-﻿using APIGatewayCoreUtilities.CommonConfiguration.ConfigurationModels.MockSettings;
-using APIGatewayCoreUtilities.CommonConfiguration.ConfigurationModels;
+﻿using APIGatewayCoreUtilities.CommonConfiguration.ConfigurationModels;
 using AspNetCoreRateLimit;
 using Microsoft.OpenApi.Models;
 
@@ -16,9 +15,6 @@ namespace APIGatewayMain.ServiceCollectionExtensions
             services.Configure<StreamServiceApiSettings>(configuration.GetSection("ComponentsSettings:StreamServiceApiSettings"));
             services.Configure<LicenseServiceClientSettings>(configuration.GetSection("ComponentsSettings:LicenseServiceClientSettings"));
             services.Configure<StreamGatewayApiSettings>(configuration.GetSection("ComponentsSettings:StreamGatewayApiSettings"));
-
-            services.Configure<ContentMetadataServiceMockSettings>(configuration.GetSection("MockComponentsSettings:ContentMetadataServiceMockSettings"));
-            services.Configure<StreamGatewayMockSettings>(configuration.GetSection("MockComponentsSettings:StreamGatewayMockSettings"));
 
             return services;
         }
