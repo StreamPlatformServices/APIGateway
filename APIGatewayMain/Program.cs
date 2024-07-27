@@ -9,20 +9,8 @@ using APIGatewayCoreUtilities.CommonConfiguration.ConfigurationModels;
 //TODO: List current config in console log
 var builder = WebApplication.CreateBuilder(args);
 
-var configPath = builder.Configuration["ConfigPath"];
-var contentDatabasePath = builder.Configuration["ContentDatabasePath"];
-
-if (string.IsNullOrEmpty(configPath))
-{
-    configPath = Directory.GetCurrentDirectory();
-}
-
-if (string.IsNullOrEmpty(contentDatabasePath))
-{
-    contentDatabasePath = "../ContentMetadataServiceMock";
-}
-
-//TODO: Check if appsettings exist //move to another method module 
+var configPath = Path.GetFullPath(builder.Configuration["ConfigPath"] ?? Directory.GetCurrentDirectory());
+var contentDatabasePath = Path.GetFullPath(builder.Configuration["ContentDatabasePath"] ?? @"../MicroServicesClients/ContentMetadataServiceMock"); //TODO: temporary (database will be moved to content metadata service)
 
 builder.Configuration.SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile(Path.Combine(configPath, "appsettings.json"), optional: false, reloadOnChange: true)
