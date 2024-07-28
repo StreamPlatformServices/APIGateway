@@ -5,7 +5,7 @@ namespace APIGatewayControllers.Models.Requests.User
     public class SignInRequestModel
     {
         [Required]
-        [EmailAddress]
+        //[EmailAddress]
         public string Email { set; get; }
         [Required]
         public string Password { get; set; }
